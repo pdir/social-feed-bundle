@@ -1,0 +1,87 @@
+
+.be_socialfeed_setup a {
+	color: #7abfbc;
+}
+
+.be_socialfeed_setup .right {
+    float: right;
+    width: 40%;
+	margin: 15px 0;
+}
+.be_socialfeed_setup .left {
+    float: left;
+    width: 50%;
+	margin: 15px 0;
+}
+
+.be_socialfeed_setup .logo {
+    margin-bottom: 5px;
+}
+
+.be_socialfeed_setup h2 {
+	margin-bottom: 10px;
+}
+
+.be_socialfeed_setup hr {
+    width: 100%;
+    margin: 20px auto;
+}
+
+.be_socialfeed_setup .devlog {
+	margin: 10px 0;
+}
+
+.be_socialfeed_setup .link-list li {
+	padding: 5px 0 5px 0;
+}
+
+.be_socialfeed_setup .feed .item {
+    margin-bottom: 5px;
+}
+
+.be_socialfeed_setup .feed .item span {
+    padding-right: 10px;
+	color: #7abfbc;
+}
+
+.be_socialfeed_setup .button {
+    float: left;
+    text-align: center;
+    margin-right: 25px;
+}
+
+.be_socialfeed_setup .kreis {
+    width: 60px;
+    padding: 13px;
+    box-sizing: border-box;
+    margin:auto;
+}
+
+.be_socialfeed_setup small {
+	color: #cccccc;
+}
+
+
+.be_socialfeed_setup .api-status .blink {
+	width: 15px;
+	height: 15px;
+	padding: 10px;
+	box-sizing: border-box;
+	border-radius: 10px;
+	background: #ACDA3D;
+	display: inline-block;
+	position: relative;
+	top: 5px;
+	margin-left: 5px;
+}
+
+.be_socialfeed_setup .api-status .blink.red {
+	background: #cc3d09;
+}
+
+.be_socialfeed_setup .debug-info {
+	background: #ccc;
+	color: #fff;
+	padding: 10px;
+	margin-top: 15px;
+}

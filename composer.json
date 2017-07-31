@@ -1,0 +1,48 @@
+{
+  "name":"pdir/contao-xing-bundle",
+  "description":"Contao 4 Xing Bundle",
+  "keywords":["contao","xing","bundle"],
+  "type":"contao-bundle",
+  "homepage":"http://contao.ninja",
+  "license":"LGPL-3.0+",
+  "authors":[
+    {
+      "name":"Mathias Arzberger",
+      "homepage":"https://pdir.de/",
+      "role":"Developer"
+    }
+  ],
+  "support":{
+    "issues":"https://github.com/pdir/contao-xing-bundle/issues",
+    "source":"https://github.com/pdir/contao-xing-bundle"
+  },
+  "require": {
+    "php": ">=5.4.0",
+    "contao/core-bundle": "~4.3"
+  },
+  "require-dev": {
+    "contao/manager-plugin": "^2.0"
+  },
+  "conflict": {
+    "contao/core": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Pdir\\SocialFeedBundle\\": "src/"
+    },
+    "classmap": [
+      "src/Resources/contao/"
+    ],
+    "exclude-from-classmap": [
+      "src/Resources/contao/config/",
+      "src/Resources/contao/dca/",
+      "src/Resources/contao/languages/",
+      "src/Resources/contao/templates/"
+    ]
+  },
+  "extra": {
+    "contao-manager-plugin": "Pdir\\SocialFeedBundle\\ContaoManagerPlugin"
+  },
+  "prefer-stable": true,
+  "minimum-stability": "dev"
+}

@@ -1,0 +1,48 @@
+<div class="tl_listing_container">
+  <div id="pdir" class="be_socialfeed_setup clr">
+    <h1 id="tl_welcome">SocialFeedBundle (Version: <?= $this->version ?>)</h1>
+    <div class="intro">
+      <div class="right">
+        <a href="https://pdir.de/mobilede.html" target="_blank"><img
+          src="https://pdir.de/files/01_inhalte/bilder/mobilemodul_logo_267x45px.png"
+          alt="mobile.de Inserate für Contao" width="267" height="45" class="logo"></a>
+        <p>Das SocialFeedBundle ist gesponsert von der <a href="http://www.pdir.de/" target="_blank">pdir / digital agentur</a></p>
+        <h2>Interessante Links</h2>
+        <ul class="link-list">
+        <li><a href="https://docs.pdir.de/" target="_blank"
+                    style="text-decoration: underline;">Dokumentation</a> (In Vorbereitung)</li>
+        <li><a href="https://github.com/pdir/social-feed-bundle/issues" target="_blank"
+                    style="text-decoration: underline;">Probleme melden</a></li>
+        </ul>
+      </div>
+      <div class="left">
+        <h2>Willkommen beim SocialFeedBundle für Contao</h2>
+        <p>Beschreibung</p>
+        <p>Ihr Team der pdir / digital agentur</p>
+      </div>
+      <div class="clr"></div>
+    </div>
+    <hr>
+    <div class="tools">
+
+      <h2>Tools</h2>
+      <div class="left">
+        no tools available yet
+      </div>
+      <div class="right">
+
+      </div>
+      <div class="clr"></div>
+    </div>
+    <hr>
+    <div class="feed">
+      <h2>DevLog</h2>
+      <div id="socialFeedDevLog" class="devlog"></div>
+      <p><a href="https://pdir.de/devlog.html" target="_blank"> [ Alle lesen ] </a></div></p>
+    </div>
+    <div class="tools">
+      <p><small>Diese Erwieterung verwendet das <a href="https://github.com/pavelk2/social-feed">social-feed Plugin</a>
+        für jQuery von <a href="https://github.com/pavelk2">pavelk2</a></small></p>
+    </div>
+  </div>
+</div>
