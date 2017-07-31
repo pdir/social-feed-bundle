@@ -1,9 +1,9 @@
 {
   "name":"pdir/contao-xing-bundle",
-  "description":"Contao 4 Xing Bundle",
-  "keywords":["contao","xing","bundle"],
+  "description":"Social feed extension for Contao CMS",
+  "keywords":["contao","social","feed","facebook","instagram","twitter","google+","pinterest","vk","rss","bundle"],
   "type":"contao-bundle",
-  "homepage":"http://contao.ninja",
+  "homepage":"https://pdir.de",
   "license":"LGPL-3.0+",
   "authors":[
     {
