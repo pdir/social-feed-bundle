@@ -1,5 +1,5 @@
 {
-  "name":"pdir/contao-xing-bundle",
+  "name":"pdir/social-feed-bundle",
   "description":"Social feed extension for Contao CMS",
   "keywords":["contao","social","feed","facebook","instagram","twitter","google+","pinterest","vk","rss","bundle"],
   "type":"contao-bundle",
@@ -13,8 +13,8 @@
     }
   ],
   "support":{
-    "issues":"https://github.com/pdir/contao-xing-bundle/issues",
-    "source":"https://github.com/pdir/contao-xing-bundle"
+    "issues":"https://github.com/pdir/social-feed-bundle/issues",
+    "source":"https://github.com/pdir/social-feed-bundle"
   },
   "require": {
     "php": ">=5.4.0",
