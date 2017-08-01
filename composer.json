@@ -20,7 +20,7 @@
     "php": ">=5.4.0",
     "contao/core-bundle": "~4.3",
     "pdir/social-feed": "~0.1.2",
-    "olado/doT": "~1.0.1",
+    "pdir/doT": "~1.0.1",
     "jublonet/codebird-js": "~2.5.0",
     "moment/moment": "~2.8.3"
   },
