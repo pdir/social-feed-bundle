@@ -46,7 +46,5 @@
   },
   "extra": {
     "contao-manager-plugin": "Pdir\\SocialFeedBundle\\ContaoManagerPlugin"
-  },
-  "prefer-stable": true,
-  "minimum-stability": "dev"
+  }
 }
