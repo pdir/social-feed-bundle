@@ -19,9 +19,9 @@
   "require": {
     "php": ">=5.4.0",
     "contao/core-bundle": "~4.3",
-    "pdir/social-feed": "~0.1.2",
-    "pdir/doT": "~1.0.1",
-    "pdir/codebird-js": "~2.5.0",
+    "pdir/social-feed": "dev-master",
+    "pdir/doT": "dev-master",
+    "pdir/codebird-js": "dev-master",
     "moment/moment": "~2.8.3"
   },
   "require-dev": {
