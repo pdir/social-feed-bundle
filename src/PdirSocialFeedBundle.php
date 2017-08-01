@@ -9,7 +9,7 @@
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
-namespace Pdir\MobileDeBundle;
+namespace Pdir\SocialFeedBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
