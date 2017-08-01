@@ -19,8 +19,8 @@
   "require": {
     "php": ">=5.4.0",
     "contao/core-bundle": "~4.3",
-    "pdir/social-feed": "gh-pages",
-    "pdir/doT": "dev-master",
+    "pdir/social-feed": "de-codeclimate",
+    "pdir/do-t": "dev-master",
     "pdir/codebird-js": "dev-master",
     "moment/moment": "~2.8.3"
   },
