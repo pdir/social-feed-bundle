@@ -19,7 +19,7 @@
   "require": {
     "php": ">=5.4.0",
     "contao/core-bundle": "~4.3",
-    "pdir/social-feed": "dev-master",
+    "pdir/social-feed": "gh-pages",
     "pdir/doT": "dev-master",
     "pdir/codebird-js": "dev-master",
     "moment/moment": "~2.8.3"
