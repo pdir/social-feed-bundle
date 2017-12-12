@@ -5,7 +5,7 @@
  */
 namespace Pdir\SocialFeedBundle;
 
-class MobileDeSetup extends \BackendModule
+class SocialFeedSetup extends \BackendModule
 {
     /**
      * social-feed-bundle version

@@ -22,13 +22,13 @@ if (!is_array($GLOBALS['BE_MOD']['pdir']))
     array_insert($GLOBALS['BE_MOD'], 1, array('pdir' => array()));
 }
 
-$assetsDir = 'bundles/socialfeedbundle';
+$assetsDir = 'bundles/pdirsocialfeed';
 
 array_insert($GLOBALS['BE_MOD']['pdir'], 0, array
 (
     'socialFeedSetup' => array
     (
-        'callback'          => 'Pdir\SocialFeedBundle\SocialFeedSetup',
+        'callback'          => 'Pdir\\SocialFeedBundle\\SocialFeedSetup',
         'icon'              => $assetsDir . '/img/icon.png',
         //'javascript'        =>  $assetsDir . '/js/backend.min.js',
         'stylesheet'		=>  $assetsDir . '/css/backend.css'

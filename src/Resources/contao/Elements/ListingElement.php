@@ -37,7 +37,7 @@ class ListingElement extends \ContentElement
 
         // Return if there is no facebook id
         if (!$this->pdir_sf_facebook_id) {
-            return '';
+            // return '';
         }
 
         return parent::generate();
@@ -48,35 +48,40 @@ class ListingElement extends \ContentElement
      */
     protected function compile()
     {
-		$assetsDir = 'web/bundles/pdirmobilede';
+        if (version_compare(VERSION, '4', '>='))
+        {
+            $assetsDir = 'web/bundles/pdirsocialfeed';
+        } else {
+            $assetsDir = 'system/modules/socialFeed/assets';
+        }
 
         if(!$this->pdir_md_removeModuleJs)
         {
-            $GLOBALS['TL_JAVASCRIPT']['sf_js_1'] = $assetsDir . '/js/jquery.socialfeed.js|static';
+            $GLOBALS['TL_FOOTER']['sf_js_1'] = $assetsDir . '/vendor/social-feed-gh-pages/js/jquery.socialfeed.js|static';
         }
         if(!$this->pdir_md_removeModuleCss)
         {
-			$GLOBALS['TL_CSS']['md_css_1'] = $assetsDir . '/css/jquery.socialfeed.css||static';
+			$GLOBALS['TL_CSS']['md_css_1'] = $assetsDir . '/vendor/social-feed-gh-pages/css/jquery.socialfeed.css||static';
         }
-
-        // Filters
-
-		// Ordering
-
-        // Pagination
-
-        // Limit
 
 		// Shuffle
         $this->Template->listShuffle = ($this->pdir_sf_list_shuffle) ? 'true' : 'false';
 
-        $this->Template->feeds = array("1", "2");
+        $this->Template->fbStatus = $this->pdir_sf_facebook_status;
+        $this->Template->fbToken = $this->pdir_sf_facebook_token;
+        $this->Template->fbAccounts = $this->pdir_sf_facebook_accounts;
+        $this->Template->fbLimit = $this->pdir_sf_facebook_limit;
+
+        $this->Template->gpStatus = $this->pdir_sf_google_plus_status;
+        $this->Template->gpToken = $this->pdir_sf_google_plus_token;
+        $this->Template->gpAccounts = $this->pdir_sf_google_plus_accounts;
+        $this->Template->gpLimit = $this->pdir_sf_google_plus_limit;
 
         // Debug mode
 		if($this->pdir_sf_enableDebugMode)
 		{
 			$this->Template->debug = true;
-			$this->Template->version = Helper::VERSION;
+			$this->Template->version = SocialFeedSetup::VERSION;
 			$this->Template->customer = $this->pdir_sf_facebook_id;
 		}
     }
