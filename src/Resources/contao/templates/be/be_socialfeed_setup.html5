@@ -3,9 +3,6 @@
     <h1 id="tl_welcome">SocialFeedBundle (Version: <?= $this->version ?>)</h1>
     <div class="intro">
       <div class="right">
-        <!-- <a href="https://pdir.de/mobilede.html" target="_blank"><img
-          src="https://pdir.de/files/01_inhalte/bilder/mobilemodul_logo_267x45px.png"
-          alt="mobile.de Inserate für Contao" width="267" height="45" class="logo"></a> -->
         <p>Das SocialFeedBundle ist gesponsert von der <a href="http://www.pdir.de/" target="_blank">pdir / digital agentur</a></p>
         <h2>Interessante Links</h2>
         <ul class="link-list">
@@ -19,7 +16,8 @@
       </div>
       <div class="left">
         <h2>Willkommen beim SocialFeedBundle für Contao</h2>
-        <p>Beschreibung</p>
+        <p>Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an. Einstellungen
+          können direkt im Content-Element vorgenommen werden.</p>
         <p>Ihr Team der pdir / digital agentur</p>
       </div>
       <div class="clr"></div>
