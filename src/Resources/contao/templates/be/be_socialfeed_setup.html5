@@ -3,16 +3,18 @@
     <h1 id="tl_welcome">SocialFeedBundle (Version: <?= $this->version ?>)</h1>
     <div class="intro">
       <div class="right">
-        <a href="https://pdir.de/mobilede.html" target="_blank"><img
+        <!-- <a href="https://pdir.de/mobilede.html" target="_blank"><img
           src="https://pdir.de/files/01_inhalte/bilder/mobilemodul_logo_267x45px.png"
-          alt="mobile.de Inserate für Contao" width="267" height="45" class="logo"></a>
+          alt="mobile.de Inserate für Contao" width="267" height="45" class="logo"></a> -->
         <p>Das SocialFeedBundle ist gesponsert von der <a href="http://www.pdir.de/" target="_blank">pdir / digital agentur</a></p>
         <h2>Interessante Links</h2>
         <ul class="link-list">
-        <li><a href="https://docs.pdir.de/" target="_blank"
-                    style="text-decoration: underline;">Dokumentation</a> (In Vorbereitung)</li>
-        <li><a href="https://github.com/pdir/social-feed-bundle/issues" target="_blank"
-                    style="text-decoration: underline;">Probleme melden</a></li>
+          <li><a href="https://docs.pdir.de/" target="_blank"
+            style="text-decoration: underline;">Dokumentation</a> (In Vorbereitung)</li>
+          <li><a href="https://github.com/pdir/social-feed-bundle/issues" target="_blank"
+            style="text-decoration: underline;">Probleme melden</a></li>
+          <li><a href="https://github.com/pdir/social-feed-bundle/" target="_blank"
+            style="text-decoration: underline;">Github</a></li>
         </ul>
       </div>
       <div class="left">

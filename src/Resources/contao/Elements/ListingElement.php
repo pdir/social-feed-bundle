@@ -14,10 +14,16 @@ namespace Pdir\SocialFeedBundle;
 class ListingElement extends \ContentElement
 {
     /**
-     * Template
+     * List Template
      * @var string
      */
     protected $strTemplate = 'ce_socialfeed_list';
+
+    /**
+     * Item Template
+     * @var string
+     */
+    protected $strItemTemplate = 'ce_socialfeed_item';
 
     /**
      * Display a wildcard in the back end
@@ -37,7 +43,7 @@ class ListingElement extends \ContentElement
 
         // Return if there is no facebook id
         if (!$this->pdir_sf_facebook_id) {
-            // return '';
+            return 'Kein Netzwerk angegeben!';
         }
 
         return parent::generate();
@@ -55,34 +61,68 @@ class ListingElement extends \ContentElement
             $assetsDir = 'system/modules/socialFeed/assets';
         }
 
+        // Assets
         if(!$this->pdir_md_removeModuleJs)
         {
-            $GLOBALS['TL_FOOTER']['sf_js_1'] = $assetsDir . '/vendor/social-feed-gh-pages/js/jquery.socialfeed.js|static';
+            $GLOBALS['TL_JAVASCRIPT'][] = 'assets/moment/min/moment.min.js';
+            $GLOBALS['TL_JAVASCRIPT'][] = 'assets/moment/locale/de.js';
+            $combiner = new \Combiner();
+            $combiner->add('/vendor/pdir/codebird-js/js/codebird.js');
+            $combiner->add('/vendor/pdir/do-t/doT.min.js');
+            $combiner->add('/vendor/pdir/social-feed/js/jquery.socialfeed.js');
+            $GLOBALS['TL_JAVASCRIPT'][] = $combiner->getCombinedFile();
         }
         if(!$this->pdir_md_removeModuleCss)
         {
-			$GLOBALS['TL_CSS']['md_css_1'] = $assetsDir . '/vendor/social-feed-gh-pages/css/jquery.socialfeed.css||static';
+            $combiner = new \Combiner();
+            $combiner->add('/vendor/pdir/social-feed/css/jquery.socialfeed.css');
+            $GLOBALS['TL_CSS'][] = $combiner->getCombinedFile();
+            $GLOBALS['TL_CSS'][] = '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css';
         }
+
+        // Parameters
+        $this->Template->textLength = $this->pdir_sf_text_length ? $this->pdir_sf_text_length : 400;
+        $this->Template->mediaMinWidth = $this->pdir_sf_media_min_width ? $this->pdir_sf_media_min_width : 200;
+        $this->Template->showMedia = $this->pdir_sf_show_media ? $this->pdir_sf_show_media : true;
+        $this->Template->updatePeriod = $this->pdir_sf_update_period ? $this->pdir_sf_update_period : 5000;
+        $this->Template->dateFormat = $this->pdir_sf_date_format ? $this->pdir_sf_date_format : 'll';
+        $this->Template->dateLocale = $this->pdir_sf_date_locale ? $this->pdir_sf_date_locale : 'de';
+        $this->Template->hideFilters = $this->pdir_sf_hideFilters ? $this->pdir_sf_hideFilters : false;
+        $this->Template->cacheTime = $this->pdir_sf_cacheTime ? $this->pdir_sf_cacheTime : 0;
 
 		// Shuffle
         $this->Template->listShuffle = ($this->pdir_sf_list_shuffle) ? 'true' : 'false';
 
+        // Facebook
         $this->Template->fbStatus = $this->pdir_sf_facebook_status;
         $this->Template->fbToken = $this->pdir_sf_facebook_token;
-        $this->Template->fbAccounts = $this->pdir_sf_facebook_accounts;
+        $this->Template->fbAccounts = '[\'' . str_replace(',', '\',\'', $this->pdir_sf_facebook_accounts) . '\']';
         $this->Template->fbLimit = $this->pdir_sf_facebook_limit;
 
+        // Google
         $this->Template->gpStatus = $this->pdir_sf_google_plus_status;
         $this->Template->gpToken = $this->pdir_sf_google_plus_token;
         $this->Template->gpAccounts = $this->pdir_sf_google_plus_accounts;
         $this->Template->gpLimit = $this->pdir_sf_google_plus_limit;
+
+        // Copy item template to files folder
+        $strItemTemplatePath = '/vendor/pdir/social-feed-bundle/src/Resources/contao/templates/elements/' . $this->strItemTemplate;
+        if($this->Template->pdir_sf_itemTemplate)
+        {
+            $strItemTemplatePath = 'templates/' . $this->Template->pdir_sf_itemTemplate;
+        }
+        $strItemTemplatePath .= '.html5';
+
+        $objFile = new \File($strItemTemplatePath, true);
+        $objFile->copyTo('web/files/' . $this->strItemTemplate . '.html');
+
+        $this->Template->itemTemplate = 'files/' . $this->strItemTemplate . '.html';
 
         // Debug mode
 		if($this->pdir_sf_enableDebugMode)
 		{
 			$this->Template->debug = true;
 			$this->Template->version = SocialFeedSetup::VERSION;
-			$this->Template->customer = $this->pdir_sf_facebook_id;
 		}
     }
 }

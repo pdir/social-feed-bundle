@@ -1,27 +1,68 @@
 <!-- indexer::stop -->
 <div class="<?php echo $this->class; ?> block"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
+
 <?php if ($this->headline): ?>
-  <<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
+<<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
 <?php endif; ?>
-<?php if(!$this->hideFilters): ?>
-  <div class="sf-filters">
-    Filter?
-  </div>
-<?php endif; ?>
-  <div class="sf-list">
-  <?php foreach($this->feeds as $feed): ?>
-    <?= $feed; ?>
-  <?php endforeach; ?>
-  </div> <!-- SocialFeedBundle list end -->
-</div>
+
+<div class="social-feed-container"></div>
+
+<script>
+  var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ? true : false;
+  var length = 250;
+  if(isMobile) {
+        length = 150;
+  }
+
+  $('.social-feed-container').socialfeed({
+  <?php if($this->fbStatus): ?>
+    // FACEBOOK
+    facebook:{
+      accounts: <?= $this->fbAccounts ?>,  //Array: Specify a list of accounts from which to pull wall posts
+      limit: <?= $this->fbLimit ?>, //Integer: max number of posts to load
+      access_token: '<?= $this->fbToken ?>'  //String: "APP_ID|APP_SECRET"
+    },
+  <?php endif; ?>
+  <?php if($this->gpStatus): ?>
+    // GOOGLEPLUS
+    google:{
+      accounts: <?= $this->gpAccounts ?>, //Array: Specify a list of accounts from which to pull posts
+      limit: <?= $this->gpLimit ?>, //Integer: max number of posts to load
+      access_token: '<?= $this->gpToken ?>' //String: G+ access token
+    },
+  <?php endif; ?>
+
+    // GENERAL SETTINGS
+    length:<?= $this->textLength ?>,
+    media_min_width: <?= $this->mediaMinWidth ?>,
+    template: '<?= $this->itemTemplate ?>',
+    show_media: <?= $this->showMedia ?>,
+    update_period: <?= $this->updatePeriod ?>,
+    date_format: '<?= $this->dateFormat ?>',
+    date_locale: '<?= $this->dateLocale ?>',
+  });
+</script>
+
 <?php if($this->debug): ?>
 <div>
   <h2>DEBUG:</h2>
   Modulversion: <?= $this->version ?><br>
-  FacebookID: <?= $this->customer ?><br><br>
+  <?php if($this->fbStatus) : ?>
+    <h5>Facebook</h5>
+    <p>Konten: <?= $this->fbAccounts ?><br>
+      Token: <?= $this->fbToken ?><br>
+      Limit: <?= $this->fbLimit ?>
+    </p>
+  <?php endif; ?>
+  <?php if($this->gpStatus) : ?>
+  <h5>Facebook</h5>
+  <p>Konten: <?= $this->gpAccounts ?><br>
+    Token: <?= $this->gpToken ?><br>
+    Limit: <?= $this->gpLimit ?>
+  </p>
+  <?php endif; ?>
 </div>
 <?php endif; ?>
-<script>
-  var mdListShuffle = <?= $this->listShuffle ?>;
-</script>
+</div>
+
 <!-- indexer::continue -->
