@@ -14,7 +14,8 @@
   ],
   "support":{
     "issues":"https://github.com/pdir/social-feed-bundle/issues",
-    "source":"https://github.com/pdir/social-feed-bundle"
+    "source":"https://github.com/pdir/social-feed-bundle",
+    "docs":"https://docs.pdir.de"
   },
   "require": {
     "php": ">=5.4.0",

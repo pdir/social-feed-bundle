@@ -12,7 +12,7 @@
 /**
  * Add content element
  */
-$GLOBALS['TL_CTE']['includes']['socialFeedList'] = 'Pdir\\SocialFeedBundle\\ListingElement';
+$GLOBALS['TL_CTE']['includes']['socialfeed'] = 'Pdir\\SocialFeedBundle\\ListingElement';
 
 /**
  * Add back end modules
@@ -42,6 +42,6 @@ array_insert($GLOBALS['FE_MOD'], 4, array
 (
     'pdir' => array
     (
-        'socialFeedList'   => 'Pdir\\SocialFeedBundle\\ListingElement'
+        'socialfeed'   => 'Pdir\\SocialFeedBundle\\ListingElement'
     )
 ));

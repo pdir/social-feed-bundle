@@ -105,18 +105,8 @@ class ListingElement extends \ContentElement
         $this->Template->gpAccounts = $this->pdir_sf_google_plus_accounts;
         $this->Template->gpLimit = $this->pdir_sf_google_plus_limit;
 
-        // Copy item template to files folder
-        $strItemTemplatePath = '/vendor/pdir/social-feed-bundle/src/Resources/contao/templates/elements/' . $this->strItemTemplate;
-        if($this->Template->pdir_sf_itemTemplate)
-        {
-            $strItemTemplatePath = 'templates/' . $this->Template->pdir_sf_itemTemplate;
-        }
-        $strItemTemplatePath .= '.html5';
-
-        $objFile = new \File($strItemTemplatePath, true);
-        $objFile->copyTo('web/files/' . $this->strItemTemplate . '.html');
-
-        $this->Template->itemTemplate = 'files/' . $this->strItemTemplate . '.html';
+        // set item template
+        $this->Template->itemTemplate = 'share/' . $this->strItemTemplate . '.html';
 
         // Debug mode
 		if($this->pdir_sf_enableDebugMode)
