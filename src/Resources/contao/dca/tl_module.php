@@ -10,20 +10,20 @@
  */
 
 /**
- * Add palette to tl_content
+ * Add palette to tl_module
  */
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['socialfeed'] = '{type_legend},type,headline;{pdir_sf_settings_legend},pdir_sf_listTemplate,pdir_sf_itemTemplate,pdir_sf_text_length,pdir_sf_update_period,pdir_sf_show_media,pdir_sf_media_min_width,pdir_sf_date_format,pdir_sf_date_locale;{pdir_sf_facebook_settings},pdir_sf_facebook_status,pdir_sf_facebook_accounts,pdir_sf_facebook_token,pdir_sf_facebook_limit;{pdir_sf_google_plus_settings},pdir_sf_google_plus_status,pdir_sf_google_plus_accounts,pdir_sf_google_plus_token,pdir_sf_google_plus_limit;{pdir_sf_filters_legend},pdir_sf_hideFilters,pdir_sf_list_shuffle;{pdir_sf_template_legend},pdir_sf_removeModuleCss,pdir_sf_removeModuleJs;{pdir_sf_debug_legend},pdir_sf_cacheTime,pdir_sf_enableDebugMode;{expert_legend:hide},cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['socialfeed'] = '{title_legend},name,headline,type;{pdir_sf_settings_legend},pdir_sf_listTemplate,pdir_sf_itemTemplate,pdir_sf_text_length,pdir_sf_update_period,pdir_sf_show_media,pdir_sf_media_min_width,pdir_sf_date_format,pdir_sf_date_locale;{pdir_sf_facebook_settings},pdir_sf_facebook_status,pdir_sf_facebook_accounts,pdir_sf_facebook_token,pdir_sf_facebook_limit;{pdir_sf_google_plus_settings},pdir_sf_google_plus_status,pdir_sf_google_plus_accounts,pdir_sf_google_plus_token,pdir_sf_google_plus_limit;{pdir_sf_filters_legend},pdir_sf_hideFilters,pdir_sf_list_shuffle;{pdir_sf_template_legend},pdir_sf_removeModuleCss,pdir_sf_removeModuleJs;{pdir_sf_debug_legend},pdir_sf_cacheTime,pdir_sf_enableDebugMode;{expert_legend:hide},cssID,space';
 
 /**
- * Add fields to tl_content
+ * Add fields to tl_module
  */
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_listTemplate'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_listTemplate'] = array
 (
-	'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_listTemplate'],
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_listTemplate'],
 	'exclude' => true,
 	'inputType' => 'select',
-	'options_callback' => array('pdir_sf_content', 'getListTemplates'),
+	'options_callback' => array('pdir_sf_module', 'getListTemplates'),
 	'reference' => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval' => array(
 		'includeBlankOption' => true,
@@ -32,15 +32,15 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_listTemplate'] = array
 	'sql' => "varchar(32) NOT NULL default '0'"
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_itemTemplate'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_itemTemplate'] = array
 (
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_itemTemplate'],
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_itemTemplate'],
     'exclude' => true,
     'inputType' => 'select',
-    'options_callback' => array('pdir_sf_content', 'getItemTemplates'),
+    'options_callback' => array('pdir_sf_module', 'getItemTemplates'),
     'save_callback' => array
     (
-        array('pdir_sf_content', 'save_socialfeed_item')
+        array('pdir_sf_module', 'save_socialfeed_item')
     ),
     'reference' => &$GLOBALS['TL_LANG']['tl_module'],
     'eval' => array(
@@ -50,8 +50,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_itemTemplate'] = array
     'sql' => "varchar(32) NOT NULL default '0'"
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_text_length'] = array(
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_text_length'],
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_text_length'] = array(
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_text_length'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => array(
@@ -61,8 +61,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_text_length'] = array(
     'sql' => "int(10) unsigned NOT NULL default '0'",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_media_min_width'] = array(
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_media_min_width'],
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_media_min_width'] = array(
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_media_min_width'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => array(
@@ -72,9 +72,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_media_min_width'] = array(
     'sql' => "int(10) unsigned NOT NULL default '0'",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_show_media'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_show_media'] = array
 (
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_show_media'],
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_show_media'],
     'exclude' => true,
     'inputType' => 'checkbox',
     'eval' => array(
@@ -84,8 +84,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_show_media'] = array
     'sql' => "char(1) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_update_period'] = array(
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_update_period'],
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_update_period'] = array(
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_update_period'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => array(
@@ -95,9 +95,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_update_period'] = array(
     'sql' => "int(10) unsigned NOT NULL default '0'",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_date_format'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_date_format'] = array
 (
-    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_date_format'],
+    'label'                   => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_date_format'],
     'exclude'                 => true,
     'inputType'               => 'text',
     'eval'                    => array(
@@ -108,9 +108,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_date_format'] = array
 );
 
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_date_locale'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_date_locale'] = array
 (
-    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_date_locale'],
+    'label'                   => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_date_locale'],
     'exclude'                 => true,
     'inputType'               => 'text',
     'eval'                    => array(
@@ -120,9 +120,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_date_locale'] = array
     'sql'                     => "varchar(3) NOT NULL default 'de'"
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_facebook_accounts'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_facebook_accounts'] = array
 (
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_facebook_accounts'],
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_facebook_accounts'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => array(
@@ -133,9 +133,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_facebook_accounts'] = array
     'sql' => "varchar(128) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_facebook_status'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_facebook_status'] = array
 (
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_facebook_status'],
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_facebook_status'],
     'exclude' => true,
     'inputType' => 'checkbox',
     'eval' => array(
@@ -145,9 +145,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_facebook_status'] = array
     'sql' => "char(1) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_facebook_token'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_facebook_token'] = array
 (
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_facebook_token'],
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_facebook_token'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => array(
@@ -158,8 +158,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_facebook_token'] = array
     'sql' => "varchar(128) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_facebook_limit'] = array(
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_facebook_limit'],
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_facebook_limit'] = array(
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_facebook_limit'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => array(
@@ -169,9 +169,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_facebook_limit'] = array(
     'sql' => "int(3) unsigned NOT NULL default '20'",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_google_plus_accounts'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_google_plus_accounts'] = array
 (
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_google_plus_accounts'],
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_google_plus_accounts'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => array(
@@ -182,9 +182,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_google_plus_accounts'] = arr
     'sql' => "varchar(128) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_google_plus_status'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_google_plus_status'] = array
 (
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_google_plus_status'],
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_google_plus_status'],
     'exclude' => true,
     'inputType' => 'checkbox',
     'eval' => array(
@@ -194,9 +194,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_google_plus_status'] = array
     'sql' => "char(1) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_google_plus_token'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_google_plus_token'] = array
 (
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_google_plus_token'],
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_google_plus_token'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => array(
@@ -207,8 +207,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_google_plus_token'] = array
     'sql' => "varchar(128) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_google_plus_limit'] = array(
-    'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_google_plus_limit'],
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_google_plus_limit'] = array(
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_google_plus_limit'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => array(
@@ -220,9 +220,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_google_plus_limit'] = array(
 
 // {pdir_sf_filters_legend},pdir_sf_hideFilters,pdir_sf_list_shuffle;{pdir_sf_template_legend},pdir_sf_removeModuleCss,pdir_sf_removeModuleJs;{pdir_sf_debug_legend},pdir_sf_cacheTime,pdir_sf_enableDebugMode;{expert_legend:hide},cssID,space
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_hideFilters'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_hideFilters'] = array
 (
-	'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_hideFilters'],
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_hideFilters'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array(
@@ -232,9 +232,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_hideFilters'] = array
 	'sql' => "char(1) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_list_shuffle'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_list_shuffle'] = array
 (
-	'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_list_shuffle'],
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_list_shuffle'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array(
@@ -244,9 +244,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_list_shuffle'] = array
 	'sql' => "char(1) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_removeModuleJs'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_removeModuleJs'] = array
 (
-	'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_removeModuleJs'],
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_removeModuleJs'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array(
@@ -256,9 +256,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_removeModuleJs'] = array
 	'sql' => "char(1) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_removeModuleCss'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_removeModuleCss'] = array
 (
-	'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_removeModuleCss'],
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_removeModuleCss'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array(
@@ -268,8 +268,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_removeModuleCss'] = array
 	'sql' => "char(1) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_cacheTime'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_cacheTime'],
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_cacheTime'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_cacheTime'],
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array(
@@ -279,8 +279,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_cacheTime'] = array(
 	'sql' => "int(10) unsigned NOT NULL default '0'",
 );
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_enableDebugMode'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_content']['pdir_sf_enableDebugMode'],
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_enableDebugMode'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_enableDebugMode'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array(
@@ -291,7 +291,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['pdir_sf_enableDebugMode'] = array(
 );
 
 
-class pdir_sf_content extends Backend
+class pdir_sf_module extends Backend
 {
     public function save_socialfeed_item($strValue, DataContainer $dc)
     {

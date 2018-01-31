@@ -42,9 +42,9 @@ class ListingElement extends \ContentElement
         }
 
         // Return if there is no facebook id
-        if (!$this->pdir_sf_facebook_id) {
+        /*if (!$this->pdir_sf_facebook_id) {
             return 'Kein Netzwerk angegeben!';
-        }
+        }*/
 
         return parent::generate();
     }
@@ -64,13 +64,13 @@ class ListingElement extends \ContentElement
         // Assets
         if(!$this->pdir_md_removeModuleJs)
         {
-            $GLOBALS['TL_JAVASCRIPT'][] = 'assets/moment/min/moment.min.js';
-            $GLOBALS['TL_JAVASCRIPT'][] = 'assets/moment/locale/de.js';
+            $GLOBALS['TL_BODY'][] = '<script src="assets/moment/min/moment.min.js"></script>';
+            $GLOBALS['TL_BODY'][] = '<script src="assets/moment/locale/de.js"></script>';
             $combiner = new \Combiner();
             $combiner->add('/vendor/pdir/codebird-js/js/codebird.js');
             $combiner->add('/vendor/pdir/do-t/doT.min.js');
             $combiner->add('/vendor/pdir/social-feed/js/jquery.socialfeed.js');
-            $GLOBALS['TL_JAVASCRIPT'][] = $combiner->getCombinedFile();
+            $GLOBALS['TL_BODY'][] = '<script src="'.$combiner->getCombinedFile().'"></script>';
         }
         if(!$this->pdir_md_removeModuleCss)
         {
