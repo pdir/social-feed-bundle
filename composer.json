@@ -4,7 +4,7 @@
   "keywords":["contao","social","feed","facebook","instagram","twitter","google plus","pinterest","vk","rss","bundle"],
   "type":"contao-bundle",
   "homepage":"https://pdir.de",
-  "license":"LGPL-3.0+",
+  "license":"LGPL-3.0-or-later",
   "authors":[
     {
       "name":"Mathias Arzberger",
