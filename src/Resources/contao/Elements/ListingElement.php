@@ -67,7 +67,7 @@ class ListingElement extends \ContentElement
             $GLOBALS['TL_BODY'][] = '<script src="assets/moment/min/moment.min.js"></script>';
             $GLOBALS['TL_BODY'][] = '<script src="assets/moment/locale/de.js"></script>';
             $combiner = new \Combiner();
-            $combiner->add('/vendor/pdir/codebird-js/js/codebird.js');
+            $combiner->add('/vendor/pdir/codebird-js/codebird.js');
             $combiner->add('/vendor/pdir/do-t/doT.min.js');
             $combiner->add('/vendor/pdir/social-feed/js/jquery.socialfeed.js');
             $GLOBALS['TL_BODY'][] = '<script src="'.$combiner->getCombinedFile().'"></script>';
@@ -82,8 +82,8 @@ class ListingElement extends \ContentElement
 
         // Parameters
         $this->Template->textLength = $this->pdir_sf_text_length ? $this->pdir_sf_text_length : 400;
-        $this->Template->mediaMinWidth = $this->pdir_sf_media_min_width ? $this->pdir_sf_media_min_width : 200;
-        $this->Template->showMedia = $this->pdir_sf_show_media ? $this->pdir_sf_show_media : true;
+        $this->Template->mediaMinWidth = $this->pdir_sf_media_min_width;
+        $this->Template->showMedia = ($this->pdir_sf_show_media == '1') ? 'true' : 'false';
         $this->Template->updatePeriod = $this->pdir_sf_update_period ? $this->pdir_sf_update_period : 5000;
         $this->Template->dateFormat = $this->pdir_sf_date_format ? $this->pdir_sf_date_format : 'll';
         $this->Template->dateLocale = $this->pdir_sf_date_locale ? $this->pdir_sf_date_locale : 'de';
@@ -106,7 +106,12 @@ class ListingElement extends \ContentElement
         $this->Template->gpLimit = $this->pdir_sf_google_plus_limit;
 
         // set item template
-        $this->Template->itemTemplate = 'share/' . $this->strItemTemplate . '.html';
+        if($this->pdir_sf_itemTemplate == "") {
+            $itemTpl = 'share/' . $this->strItemTemplate . '.html5';
+        } else {
+            $itemTpl = 'templates/' . $this->pdir_sf_itemTemplate . '.html5';
+        }
+        $this->Template->itemTemplate = $itemTpl;
 
         // Debug mode
 		if($this->pdir_sf_enableDebugMode)

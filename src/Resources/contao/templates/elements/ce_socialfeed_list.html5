@@ -8,46 +8,55 @@
 <div class="social-feed-container"></div>
 
 <?php if($this->fbStatus) {
-    $fbStatus = "// FACEBOOK
+    $fbStatus = "
     facebook:{
-    accounts: ".$this->fbAccounts.",  //Array: Specify a list of accounts from which to pull wall posts
-    limit: ".$this->fbLimit.", //Integer: max number of posts to load
-    access_token: '".$this->fbToken."'  //String: 'APP_ID|APP_SECRET'
+        accounts: ".$this->fbAccounts.",
+        limit: ".$this->fbLimit.",
+        access_token: '".$this->fbToken."'
     },";
 } ?>
 
 <?php if($this->gpStatus) {
-    $gpStatus = "// GOOGLEPLUS
+    $gpStatus = "
     google:{
-      accounts: ".$this->gpAccounts.", //Array: Specify a list of accounts from which to pull posts
-      limit: ".$this->gpLimit.", //Integer: max number of posts to load
-      access_token: '".$this->gpToken."' //String: G+ access token
+        accounts: ".$this->gpAccounts.",
+        limit: ".$this->gpLimit.",
+        access_token: '".$this->gpToken."'
     },";
 } ?>
 
 <?php
-    $generalSettings = "// GENERAL SETTINGS
+    $generalSettings = "
     length:".$this->textLength.",
     media_min_width: ".$this->mediaMinWidth.",
-    template: '".$this->itemTemplate."',
+    template: '".$this->itemTemplate."?_=".time()."',
     show_media: ".$this->showMedia.",
     update_period: ".$this->updatePeriod.",
     date_format: '".$this->dateFormat."',
-    date_locale: '".$this->dateLocale."',";
+    date_locale: '".$this->dateLocale."',
+    moderation: function(content) {
+        return  (content.text) ? content.text.indexOf('fuck') == -1 : true;
+    },
+    callback: function() {
+        console.log('All posts collected!');
+    }
+    " ;
 ?>
 
 
 <?php $GLOBALS['TL_BODY'][] = "
 <script>
-  var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ? true : false;
-  var length = 250;
-  if(isMobile) {
+$(document).ready(function() {
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ? true : false;
+    var length = 250;
+    if(isMobile) {
         length = 150;
-  }
+    }
 
-  $('.social-feed-container').socialfeed({
-        ".$fbStatus.$gpStatus.$generalSettings."
-  });
+    $('.social-feed-container').socialfeed({
+        " . $fbStatus . $gpStatus . $generalSettings . "
+    });
+});
 </script>"; ?>
 
 <?php if($this->debug): ?>

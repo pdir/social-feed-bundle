@@ -299,19 +299,19 @@ class pdir_sf_module extends Backend
         $strItemFilename = 'ce_socialfeed_item';
         if($dc->activeRecord->pdir_sf_itemTemplate == '')
         {
-            $strItemTemplatePath = 'vendor/pdir/social-feed-bundle/src/Resources/contao/templates/elements/' . $strItemFilename . '.html5';
+            $strItemTemplatePath = '/vendor/pdir/social-feed-bundle/src/Resources/contao/templates/elements/' . $strItemFilename . '.html5';
         }
         else
         {
             // copy from custom
             $strPath = $this->getTemplate($dc->activeRecord->pdir_sf_itemTemplate);
-            $arrPath = explode("/templates", $strPath);
-            $strItemTemplatePath = '/templates' . $arrPath[1];
+            $arrPath = explode("templates", $strPath);
+            $strItemTemplatePath = 'templates' . $arrPath[1];
             $strItemFilename = $dc->activeRecord->pdir_sf_itemTemplate;
         }
 
         $objFile = new \File($strItemTemplatePath, true);
-        $objFile->copyTo('web/share/' . $strItemFilename . '.html');
+        $objFile->copyTo('web/share/' . $strItemFilename . '.html5');
 
         return $strValue;
     }
