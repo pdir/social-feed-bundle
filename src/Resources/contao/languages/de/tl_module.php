@@ -18,6 +18,8 @@ $GLOBALS['TL_LANG']['tl_module']['pdir_sf_facebook_settings'] = 'Facebook Einste
 $GLOBALS['TL_LANG']['tl_module']['pdir_sf_google_plus_settings'] = 'Google+ Einstellungen';
 $GLOBALS['TL_LANG']['tl_module']['pdir_sf_template_legend'] = 'Template-Einstellungen';
 $GLOBALS['TL_LANG']['tl_module']['pdir_sf_debug_legend'] = 'Cache & Debugging';
+$GLOBALS['TL_LANG']['tl_module']['pdir_sf_masonry_legend'] = 'Masonry-Einstellungen';
+$GLOBALS['TL_LANG']['tl_module']['pdir_sf_filters_legend'] = 'Filter-Einstellungen';
 
 $GLOBALS['TL_LANG']['tl_module']['pdir_sf_listTemplate'] = array('Listenansicht Template', 'Bitte wählen Sie hier ein Template für die Listenansicht aus.');
 $GLOBALS['TL_LANG']['tl_module']['pdir_sf_itemTemplate'] = array('Post Template', 'Bitte wählen Sie hier ein Template für die Posts aus.');
@@ -45,3 +47,6 @@ $GLOBALS['TL_LANG']['tl_module']['pdir_sf_removeModuleJs'] = array('Javascript a
 $GLOBALS['TL_LANG']['tl_module']['pdir_sf_removeModuleCss'] = array('Stylesheet auslassen', 'Wenn aktiv wird das moduleigene Stylesheet ausgelassen.');
 $GLOBALS['TL_LANG']['tl_module']['pdir_sf_cacheTime'] = array('Cache Zeit', 'Hier kann die Cache Zeit in Minuten angegeben werden.');
 $GLOBALS['TL_LANG']['tl_module']['pdir_sf_enableDebugMode'] = array('Debug', 'Debug Modus aktivieren, es werden alle verfügbaren Feldschlüssel ausgegeben.');
+
+$GLOBALS['TL_LANG']['tl_module']['pdir_sf_enableMasonry'] = array('Masonry aktivieren', 'Wenn aktiv, dann werden die Elemente, ähnlich wie Steine in einer Mauer, vertikal optimal angeordnet, sodass keine bis wenig Lücken entstehen.');
+$GLOBALS['TL_LANG']['tl_module']['pdir_sf_masonryWidth'] = array('Spaltenbreite', 'Geben Sie eine Spaltenbreite (nur feste Angaben ohne px oder %) für die Elemente an. Wird keine oder 0 angegeben, kann die Breite auch über das CSS gesetzt werden.');

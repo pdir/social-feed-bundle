@@ -66,6 +66,7 @@ class ListingElement extends \ContentElement
         {
             $GLOBALS['TL_BODY'][] = '<script src="assets/moment/min/moment.min.js"></script>';
             $GLOBALS['TL_BODY'][] = '<script src="assets/moment/locale/de.js"></script>';
+            if($this->pdir_sf_enableMasonry) $GLOBALS['TL_BODY'][] = '<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>';
             $combiner = new \Combiner();
             $combiner->add('/vendor/pdir/codebird-js/codebird.js');
             $combiner->add('/vendor/pdir/do-t/doT.min.js');
@@ -89,6 +90,8 @@ class ListingElement extends \ContentElement
         $this->Template->dateLocale = $this->pdir_sf_date_locale ? $this->pdir_sf_date_locale : 'de';
         $this->Template->hideFilters = $this->pdir_sf_hideFilters ? $this->pdir_sf_hideFilters : false;
         $this->Template->cacheTime = $this->pdir_sf_cacheTime ? $this->pdir_sf_cacheTime : 0;
+        $this->Template->masonryWidth = $this->pdir_sf_masonryWidth;
+        $this->Template->enableMasonry = $this->pdir_sf_enableMasonry;
 
 		// Shuffle
         $this->Template->listShuffle = ($this->pdir_sf_list_shuffle) ? 'true' : 'false';

@@ -13,7 +13,7 @@
  * Add palette to tl_module
  */
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['socialfeed'] = '{title_legend},name,headline,type;{pdir_sf_settings_legend},pdir_sf_listTemplate,pdir_sf_itemTemplate,pdir_sf_text_length,pdir_sf_update_period,pdir_sf_show_media,pdir_sf_media_min_width,pdir_sf_date_format,pdir_sf_date_locale;{pdir_sf_facebook_settings},pdir_sf_facebook_status,pdir_sf_facebook_accounts,pdir_sf_facebook_token,pdir_sf_facebook_limit;{pdir_sf_google_plus_settings},pdir_sf_google_plus_status,pdir_sf_google_plus_accounts,pdir_sf_google_plus_token,pdir_sf_google_plus_limit;{pdir_sf_filters_legend},pdir_sf_hideFilters,pdir_sf_list_shuffle;{pdir_sf_template_legend},pdir_sf_removeModuleCss,pdir_sf_removeModuleJs;{pdir_sf_debug_legend},pdir_sf_cacheTime,pdir_sf_enableDebugMode;{expert_legend:hide},cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['socialfeed'] = '{title_legend},name,headline,type;{pdir_sf_settings_legend},pdir_sf_listTemplate,pdir_sf_itemTemplate,pdir_sf_text_length,pdir_sf_update_period,pdir_sf_show_media,pdir_sf_media_min_width,pdir_sf_date_format,pdir_sf_date_locale;{pdir_sf_facebook_settings},pdir_sf_facebook_status,pdir_sf_facebook_accounts,pdir_sf_facebook_token,pdir_sf_facebook_limit;{pdir_sf_google_plus_settings},pdir_sf_google_plus_status,pdir_sf_google_plus_accounts,pdir_sf_google_plus_token,pdir_sf_google_plus_limit;{pdir_sf_filters_legend},pdir_sf_hideFilters,pdir_sf_list_shuffle;{pdir_sf_template_legend},pdir_sf_removeModuleCss,pdir_sf_removeModuleJs;{pdir_sf_debug_legend},pdir_sf_cacheTime,pdir_sf_enableDebugMode;{pdir_sf_masonry_legend},pdir_sf_enableMasonry,pdir_sf_masonryWidth;{expert_legend:hide},cssID,space';
 
 /**
  * Add fields to tl_module
@@ -288,6 +288,29 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_enableDebugMode'] = array(
 		'tl_class' => 'w50 m12',
 	),
 	'sql' => "char(1) NOT NULL default ''",
+);
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_enableMasonry'] = array
+(
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_enableMasonry'],
+    'exclude' => true,
+    'inputType' => 'checkbox',
+    'eval' => array(
+        'submitOnChange' => true,
+        'tl_class' => 'w50 m12',
+    ),
+    'sql' => "char(1) NOT NULL default ''",
+);
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_masonryWidth'] = array(
+    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_masonryWidth'],
+    'exclude' => true,
+    'inputType' => 'text',
+    'eval' => array(
+        'submitOnChange' => true,
+        'tl_class' => 'w50',
+    ),
+    'sql' => "int(10) unsigned NOT NULL default '0'",
 );
 
 

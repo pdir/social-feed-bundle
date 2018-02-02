@@ -7,7 +7,8 @@
 
 <div class="social-feed-container"></div>
 
-<?php if($this->fbStatus) {
+<?php
+if($this->fbStatus) {
     $fbStatus = "
     facebook:{
         accounts: ".$this->fbAccounts.",
@@ -43,6 +44,22 @@
     " ;
 ?>
 
+<?php
+if($this->enableMasonry) {
+    if($this->masonryWidth > 0) {
+        $masonryWidth = ',columnWidth: '.$this->masonryWidth;
+    }
+    $masonry = "
+        setTimeout(function() {
+            $('.social-feed-container').masonry({
+                itemSelector: '.social-feed-element'
+                ".$masonryWidth."
+            });
+        }, 3000)
+    ";
+}
+?>
+
 
 <?php $GLOBALS['TL_BODY'][] = "
 <script>
@@ -56,6 +73,8 @@ $(document).ready(function() {
     $('.social-feed-container').socialfeed({
         " . $fbStatus . $gpStatus . $generalSettings . "
     });
+
+    ".$masonry."
 });
 </script>"; ?>
 
