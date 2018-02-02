@@ -109,11 +109,8 @@ class ListingElement extends \ContentElement
         $this->Template->gpLimit = $this->pdir_sf_google_plus_limit;
 
         // set item template
-        if($this->pdir_sf_itemTemplate == "") {
-            $itemTpl = 'share/' . $this->strItemTemplate . '.html5';
-        } else {
-            $itemTpl = 'templates/' . $this->pdir_sf_itemTemplate . '.html5';
-        }
+        $itemTpl = 'share/' . $this->strItemTemplate . '.html5';
+
         $this->Template->itemTemplate = $itemTpl;
 
         // Debug mode

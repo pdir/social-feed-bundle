@@ -27,6 +27,18 @@ if($this->fbStatus) {
 } ?>
 
 <?php
+if($this->enableMasonry) {
+    $masonry = "
+        setTimeout(function() {
+            $('.social-feed-container').masonry({
+                itemSelector: '.social-feed-element'
+            });
+        }, 3000)
+    ";
+}
+?>
+
+<?php
     $generalSettings = "
     length:".$this->textLength.",
     media_min_width: ".$this->mediaMinWidth.",
@@ -35,29 +47,15 @@ if($this->fbStatus) {
     update_period: ".$this->updatePeriod.",
     date_format: '".$this->dateFormat."',
     date_locale: '".$this->dateLocale."',
-    moderation: function(content) {
+    // Function: if returns false, template will have class hidden
+    /*moderation: function(content) {
         return  (content.text) ? content.text.indexOf('fuck') == -1 : true;
-    },
-    callback: function() {
-        console.log('All posts collected!');
-    }
+    },*/
+    // Function: This is a callback function which is evoked when all the posts are collected and displayed
+    /*callback: function() {
+       console.log('All posts collected!');
+    }*/
     " ;
-?>
-
-<?php
-if($this->enableMasonry) {
-    if($this->masonryWidth > 0) {
-        $masonryWidth = ',columnWidth: '.$this->masonryWidth;
-    }
-    $masonry = "
-        setTimeout(function() {
-            $('.social-feed-container').masonry({
-                itemSelector: '.social-feed-element'
-                ".$masonryWidth."
-            });
-        }, 3000)
-    ";
-}
 ?>
 
 
@@ -73,7 +71,6 @@ $(document).ready(function() {
     $('.social-feed-container').socialfeed({
         " . $fbStatus . $gpStatus . $generalSettings . "
     });
-
     ".$masonry."
 });
 </script>"; ?>
