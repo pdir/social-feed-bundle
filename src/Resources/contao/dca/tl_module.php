@@ -320,17 +320,23 @@ class pdir_sf_module extends Backend
     {
         // Copy item template to files folder
         $strItemFilename = 'ce_socialfeed_item';
-        if($dc->activeRecord->pdir_sf_itemTemplate == '')
+        if($strValue == '')
         {
             $strItemTemplatePath = '/vendor/pdir/social-feed-bundle/src/Resources/contao/templates/elements/' . $strItemFilename . '.html5';
         }
         else
         {
             // copy from custom
-            $strPath = $this->getTemplate($dc->activeRecord->pdir_sf_itemTemplate);
+            //echo "<br>strValue: " . $strValue;
+            $strPath = \Controller::getTemplate($strValue);
+            global $objPage;
+            //echo "<pre>";print_r($objPage);
+            //echo "<pre>templateGroup: " . $objPage->templateGroup;
+            //echo "<br>strPAth: " . $strPath;
             $arrPath = explode("templates", $strPath);
             $strItemTemplatePath = 'templates' . $arrPath[1];
-            $strItemFilename = $dc->activeRecord->pdir_sf_itemTemplate;
+            $strItemFilename = $strValue;
+            //echo "<br>strItemTemplatePath:" . $strItemTemplatePath;
         }
 
         $objFile = new \File($strItemTemplatePath, true);
