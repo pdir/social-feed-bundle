@@ -66,11 +66,11 @@ class ListingElement extends \ContentElement
         {
             $GLOBALS['TL_BODY'][] = '<script src="assets/moment/min/moment.min.js"></script>';
             $GLOBALS['TL_BODY'][] = '<script src="assets/moment/locale/de.js"></script>';
-            if($this->pdir_sf_enableMasonry) $GLOBALS['TL_BODY'][] = '<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>';
             $combiner = new \Combiner();
             $combiner->add('/vendor/pdir/codebird-js/codebird.js');
             $combiner->add('/vendor/pdir/do-t/doT.min.js');
             $combiner->add('/vendor/pdir/social-feed/js/jquery.socialfeed.js');
+            if($this->pdir_sf_enableMasonry) $combiner->add('/vendor/pdir/social-feed/js/masonry.pkgd.min.js');
             $GLOBALS['TL_BODY'][] = '<script src="'.$combiner->getCombinedFile().'"></script>';
         }
         if(!$this->pdir_md_removeModuleCss)
@@ -78,7 +78,7 @@ class ListingElement extends \ContentElement
             $combiner = new \Combiner();
             $combiner->add('/vendor/pdir/social-feed/css/jquery.socialfeed.css');
             $GLOBALS['TL_CSS'][] = $combiner->getCombinedFile();
-            $GLOBALS['TL_CSS'][] = '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css';
+            $GLOBALS['TL_CSS'][] = '/vendor/pdir/social-feed/font-awesome/css/font-awesome.min.css';
         }
 
         // Parameters
