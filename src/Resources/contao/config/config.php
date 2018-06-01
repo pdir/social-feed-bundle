@@ -1,18 +1,6 @@
 <?php
 
-/**
- * Contao Open Source CMS
- *
- * Copyright (c) 2017 pdir / digital agentur
- * @package social-feed-bundle
- * @author Mathias Arzberger <develop@pdir.de>
- * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
- */
-
-/**
- * Add content element
- */
-$GLOBALS['TL_CTE']['includes']['socialfeed'] = 'Pdir\\SocialFeedBundle\\ListingElement';
+use Pdir\SocialFeedBundle\Module\ModuleSocialFeedNews;
 
 /**
  * Add back end modules
@@ -24,6 +12,10 @@ if (!is_array($GLOBALS['BE_MOD']['pdir']))
 
 $assetsDir = 'bundles/pdirsocialfeed';
 
+$GLOBALS['BE_MOD']['pdir']['socialFeed'] = [
+    'tables' => ['tl_social_feed']
+];
+
 array_insert($GLOBALS['BE_MOD']['pdir'], 0, array
 (
     'socialFeedSetup' => array
@@ -33,15 +25,21 @@ array_insert($GLOBALS['BE_MOD']['pdir'], 0, array
         //'javascript'        =>  $assetsDir . '/js/backend.min.js',
         'stylesheet'		=>  $assetsDir . '/css/backend.css'
     ),
+    'socialFeed' => array
+    (
+        'callback'          => 'Pdir\\SocialFeedBundle\\SocialFeed'
+    ),
 ));
 
+$GLOBALS['TL_MODELS']['tl_social_feed'] = 'Pdir\SocialFeedBundle\Model\SocialFeedModel';
+$GLOBALS['FE_MOD']['news']['newslist'] = ModuleSocialFeedNews::class;
+
+//$GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\NewsListener\CronListener', 'getFbPosts');
+
 /**
- * Front end modules
+ * CSS for Frontend
  */
-array_insert($GLOBALS['FE_MOD'], 4, array
-(
-    'pdir' => array
-    (
-        'socialfeed'   => 'Pdir\\SocialFeedBundle\\ListingElement'
-    )
-));
+if (TL_MODE == 'FE')
+{
+    $GLOBALS['TL_CSS'][] =  'bundles/pdirsocialfeed/css/social_feed.scss||static';
+}

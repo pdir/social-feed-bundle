@@ -1,0 +1,43 @@
+.social_feed_element {
+    margin: 0 0 30px;
+    overflow: visible;
+    padding: 0 4px;
+
+    .inner {
+        background: #f2f2f2;
+        padding: 15px;
+        position: relative;
+        box-shadow: -1px 1px 2px 0 rgba(0, 0, 0, 0.25);
+        -webkit-box-shadow: -1px 1px 2px 0 rgba(0, 0, 0, 0.25);
+    }
+
+    .ce_text {
+        padding: 15px 0;
+    }
+
+    .title {
+
+        img {
+            position: absolute;
+            top: 15px;
+            border-radius: 100%;
+        }
+
+        div {
+            padding-left: 70px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+    }
+
+    .info {
+        margin: 0;
+        padding: 5px 0 15px 70px;
+        color: grey;
+    }
+
+    a {
+        color: #333;
+        text-decoration: none;
+    }
+}
