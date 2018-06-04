@@ -4,7 +4,7 @@ namespace Pdir\SocialFeedBundle\Module;
 
 use Contao\ModuleNewsList;
 
-class ModuleSocialFeedNews extends ModuleNewsList
+class ModuleCustomNewslist extends ModuleNewsList
 {
     /**
      * Template
@@ -16,6 +16,6 @@ class ModuleSocialFeedNews extends ModuleNewsList
     {
         parent::compile();
 
-        $this->Template->textLength = $this->pdir_sf_text_length;
+        $this->Template->sfMasonry = $this->pdir_sf_enableMasonry;
     }
 }

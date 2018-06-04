@@ -8,13 +8,17 @@ class CronListener extends \System
 {
     public function getFbPosts()
     {
-        if (TL_MODE != 'FE') {
-            //$this->log('Social Feed: Cache Sources Cron ');
+        $objSocialFeed = SocialFeedModel::findAll();
 
-            $objSocialFeed = SocialFeedModel::findAll();
+        foreach($objSocialFeed as $obj) {
+            // Get Facebook Feed
+            $cron = $obj->pdir_sf_fb_news_cronjob;
+            $lastImport = $obj->pdir_sf_fb_news_last_import_date;
+            $tstamp = time();
+            $interval = $tstamp - $lastImport;
+            if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == "" && $cron != "no_cronjob") ) {
+                echo "Cron ausgeführt<br>";
 
-            foreach($objSocialFeed as $obj) {
-                // Get Facebook Feed
                 $appId = $obj->pdir_sf_fb_app_id;
                 $appSecret = $obj->pdir_sf_fb_app_secret;
                 $accessToken = $appId . "|" . $appSecret;
@@ -49,12 +53,15 @@ class CronListener extends \System
 
                 // Write in Database
                 foreach($response->getDecodedBody()['data'] as $post) {
+                    $resMedia = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
+                    //echo "<pre>"; print_r($resMedia); echo "</pre>";
+
                     $objNews = new \NewsModel();
                     if (null !== $objNews->findBy("pdir_sf_fb_id", $post['id'])) {
                         continue;
                     }
 
-                    $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
+                    $imageSrc = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
 
                     // set variables
                     if(strpos($post['message'],"\n")) {
@@ -78,13 +85,15 @@ class CronListener extends \System
 
                     // set data
                     $objNews->pid = $obj->pdir_sf_fb_news_archive;
-                    $objNews->singleSRC = $objFile->uuid;
+                    if($imageSrc != "") {
+                        $objNews->singleSRC = $objFile->uuid;
+                        $objNews->addImage = 1;
+                    }
                     $objNews->tstamp = time();
                     $objNews->headline = $title;
                     $objNews->teaser = $message;
                     $objNews->date = $timestamp;
                     $objNews->time = $timestamp;
-                    $objNews->addImage = 1;
                     $objNews->published = 1;
                     $objNews->pdir_sf_fb_id = $post['id'];
                     $objNews->pdir_sf_fb_account = $post['from']['name'];
@@ -94,14 +103,17 @@ class CronListener extends \System
                     $objNews->save();
                 }
 
+                \System::log('Social Feed: Import Account '.$account, __METHOD__, TL_GENERAL);
+                // set timestamp
+                $this->import('Database');
+                $this->Database->prepare("UPDATE tl_social_feed SET pdir_sf_fb_news_last_import_date = ".time().", pdir_sf_fb_news_last_import_time = ".time()." WHERE pdir_sf_fb_account=?")->execute($account);
             }
-
-            $this->import('Automator');
-            $this->Automator->generateSymlinks();
-
-            //echo "<pre>"; print_r($objSocialFeed); echo "</pre>";
-
         }
+
+        $this->import('Automator');
+        $this->Automator->generateSymlinks();
+
+        //echo "<pre>"; print_r($objSocialFeed); echo "</pre>";
     }
 
     private function getFbFeed($fb, $accessToken, $account) {
@@ -122,20 +134,23 @@ class CronListener extends \System
     private function getFbAttachments($fb,$id,$accesstoken, $imgPath) {
         try {
             $resMedia = $fb->get('/'. $id .'/attachments', $accesstoken);
-            //echo "<pre>"; print_r($resMedia); echo "</pre>";
+            $imageSrc = "";
 
-            if($resMedia->getDecodedBody()['data']['0']['media']) {
-                $arrMedia = $resMedia->getDecodedBody()['data']['0'];
-            } else if($resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0']['media']) {
+            if($resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0']['media']) {
                 $arrMedia = $resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0'];
+            } else if($resMedia->getDecodedBody()['data']['0']['media']) {
+                $arrMedia = $resMedia->getDecodedBody()['data']['0'];
             }
-            $imageSrc = $arrMedia['media']['image']['src'];
+            if(is_array($arrMedia)) {
+                $imageSrc = $arrMedia['media']['image']['src'];
 
-            $strImage = file_get_contents($imageSrc);
-            $file = new \File($imgPath . $id . '.jpg');
-            $file->write($strImage);
-            $file->close();
+                $strImage = file_get_contents($imageSrc);
+                $file = new \File($imgPath . $id . '.jpg');
+                $file->write($strImage);
+                $file->close();
+            }
 
+            return $imageSrc;
         } catch(Facebook\Exceptions\FacebookResponseException $e) {
             echo 'Graph returned an error: ' . $e->getMessage();
             exit;

@@ -16,6 +16,5 @@
 $GLOBALS['TL_LANG']['MOD']['pdir'][0] = "pdir Apps";
 $GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][0]   = "Social Feed Setup";
 $GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][1]   = "Verwalten Sie hier das Social Feed Bundle";
-$GLOBALS['TL_LANG']['CTE']['socialfeed'][0]   = "SocialFeed Listansicht";
-$GLOBALS['TL_LANG']['CTE']['socialfeed'][1]   = "Inhaltelement um die SocialFeed Listansicht auf der gewünschten Seite zu platzieren.";
-$GLOBALS['TL_LANG']['FMD']['socialfeed'][0] = "Social Feed Listenansicht";
+$GLOBALS['TL_LANG']['MOD']['socialFeed'][0]   = "Social Feed Accounts";
+$GLOBALS['TL_LANG']['MOD']['socialFeed'][1]   = "Konfigurieren Sie hier das Social Feed Bundle.";

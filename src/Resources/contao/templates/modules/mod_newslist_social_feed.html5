@@ -1,0 +1,29 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+<?php if (empty($this->articles)): ?>
+    <p class="empty"><?= $this->empty ?></p>
+<?php else: ?>
+    <div class="social_feed_container">
+        <?= implode('', $this->articles) ?>
+    </div>
+    <?= $this->pagination ?>
+<?php endif; ?>
+
+<?php $this->endblock(); ?>
+
+<?php if($this->sfMasonry): ?>
+    <?php $GLOBALS['TL_BODY'][] = "<script src='bundles/pdirsocialfeed/js/masonry.pkgd.min.js'></script>"; ?>
+    <?php $GLOBALS['TL_BODY'][] = "
+        <script>
+        $(document).ready(function() {
+            setTimeout(function() {
+                $('.social_feed_container').masonry({
+                    itemSelector: '.social_feed_element'
+                });
+            }, 300)
+        });
+        </script>
+    "; ?>
+<?php endif; ?>

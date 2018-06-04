@@ -1,6 +1,6 @@
 <?php
 
-use Pdir\SocialFeedBundle\Module\ModuleSocialFeedNews;
+use Pdir\SocialFeedBundle\Module\ModuleCustomNewslist;
 
 /**
  * Add back end modules
@@ -9,6 +9,8 @@ if (!is_array($GLOBALS['BE_MOD']['pdir']))
 {
     array_insert($GLOBALS['BE_MOD'], 1, array('pdir' => array()));
 }
+
+$GLOBALS['TL_HOOKS']['parseArticles'][] = array('Pdir\SocialFeedBundle\SocialFeed\SocialFeedNewsClass', 'parseNews');
 
 $assetsDir = 'bundles/pdirsocialfeed';
 
@@ -32,9 +34,10 @@ array_insert($GLOBALS['BE_MOD']['pdir'], 0, array
 ));
 
 $GLOBALS['TL_MODELS']['tl_social_feed'] = 'Pdir\SocialFeedBundle\Model\SocialFeedModel';
-$GLOBALS['FE_MOD']['news']['newslist'] = ModuleSocialFeedNews::class;
 
-//$GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\NewsListener\CronListener', 'getFbPosts');
+$GLOBALS['FE_MOD']['news']['newslist'] = ModuleCustomNewslist::class;
+
+$GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\NewsListener\CronListener', 'getFbPosts');
 
 /**
  * CSS for Frontend

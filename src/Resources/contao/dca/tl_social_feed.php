@@ -4,9 +4,9 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     'config' => [
         'dataContainer' => 'Table',
         'enableVersioning' => true,
-        'onsubmit_callback' => [
+        /*'onsubmit_callback' => [
             ['Pdir\SocialFeedBundle\NewsListener\CronListener', 'getFbPosts'],
-        ],
+        ],*/
         'sql' => [
             'keys' => [
                 'id' => 'primary',
@@ -60,7 +60,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     ],
 
     'palettes' => [
-        'default' => '{list_legend},pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_news_archive',
+        'default' => '{pdir_sf_fb_legend},pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
     ],
 
     'fields' => [
@@ -90,6 +90,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
+                'tl_class' => 'w50'
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -101,6 +102,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
+                'tl_class' => 'w50'
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -109,8 +111,43 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_archive'],
             'exclude' => true,
             'inputType' => 'select',
+            'eval' => [
+                'tl_class' => 'w50'
+            ],
             'foreignKey' => 'tl_news_archive.title',
             'sql' => "varchar(64) NOT NULL default ''",
+        ],
+
+        'pdir_sf_fb_news_cronjob' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_cronjob'],
+            'exclude' => true,
+            'inputType' => 'select',
+            'eval' => [
+                'tl_class' => 'w50'
+            ],
+            'options' => array('no_cronjob' => $GLOBALS['TL_LANG']['tl_social_feed']['no_cronjob'],
+                               '60'   => $GLOBALS['TL_LANG']['tl_social_feed']['minutely'],
+                               '3600'     => $GLOBALS['TL_LANG']['tl_social_feed']['hourly'],
+                               '86400'      => $GLOBALS['TL_LANG']['tl_social_feed']['daily'],
+                               '604800.02'     => $GLOBALS['TL_LANG']['tl_social_feed']['weekly'],
+                               '2629800'    => $GLOBALS['TL_LANG']['tl_social_feed']['monthly']),
+            'sql' => "varchar(64) NOT NULL default ''",
+        ],
+
+        'pdir_sf_fb_news_last_import_date' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'sql' => "varchar(255) NOT NULL default ''",
+            'eval' => array('rgxp' => 'date', 'tl_class' => 'w50', 'disabled' => true)
+        ],
+
+        'pdir_sf_fb_news_last_import_time' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_time'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'sql' => "varchar(255) NOT NULL default ''",
+            'eval' => array('rgxp' => 'time', 'tl_class' => 'w50', 'disabled' => true)
         ],
     ],
 ];

@@ -1,10 +1,10 @@
 <div class="social_feed_element arc_<?= $this->archive->id ?> block<?= $this->class ?>" itemscope itemtype="http://schema.org/Article">
     <div class="inner">
 
-        <a href="<?= $this->pdir_sf_fb_link ?>" target="_blank">
+        <a href="<?= $this->sfFbLink ?>" target="_blank">
             <div class="title">
-                {{picture::<?php echo \StringUtil::binToUuid($this->pdir_sf_fb_account_picture); ?>}}
-                <div><?= $this->pdir_sf_fb_account ?></div>
+                {{picture::<?php echo \StringUtil::binToUuid($this->sfFbAccountPicture); ?>}}
+                <div><?= $this->sfFbAccount ?></div>
             </div>
 
             <?php if ($this->hasMetaFields): ?>
@@ -16,11 +16,7 @@
             <?php endif; ?>
 
             <div class="ce_text block" itemprop="description">
-                <?php if($this->textLength > 0): ?>
-                    <?= substr($this->teaser ,0,$this->textLength) ?><?php if(substr($this->teaser ,$this->textLength,1) != "") { echo "..."; } ?>
-                <?php else: ?>
-                    <?= $this->teaser ?>
-                <?php endif; ?>
+                <?= $this->teaser ?>
             </div>
         </a>
 
