@@ -16,8 +16,7 @@
             </div>
             <div class="left">
                 <h2>Willkommen beim SocialFeedBundle für Contao</h2>
-                <p>Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an. Einstellungen
-                    können direkt im Content-Element vorgenommen werden.</p>
+                <p>Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an. Zur Zeit wird nur Facebook unterstützt, weitere Kanäle werden in Zukunft folgen.</p>
                 <p>Ihr Team der pdir / digital agentur</p>
             </div>
             <div class="clr"></div>
@@ -34,15 +33,5 @@
             </div>
             <div class="clr"></div>
         </div>
-        <hr>
-        <div class="feed">
-            <h2>DevLog</h2>
-            <div id="socialFeedDevLog" class="devlog"></div>
-            <p><a href="https://pdir.de/devlog.html" target="_blank"> [ Alle lesen ] </a></div></p>
-    </div>
-    <div class="tools">
-        <p><small>Diese Erweiterung verwendet das <a href="https://github.com/pavelk2/social-feed">social-feed Plugin</a>
-                für jQuery von <a href="https://github.com/pavelk2">pavelk2</a></small></p>
-    </div>
 </div>
 </div>
