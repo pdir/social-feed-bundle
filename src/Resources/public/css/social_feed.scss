@@ -1,43 +1,118 @@
 .social_feed_element {
-    margin: 0 0 30px;
     overflow: visible;
-    padding: 0 4px;
+    padding: 0;
+    width: 100%;
 
     .inner {
         background: #f2f2f2;
-        padding: 15px;
+        padding: 15px 20px;
+        margin: 30px 10px 10px;
         position: relative;
-        box-shadow: -1px 1px 2px 0 rgba(0, 0, 0, 0.25);
-        -webkit-box-shadow: -1px 1px 2px 0 rgba(0, 0, 0, 0.25);
+        word-break: break-word;
+        border-top: 5px solid #c1c1c1;
     }
 
     .ce_text {
         padding: 15px 0;
+        color: #333;
     }
 
-    .title {
+    .icon {
 
         img {
             position: absolute;
-            top: 15px;
+            top: -20px;
             border-radius: 100%;
-        }
-
-        div {
-            padding-left: 70px;
-            font-weight: 700;
-            font-size: 1.2rem;
         }
     }
 
     .info {
         margin: 0;
-        padding: 5px 0 15px 70px;
-        color: grey;
+        padding: 0;
+        text-align: right;
+        font-size: 14px;
+        color: #989898;
+    }
+
+    .title {
+        margin: 10px 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #333;
     }
 
     a {
         color: #333;
         text-decoration: none;
+    }
+
+    .ce_text {
+        font-size: 14px;
+    }
+}
+
+.social_feed_container {
+    width: calc(100% + 30px);
+    margin-left: -15px;
+    font-family: sans-serif;
+
+    &:not(.masonry) {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+
+        .columns2 {
+            -ms-flex: 0 0 50%;
+            flex: 0 0 50%;
+        }
+
+        .columns3 {
+            -ms-flex: 0 0 33%;
+            flex: 0 0 33%;
+        }
+
+        .columns4 {
+            -ms-flex: 0 0 25%;
+            flex: 0 0 25%;
+        }
+    }
+    &.masonry {
+        .columns2, .columns3, .columns4 {
+            float: left;
+        }
+
+        .columns2 {
+            width: 50%;
+        }
+
+        .columns3 {
+            width: 33.33%;
+        }
+
+        .columns4 {
+            width: 25%;
+        }
+    }
+}
+
+@media (max-width:767px) {
+    .social_feed_container {
+        width: 100%;
+        margin-left: 0;
+
+        &:not(.masonry) {
+            .columns2, .columns3, .columns4 {
+                -ms-flex: 0 0 100%;
+                flex: 0 0 100%;
+            }
+        }
+
+        &.masonry {
+            .columns2, .columns3, .columns4 {
+                float: none;
+                width: 100%;
+            }
+        }
     }
 }

@@ -1,17 +1,19 @@
-<div class="social_feed_element arc_<?= $this->archive->id ?> block<?= $this->class ?>" itemscope itemtype="http://schema.org/Article">
+<?php #$this->showTemplateVars(); ?>
+<div class="social_feed_element arc_<?= $this->archive->id ?> block<?= $this->class ?> <?= $this->sfElementWidth ?>" itemscope itemtype="http://schema.org/Article">
     <div class="inner">
 
         <a href="<?= $this->sfFbLink ?>" target="_blank">
-            <div class="title">
+            <div class="icon">
                 {{picture::<?php echo \StringUtil::binToUuid($this->sfFbAccountPicture); ?>}}
-                <div><?= $this->sfFbAccount ?></div>
             </div>
 
             <?php if ($this->hasMetaFields): ?>
                 <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished"><?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?></p>
             <?php endif; ?>
 
-            <?php if ($this->addImage): ?>
+            <div class="title"><?= $this->sfFbAccount ?></div>
+
+            <?php if ($this->addImage && $this->sfImages): ?>
                 <?php $this->insert('image', $this->arrData); ?>
             <?php endif; ?>
 

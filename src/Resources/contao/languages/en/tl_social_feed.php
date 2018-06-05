@@ -1,5 +1,18 @@
 <?php
 
+$GLOBALS['TL_LANG']['tl_social_feed']['edit'] = array('', 'Edit');
+$GLOBALS['TL_LANG']['tl_social_feed']['delete'] = array('', 'Delete');
+$GLOBALS['TL_LANG']['tl_social_feed']['show'] = array('', 'Show details');
+$GLOBALS['TL_LANG']['tl_social_feed']['new'] = array('Create new social feed account', '');
+
+$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_legend'] = 'Facebook Configuration';
+$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_account'] = array("Facebook Account","Please enter the facebook acount name (from the URL).");
+$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_app_id'] = array("App ID","Please enter the facebook app ID.");
+$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_app_secret'] = array("App Secret","Please enter the facebook app secret.");
+$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_archive'] = array("News archive","Please enter the news archive to which the facebook posts should be imported.");
+$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_cronjob'] = array("Execution of the cronjob","Please choose the time how often the cronjob should be called to import facebook posts.");
+$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'] = array("Last import (date)","");
+$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_time'] = array("Last import (time)","");
 $GLOBALS['TL_LANG']['tl_social_feed']['no_cronjob'] = 'no cronjob';
 $GLOBALS['TL_LANG']['tl_social_feed']['minutely'] = 'minutely';
 $GLOBALS['TL_LANG']['tl_social_feed']['hourly'] = 'hourly';
