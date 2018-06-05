@@ -17,7 +17,7 @@ Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzw
 
 Screenshot
 -----------
-
+![Social Feed Stream](https://pdir.de/pdir/screenshot_socialfeedbundle.png)
 
 System requirements
 -------------------
