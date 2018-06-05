@@ -6,8 +6,8 @@
                 <p>Das SocialFeedBundle ist gesponsert von der <a href="http://www.pdir.de/" target="_blank">pdir / digital agentur</a></p>
                 <h2>Interessante Links</h2>
                 <ul class="link-list">
-                    <li><a href="https://docs.pdir.de/" target="_blank"
-                           style="text-decoration: underline;">Dokumentation</a> (In Vorbereitung)</li>
+                    <li><a href="https://docs.pdir.de/social-feed.html" target="_blank"
+                           style="text-decoration: underline;">Dokumentation</a></li>
                     <li><a href="https://github.com/pdir/social-feed-bundle/issues" target="_blank"
                            style="text-decoration: underline;">Probleme melden</a></li>
                     <li><a href="https://github.com/pdir/social-feed-bundle/" target="_blank"
