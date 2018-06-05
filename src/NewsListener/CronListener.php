@@ -57,7 +57,7 @@ class CronListener extends \System
                     //echo "<pre>"; print_r($resMedia); echo "</pre>";
 
                     $objNews = new \NewsModel();
-                    if (null !== $objNews->findBy("pdir_sf_fb_id", $post['id'])) {
+                    if (null !== $objNews->findBy("pdir_sf_fb_id", $post['id']) && $post['from']['name'] != "") {
                         continue;
                     }
 
@@ -107,11 +107,13 @@ class CronListener extends \System
                 // set timestamp
                 $this->import('Database');
                 $this->Database->prepare("UPDATE tl_social_feed SET pdir_sf_fb_news_last_import_date = ".time().", pdir_sf_fb_news_last_import_time = ".time()." WHERE pdir_sf_fb_account=?")->execute($account);
+
+                $this->import('Automator');
+                $this->Automator->generateSymlinks();
             }
         }
 
-        $this->import('Automator');
-        $this->Automator->generateSymlinks();
+
 
         //echo "<pre>"; print_r($objSocialFeed); echo "</pre>";
     }
