@@ -14,7 +14,7 @@
  */
 
 $GLOBALS['TL_LANG']['MOD']['pdir'][0] = "pdir Apps";
-$GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][0]   = "Social Feed Setup";
+$GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][0]   = "Social Feed Info";
 $GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][1]   = "Here you can manage the social feed setup.";
 $GLOBALS['TL_LANG']['MOD']['socialFeed'][0]   = "Social Feed Accounts";
 $GLOBALS['TL_LANG']['MOD']['socialFeed'][1]   = "Here you can manage the social feed accounts.";
