@@ -57,50 +57,54 @@ class CronListener extends \System
                     //echo "<pre>"; print_r($resMedia); echo "</pre>";
 
                     $objNews = new \NewsModel();
-                    if (null !== $objNews->findBy("pdir_sf_fb_id", $post['id']) && $post['from']['name'] != "") {
+                    if (null !== $objNews->findBy("pdir_sf_fb_id", $post['id']) ) {
                         continue;
                     }
 
-                    $imageSrc = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
+                    if($post['from']['name'] != "") {
 
-                    // set variables
-                    if(strpos($post['message'],"\n")) {
-                        $title = substr($post['message'],0,strpos($post['message'],"\n"));
-                    } else if($post['message'] == "") {
-                        $title = "Kein Titel";
-                    } else {
-                        $title = substr($post['message'],0);
+                        $imageSrc = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
+
+                        // set variables
+                        if(strpos($post['message'],"\n")) {
+                            $title = substr($post['message'],0,strpos($post['message'],"\n"));
+                        } else if($post['message'] == "") {
+                            $title = "Kein Titel";
+                        } else {
+                            $title = substr($post['message'],0);
+                        }
+                        $message = str_replace("\n","<br>",$post['message']);
+                        $timestamp = strtotime($post['created_time']);
+                        $img = $imgPath . $post['id'] . ".jpg";
+                        $accountImg = $imgPath . $accountId . ".jpg";
+
+                        // add/fetch file from DBAFS
+                        $objFile = \Dbafs::addResource($img);
+                        $objFileAccount = \Dbafs::addResource($accountImg);
+
+                        // create new news
+                        $objNews = new \NewsModel();
+
+                        // set data
+                        $objNews->pid = $obj->pdir_sf_fb_news_archive;
+                        if($imageSrc != "") {
+                            $objNews->singleSRC = $objFile->uuid;
+                            $objNews->addImage = 1;
+                        }
+                        $objNews->tstamp = time();
+                        $objNews->headline = $title;
+                        $objNews->teaser = $message;
+                        $objNews->date = $timestamp;
+                        $objNews->time = $timestamp;
+                        $objNews->published = 1;
+                        $objNews->pdir_sf_fb_id = $post['id'];
+                        $objNews->pdir_sf_fb_account = $post['from']['name'];
+                        $objNews->pdir_sf_fb_account_picture = $objFileAccount->uuid;
+                        $objNews->pdir_sf_fb_link = $post['permalink_url'];
+
+                        $objNews->save();
+
                     }
-                    $message = str_replace("\n","<br>",$post['message']);
-                    $timestamp = strtotime($post['created_time']);
-                    $img = $imgPath . $post['id'] . ".jpg";
-                    $accountImg = $imgPath . $accountId . ".jpg";
-
-                    // add/fetch file from DBAFS
-                    $objFile = \Dbafs::addResource($img);
-                    $objFileAccount = \Dbafs::addResource($accountImg);
-
-                    // create new news
-                    $objNews = new \NewsModel();
-
-                    // set data
-                    $objNews->pid = $obj->pdir_sf_fb_news_archive;
-                    if($imageSrc != "") {
-                        $objNews->singleSRC = $objFile->uuid;
-                        $objNews->addImage = 1;
-                    }
-                    $objNews->tstamp = time();
-                    $objNews->headline = $title;
-                    $objNews->teaser = $message;
-                    $objNews->date = $timestamp;
-                    $objNews->time = $timestamp;
-                    $objNews->published = 1;
-                    $objNews->pdir_sf_fb_id = $post['id'];
-                    $objNews->pdir_sf_fb_account = $post['from']['name'];
-                    $objNews->pdir_sf_fb_account_picture = $objFileAccount->uuid;
-                    $objNews->pdir_sf_fb_link = $post['permalink_url'];
-
-                    $objNews->save();
                 }
 
                 \System::log('Social Feed: Import Account '.$account, __METHOD__, TL_GENERAL);
