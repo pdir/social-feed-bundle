@@ -8,7 +8,7 @@
             </div>
 
             <?php if ($this->hasMetaFields): ?>
-                <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished"><?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?></p>
+                <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished"><?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?> <i class="fa fa-facebook" aria-hidden="true"></i></p>
             <?php endif; ?>
 
             <div class="title"><?= $this->sfFbAccount ?></div>
