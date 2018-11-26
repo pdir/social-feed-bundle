@@ -60,7 +60,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     ],
 
     'palettes' => [
-        'default' => '{pdir_sf_fb_legend},pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
+        'default' => '{pdir_sf_fb_legend},pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
     ],
 
     'fields' => [
@@ -103,6 +103,18 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
                 'mandatory' => true,
                 'maxlength' => 255,
                 'tl_class' => 'w50'
+            ],
+            'sql' => "varchar(255) NOT NULL default ''",
+        ],
+
+        'pdir_sf_fb_access_token' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_access_token'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 255,
+                'tl_class' => 'clr'
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],

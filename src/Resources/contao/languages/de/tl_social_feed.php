@@ -9,6 +9,7 @@ $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_legend'] = 'Facebook-Konfigura
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_account'] = array("Facebook-Account","Geben Sie hier den Namen der Facebook-Seite an, wie er in der URL steht (z. B. meissen.online).");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_app_id'] = array("App ID","Geben Sie hier die App ID Ihrer Facebook-App an.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_app_secret'] = array("App Secret","Geben Sie hier den App Secret Ihrer Facebook-App an.");
+$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_access_token'] = array("Access Token","Geben Sie hier den Access Token ein. Eine Anleitung zur Generierung des Access Token finden Sie in der Dokumentation.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_archive'] = array("News-Archiv","Geben Sie hier das News-Archiv an, in welches die Facebook-Posts importiert werden sollen.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_cronjob'] = array("Ausführung des Cronjobes","Geben Sie hier an, wie oft der Cronjob aufgerufen werden soll, um Facebook-Posts zu importieren.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'] = array("Letzter Import (Datum) - wird automatisch ausgefüllt","Dieses Feld wird automatisch ausgefüllt und sollten Sie nicht ausfüllen.");

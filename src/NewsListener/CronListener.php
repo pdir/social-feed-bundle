@@ -21,7 +21,7 @@ class CronListener extends \System
 
                 $appId = $obj->pdir_sf_fb_app_id;
                 $appSecret = $obj->pdir_sf_fb_app_secret;
-                $accessToken = $appId . "|" . $appSecret;
+                $accessToken = $obj->pdir_sf_fb_access_token;
                 $account = $obj->pdir_sf_fb_account;
                 $fb = new \Facebook\Facebook([
                     'app_id' => $appId,
