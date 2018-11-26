@@ -26,8 +26,7 @@ System requirements
 
 Installation & Configuration
 ----------------------------
-
-To install use Contao Manager or Composer and search for "pdir/social-feed-bundle".
+* [Dokumentation](https://docs.pdir.de/social-feed.html)
 
 See this Extension in the Contao Extension-Repository
 ---------------
