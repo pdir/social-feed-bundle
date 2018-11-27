@@ -28,7 +28,12 @@ class CronListener extends \System
                     'app_secret' => $appSecret,
                     'default_graph_version' => 'v2.10',
                 ]);
-                $response = $this->getFbFeed($fb, $accessToken, $account);
+
+                if($obj->pdir_sf_fb_posts == 1) {
+                    $response = $this->getFbPostList($fb, $accessToken, $account);
+                } else {
+                    $response = $this->getFbFeed($fb, $accessToken, $account);
+                }
                 //echo "<pre>"; print_r($response); echo "</pre>";
 
                 // Create Public Image Folder
@@ -53,9 +58,6 @@ class CronListener extends \System
 
                 // Write in Database
                 foreach($response->getDecodedBody()['data'] as $post) {
-                    $resMedia = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
-                    //echo "<pre>"; print_r($resMedia); echo "</pre>";
-
                     $objNews = new \NewsModel();
                     if (null !== $objNews->findBy("pdir_sf_fb_id", $post['id']) ) {
                         continue;
@@ -75,12 +77,16 @@ class CronListener extends \System
                         }
                         $message = str_replace("\n","<br>",$post['message']);
                         $timestamp = strtotime($post['created_time']);
-                        $img = $imgPath . $post['id'] . ".jpg";
+                        if($imageSrc != "") {
+                            $img = $imgPath . $post['id'] . ".jpg";
+                        }
                         $accountImg = $imgPath . $accountId . ".jpg";
 
                         // add/fetch file from DBAFS
-                        $objFile = \Dbafs::addResource($img);
-                        $objFileAccount = \Dbafs::addResource($accountImg);
+                        if( !is_null($img) ) {
+                            $objFile = \Dbafs::addResource($img);
+                            $objFileAccount = \Dbafs::addResource($accountImg);
+                        }
 
                         // create new news
                         $objNews = new \NewsModel();
@@ -122,6 +128,21 @@ class CronListener extends \System
         //echo "<pre>"; print_r($objSocialFeed); echo "</pre>";
     }
 
+    private function getFbPostList($fb, $accessToken, $account) {
+        try {
+            $response = $fb->get(
+                $account.'/posts?access_token='.$accessToken.'&fields=id,from,created_time,message,permalink_url'
+            );
+            return $response;
+        } catch(Facebook\Exceptions\FacebookResponseException $e) {
+            echo 'Graph returned an error: ' . $e->getMessage();
+            exit;
+        } catch(Facebook\Exceptions\FacebookSDKException $e) {
+            echo 'Facebook SDK returned an error: ' . $e->getMessage();
+            exit;
+        }
+    }
+
     private function getFbFeed($fb, $accessToken, $account) {
         try {
             $response = $fb->get(
@@ -137,9 +158,9 @@ class CronListener extends \System
         }
     }
 
-    private function getFbAttachments($fb,$id,$accesstoken, $imgPath) {
+    private function getFbAttachments($fb,$id,$accessToken, $imgPath) {
         try {
-            $resMedia = $fb->get('/'. $id .'/attachments', $accesstoken);
+            $resMedia = $fb->get('/'. $id .'/attachments', $accessToken);
             $imageSrc = "";
 
             if($resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0']['media']) {
@@ -147,9 +168,9 @@ class CronListener extends \System
             } else if($resMedia->getDecodedBody()['data']['0']['media']) {
                 $arrMedia = $resMedia->getDecodedBody()['data']['0'];
             }
+
             if(is_array($arrMedia)) {
                 $imageSrc = $arrMedia['media']['image']['src'];
-
                 $strImage = file_get_contents($imageSrc);
                 $file = new \File($imgPath . $id . '.jpg');
                 $file->write($strImage);

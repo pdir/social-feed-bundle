@@ -14,6 +14,7 @@ $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_archive'] = array("News-A
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_cronjob'] = array("Ausführung des Cronjobes","Geben Sie hier an, wie oft der Cronjob aufgerufen werden soll, um Facebook-Posts zu importieren.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'] = array("Letzter Import (Datum) - wird automatisch ausgefüllt","Dieses Feld wird automatisch ausgefüllt und sollten Sie nicht ausfüllen.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_time'] = array("Letzter Import (Zeit) - wird automatisch ausgefüllt","Dieses Feld wird automatisch ausgefüllt und sollten Sie nicht ausfüllen.");
+$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_posts'] = array("Nur Posts der Seite importieren","Wenn diese Option aktiviert ist, werden nur die Posts der Seite importiert und keine Posts, die Nutzer an Ihre Pinnwand geschrieben haben.");
 $GLOBALS['TL_LANG']['tl_social_feed']['no_cronjob'] = "Kein Cronjob";
 $GLOBALS['TL_LANG']['tl_social_feed']['minutely'] = "Minütlich";
 $GLOBALS['TL_LANG']['tl_social_feed']['hourly'] = "Stündlich";

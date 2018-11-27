@@ -60,7 +60,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     ],
 
     'palettes' => [
-        'default' => '{pdir_sf_fb_legend},pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
+        'default' => '{pdir_sf_fb_legend},pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
     ],
 
     'fields' => [
@@ -128,6 +128,17 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             ],
             'foreignKey' => 'tl_news_archive.title',
             'sql' => "varchar(64) NOT NULL default ''",
+        ],
+
+        'pdir_sf_fb_posts' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_posts'],
+            'default' => 1,
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => [
+                'tl_class' => 'clr'
+            ],
+            'sql' => "char(1) NOT NULL default ''",
         ],
 
         'pdir_sf_fb_news_cronjob' => [
