@@ -1,4 +1,3 @@
-<?php #$this->showTemplateVars(); ?>
 <div class="social_feed_element arc_<?= $this->archive->id ?> block<?= $this->class ?> <?= $this->sfElementWidth ?>" itemscope itemtype="http://schema.org/Article">
     <div class="inner">
 
@@ -14,11 +13,9 @@
             <div class="title"><?= $this->sfFbAccount ?></div>
         </a>
 
-        <?php if($this->arrData['url'] == ""): ?><a href="<?= $this->url ?>" target="_blank"><?php endif; ?>
         <?php if ($this->addImage && $this->sfImages): ?>
             <?php $this->insert('image', $this->arrData); ?>
         <?php endif; ?>
-        <?php if($this->arrData['url'] == ""): ?></a><?php endif; ?>
 
         <a href="<?= $this->url ?>" target="_blank">
             <div class="ce_text block" itemprop="description">
