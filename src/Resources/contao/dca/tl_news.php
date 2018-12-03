@@ -4,24 +4,11 @@
  * Add palette to tl_module
  */
 
-$GLOBALS['TL_DCA']['tl_news']['palettes']['default'] = str_replace('stop','stop;{pdir_sf_settings_legend},pdir_sf_fb_id,pdir_sf_fb_link,pdir_sf_fb_account,pdir_sf_fb_account_picture', $GLOBALS['TL_DCA']['tl_news']['palettes']['default']);
+$GLOBALS['TL_DCA']['tl_news']['palettes']['default'] = str_replace('stop','stop;{pdir_sf_settings_legend},pdir_sf_fb_id,pdir_sf_fb_account,pdir_sf_fb_account_picture', $GLOBALS['TL_DCA']['tl_news']['palettes']['default']);
 
 $GLOBALS['TL_DCA']['tl_news']['fields']['pdir_sf_fb_id'] = array
 (
     'label' => &$GLOBALS['TL_LANG']['tl_news']['pdir_sf_fb_id'],
-    'exclude' => true,
-    'inputType' => 'text',
-    'eval' => array(
-        'mandatory'=>false,
-        'tl_class' => 'w50',
-        'decodeEntities' => true,
-    ),
-    'sql' => "varchar(128) NOT NULL default ''",
-);
-
-$GLOBALS['TL_DCA']['tl_news']['fields']['pdir_sf_fb_link'] = array
-(
-    'label' => &$GLOBALS['TL_LANG']['tl_news']['pdir_sf_fb_link'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => array(

@@ -106,7 +106,9 @@ class CronListener extends \System
                         $objNews->pdir_sf_fb_id = $post['id'];
                         $objNews->pdir_sf_fb_account = $post['from']['name'];
                         $objNews->pdir_sf_fb_account_picture = $objFileAccount->uuid;
-                        $objNews->pdir_sf_fb_link = $post['permalink_url'];
+                        $objNews->source = 'external';
+                        $objNews->url = $post['permalink_url'];
+                        $objNews->target = 1;
 
                         $objNews->save();
 
