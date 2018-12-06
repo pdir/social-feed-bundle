@@ -75,7 +75,20 @@ class CronListener extends \System
                         } else {
                             $title = substr($post['message'],0);
                         }
-                        $message = str_replace("\n","<br>",$post['message']);
+
+                        if (version_compare(VERSION, '4.5', '<')) {
+                            //reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ?
+                            $message = preg_replace('/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]' .
+                                '|[\x00-\x7F][\x80-\xBF]+' .
+                                '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*' .
+                                '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})' .
+                                '|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/S',
+                                '', $post['message']);
+                        } else {
+                            $message = $post['message'];
+                        }
+                        $message = str_replace("\n","<br>",$message);
+
                         $timestamp = strtotime($post['created_time']);
                         if($imageSrc != "") {
                             $img = $imgPath . $post['id'] . ".jpg";

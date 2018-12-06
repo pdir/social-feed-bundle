@@ -10,7 +10,11 @@ class SocialFeedNewsClass {
 
             if($objModule->pdir_sf_text_length > 0) {
                 $teaser = $arrRow['teaser'];
-                $teaser = \StringUtil::substrHtml($teaser,$objModule->pdir_sf_text_length)." ...";
+                $more = "";
+                if( strlen($teaser) > $objModule->pdir_sf_text_length) {
+                    $more = " ...";
+                }
+                $teaser = \StringUtil::substrHtml($teaser,$objModule->pdir_sf_text_length).$more;
             } else {
                 $teaser = $arrRow['teaser'];
             }
