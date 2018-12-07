@@ -3,9 +3,36 @@
 namespace Pdir\SocialFeedBundle\NewsListener;
 
 use Pdir\SocialFeedBundle\Model\SocialFeedModel as SocialFeedModel;
+use InstagramScraper\Instagram;
 
 class CronListener extends \System
 {
+    public function getInstagramPosts() {
+        echo "Instagram:<br><br>";
+
+        $instagram = new \InstagramScraper\Instagram();
+        $medias = $instagram->getMedias('philippseibt.photography', 25);
+
+        foreach($medias as $media) {
+            echo "Media info:<br>";
+            echo "Id: {$media->getId()}<br>";
+            echo "Shortcode: {$media->getShortCode()}<br>";
+            echo "Created at: {$media->getCreatedTime()}<br>";
+            echo "Caption: {$media->getCaption()}<br>";
+            echo "Number of comments: {$media->getCommentsCount()}";
+            echo "Number of likes: {$media->getLikesCount()}";
+            echo "Get link: {$media->getLink()}";
+            echo "High resolution image: {$media->getImageHighResolutionUrl()}";
+            echo "Media type (video or image): {$media->getType()}";
+            $account = $media->getOwner();
+            echo "Account info:<br>";
+            echo "Id: {$account->getId()}<br>";
+            echo "Username: {$account->getUsername()}<br>";
+            echo "Full name: {$account->getFullName()}<br>";
+            echo "Profile pic url: {$account->getProfilePicUrl()}<br>";
+        }
+    }
+
     public function getFbPosts()
     {
         $objSocialFeed = SocialFeedModel::findAll();
@@ -34,7 +61,6 @@ class CronListener extends \System
                 } else {
                     $response = $this->getFbFeed($fb, $accessToken, $account);
                 }
-                //echo "<pre>"; print_r($response); echo "</pre>";
 
                 // Create Public Image Folder
                 $imgPath = "files/social-feed/".$account."/";

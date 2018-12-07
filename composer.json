@@ -20,7 +20,8 @@
   "require": {
     "php": ">=5.4.0",
     "contao/core-bundle": "~4.3",
-    "facebook/graph-sdk": "~5.6"
+    "facebook/graph-sdk": "~5.6",
+    "raiym/instagram-php-scraper": "~0.8"
   },
   "require-dev": {
     "contao/manager-plugin": "^2.0"
