@@ -20,5 +20,6 @@ class ModuleCustomNewslist extends ModuleNewsList
             $GLOBALS['TL_CSS'][] = "bundles/pdirsocialfeed/font-awesome/css/font-awesome.min.css";
         }
         $this->Template->sfMasonry = $this->pdir_sf_enableMasonry;
+        $this->Template->sfColumns = " ".$this->pdir_sf_columns;
     }
 }

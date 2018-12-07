@@ -1,4 +1,4 @@
-<div class="social_feed_element arc_<?= $this->archive->id ?> block<?= $this->class ?> <?= $this->sfElementWidth ?>" itemscope itemtype="http://schema.org/Article">
+<div class="social_feed_element arc_<?= $this->archive->id ?> block<?= $this->class ?>" itemscope itemtype="http://schema.org/Article">
     <div class="inner">
 
         <a href="<?= $this->url ?>" target="_blank">
@@ -13,9 +13,14 @@
             <div class="title"><?= $this->sfFbAccount ?></div>
         </a>
 
-        <?php if ($this->addImage && $this->sfImages): ?>
-            <?php $this->insert('image', $this->arrData); ?>
+        <?php if ($this->addImage): ?>
+            <?php if ($this->sfImages): ?>
+                <?php $this->insert('image', $this->arrData); ?>
+            <?php else: ?>
+                <?php $this->insert('image', $this->arrData); ?>
+            <?php endif; ?>
         <?php endif; ?>
+
 
         <a href="<?= $this->url ?>" target="_blank">
             <div class="ce_text block" itemprop="description">

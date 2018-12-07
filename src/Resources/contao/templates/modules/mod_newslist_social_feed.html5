@@ -5,7 +5,7 @@
 <?php if (empty($this->articles)): ?>
     <p class="empty"><?= $this->empty ?></p>
 <?php else: ?>
-    <div class="social_feed_container<?php if($this->sfMasonry): ?> masonry<?php endif; ?>">
+    <div class="social_feed_container<?php if($this->sfMasonry): ?> masonry<?php endif; ?><?= $this->sfColumns ?>">
         <?= implode('', $this->articles) ?>
     </div>
     <?= $this->pagination ?>
