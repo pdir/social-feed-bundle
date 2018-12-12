@@ -75,6 +75,11 @@ class CronListener extends \System
                         } else {
                             $title = substr($post['message'],0);
                         }
+                        
+                        // strip title to fit varchar(255) field in tl_news
+                        if (strlen($title) > 255) {
+                            $title = substr($title, 0, 252) . '...';
+                        }
 
                         if (version_compare(VERSION, '4.5', '<')) {
                             //reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ?
