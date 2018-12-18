@@ -161,7 +161,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'],
             'exclude' => true,
             'inputType' => 'text',
-            'sql' => "varchar(255) NOT NULL default ''",
+            'sql' => "varchar(255) NOT NULL default 0",
             'eval' => array('rgxp' => 'date', 'tl_class' => 'w50')
         ],
 
@@ -169,7 +169,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_time'],
             'exclude' => true,
             'inputType' => 'text',
-            'sql' => "varchar(255) NOT NULL default ''",
+            'sql' => "varchar(255) NOT NULL default 0",
             'eval' => array('rgxp' => 'time', 'tl_class' => 'w50')
         ],
     ],
