@@ -3,6 +3,8 @@
 namespace Pdir\SocialFeedBundle\NewsListener;
 
 use Pdir\SocialFeedBundle\Model\SocialFeedModel as SocialFeedModel;
+use Contao\CoreBundle\Monolog\ContaoContext;
+use Psr\Log\LogLevel;
 
 class CronListener extends \System
 {
@@ -128,7 +130,13 @@ class CronListener extends \System
                     }
                 }
 
-                \System::log('Social Feed: Import Account '.$account, __METHOD__, TL_GENERAL);
+                $logger = static::getContainer()->get('monolog.logger.contao');
+                $logger->log(
+                    LogLevel::INFO,
+                    'Social Feed: Import Account ' . $account,
+                    array('contao' => new ContaoContext(__METHOD__, TL_CRON))
+                );
+                
                 // set timestamp
                 $this->import('Database');
                 $this->Database->prepare("UPDATE tl_social_feed SET pdir_sf_fb_news_last_import_date = ".time().", pdir_sf_fb_news_last_import_time = ".time()." WHERE pdir_sf_fb_account=?")->execute($account);
