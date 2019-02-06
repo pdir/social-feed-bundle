@@ -15,14 +15,16 @@
 
 <?php if($this->sfMasonry): ?>
     <?php $GLOBALS['TL_BODY'][] = "<script src='bundles/pdirsocialfeed/js/masonry.pkgd.min.js'></script>"; ?>
+    <?php $GLOBALS['TL_BODY'][] = "<script src='bundles/pdirsocialfeed/js/imagesloaded.pkgd.min.js'></script>"; ?>
     <?php $GLOBALS['TL_BODY'][] = "
         <script>
         jQuery(document).ready(function($) {
-            setTimeout(function() {
-                $('.social_feed_container').masonry({
-                    itemSelector: '.social_feed_element'
-                });
-            }, 300)
+            var grid = $('.social_feed_container').imagesLoaded( function() {
+              // init Masonry after all images have loaded
+              grid.masonry({
+                itemSelector:'.social_feed_element'
+              });
+	        });
         });
         </script>
     "; ?>

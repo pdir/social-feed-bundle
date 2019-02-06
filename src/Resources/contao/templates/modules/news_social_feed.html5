@@ -16,8 +16,6 @@
         <?php if ($this->addImage): ?>
             <?php if ($this->sfImages): ?>
                 <?php $this->insert('image', $this->arrData); ?>
-            <?php else: ?>
-                <?php $this->insert('image', $this->arrData); ?>
             <?php endif; ?>
         <?php endif; ?>
 
