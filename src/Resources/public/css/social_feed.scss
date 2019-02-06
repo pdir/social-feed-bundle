@@ -33,6 +33,10 @@
             top: -20px;
             border-radius: 100%;
         }
+
+      .image-wrapper:not(.loaded) {
+        height: 0 !important;
+      }
     }
 
     .info {

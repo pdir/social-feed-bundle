@@ -13,6 +13,16 @@
 
 <?php $this->endblock(); ?>
 
+<?php $lazyloadMasonry = ""; if($this->lazyload) {
+    $lazyloadMasonry = "
+     $('.social_feed_element img').on('load', function () {
+        grid.masonry({
+            itemSelector:'.social_feed_element'
+        });
+    });
+    ";
+} ?>
+
 <?php if($this->sfMasonry): ?>
     <?php $GLOBALS['TL_BODY'][] = "<script src='bundles/pdirsocialfeed/js/masonry.pkgd.min.js'></script>"; ?>
     <?php $GLOBALS['TL_BODY'][] = "<script src='bundles/pdirsocialfeed/js/imagesloaded.pkgd.min.js'></script>"; ?>
@@ -25,6 +35,8 @@
                 itemSelector:'.social_feed_element'
               });
 	        });
+
+	        ".$lazyloadMasonry."
         });
         </script>
     "; ?>
