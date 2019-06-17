@@ -4,11 +4,11 @@
  * Add palette to tl_module
  */
 
-$GLOBALS['TL_DCA']['tl_news']['palettes']['default'] = str_replace('stop','stop;{pdir_sf_settings_legend},pdir_sf_fb_id,pdir_sf_fb_account,pdir_sf_fb_account_picture', $GLOBALS['TL_DCA']['tl_news']['palettes']['default']);
+$GLOBALS['TL_DCA']['tl_news']['palettes']['default'] = str_replace('stop','stop;{pdir_sf_settings_legend},social_feed_type,social_feed_id,social_feed_account,social_feed_account_picture', $GLOBALS['TL_DCA']['tl_news']['palettes']['default']);
 
-$GLOBALS['TL_DCA']['tl_news']['fields']['pdir_sf_fb_id'] = array
+$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_id'] = array
 (
-    'label' => &$GLOBALS['TL_LANG']['tl_news']['pdir_sf_fb_id'],
+    'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_id'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => array(
@@ -19,9 +19,21 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['pdir_sf_fb_id'] = array
     'sql' => "varchar(128) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_news']['fields']['pdir_sf_fb_account'] = array
+$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_type'] = array
 (
-    'label' => &$GLOBALS['TL_LANG']['tl_news']['pdir_sf_fb_account'],
+    'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_type'],
+    'exclude'                 => true,
+    'filter'                  => true,
+    'sorting'                 => true,
+    'inputType'               => 'select',
+    'options'                 => array('Facebook','Instagram'),
+    'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+    'sql'                     => "varchar(255) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_account'] = array
+(
+    'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_account'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => array(
@@ -32,9 +44,9 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['pdir_sf_fb_account'] = array
     'sql' => "varchar(128) NOT NULL default ''",
 );
 
-$GLOBALS['TL_DCA']['tl_news']['fields']['pdir_sf_fb_account_picture'] = array
+$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_account_picture'] = array
 (
-    'label' => &$GLOBALS['TL_LANG']['tl_news']['pdir_sf_fb_account_picture'],
+    'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_account_picture'],
     'exclude' => true,
     'inputType' => 'fileTree',
     'eval' => array( 'filesOnly'=>true, 'fieldType'=>'radio', 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50 autoheight' ),

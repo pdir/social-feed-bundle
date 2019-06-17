@@ -30,107 +30,41 @@ class CronListener extends \System
                 if($lastImport == "") $lastImport = 0;
                 $interval = $tstamp - $lastImport;
 
-                if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == "" && $cron != "no_cronjob") ) {
-                    echo "Instagram Cron ausgeführt<br>";
+                $this->setLastImportDate($id = $obj->id);
 
+                if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == "" && $cron != "no_cronjob") ) {
                     $accountName = $obj->instagram_account;
                     $instagram = new \InstagramScraper\Instagram();
-                    $medias = $instagram->getMedias($accountName, 25);
+                    $medias = $instagram->getMedias($accountName, $obj->number_posts);
 
-                    foreach($medias as $media) {
-                        $objNews = new \NewsModel();
-                        if (null !== $objNews->findBy("pdir_sf_fb_id", $media->getId()) ) {
-                            continue;
+                    if(is_array($medias)) {
+                        foreach ($medias as $media) {
+                            $objNews = new \NewsModel();
+                            echo "ID: ".$media->getId();
+                            if (null !== $objNews->findBy("social_feed_id", $media->getId())) {
+                                continue;
+                            }
+
+                            $imgPath = $this->createImageFolder($accountName);
+                            $account = $instagram->getAccount($accountName);
+
+                            // save account picture
+                            $accountPicture = $imgPath . $account->getId() . '.jpg';
+                            $this->saveAccountPicture($accountPicture, $account);
+
+                            // save pictures
+                            $picturePath = $imgPath . $media->getId() . '.jpg';
+                            $this->savePostPictures($picturePath, $media);
+
+                            // Write in Database
+                            $message = $this->getPostMessage($messageText = $media->getCaption());
+
+                            // add/fetch file from DBAFS
+                            $objFile = \Dbafs::addResource($imgPath . $media->getId() . '.jpg');
+                            $this->saveInstagramNews($objNews, $obj, $objFile, $message, $media, $account, $accountPicture);
                         }
-
-                        /*echo "Media info:<br>";
-                        echo "Id: {$media->getId()}<br>";
-                        echo "Shortcode: {$media->getShortCode()}<br>";
-                        echo "Created at: {$media->getCreatedTime()}<br>";
-                        echo "Caption: {$media->getCaption()}<br>";
-                        echo "Number of comments: {$media->getCommentsCount()}";
-                        echo "Number of likes: {$media->getLikesCount()}";
-                        echo "Get link: {$media->getLink()}";
-                        echo "High resolution image: {$media->getImageHighResolutionUrl()}";
-                        echo "Media type (video or image): {$media->getType()}";*/
-
-                        $imgPath = $this->createImageFolder($accountName);
-
-                        $account = $instagram->getAccount($accountName);
-                        // Available fields
-                        /*echo "Account info:\n";
-                        echo "Id: {$account->getId()}\n";
-                        echo "Username: {$account->getUsername()}\n";
-                        echo "Full name: {$account->getFullName()}\n";
-                        echo "Biography: {$account->getBiography()}\n";
-                        echo "Profile picture url: {$account->getProfilePicUrl()}\n";
-                        echo "External link: {$account->getExternalUrl()}\n";
-                        echo "Number of published posts: {$account->getMediaCount()}\n";
-                        echo "Number of followers: {$account->getFollowedByCount()}\n";
-                        echo "Number of follows: {$account->getFollowsCount()}\n";
-                        echo "Is private: {$account->isPrivate()}\n";
-                        echo "Is verified: {$account->isVerified()}\n";*/
-
-                        // save account picture
-                        if( !file_exists($imgPath . $account->getId() . '.jpg') ) {
-                            $strImage = file_get_contents($account->getProfilePicUrl());
-                            $file = new \File($imgPath . $account->getId() . '.jpg');
-                            $file->write($strImage);
-                            $file->close();
-                        }
-
-                        // save pictures
-                        if( !file_exists($imgPath . $media->getId() . '.jpg') ) {
-                            $strImage = file_get_contents($media->getImageHighResolutionUrl());
-                            $file = new \File($imgPath . $media->getId() . '.jpg');
-                            $file->write($strImage);
-                            $file->close();
-                        }
-
-                        // Write in Database
-                        if (version_compare(VERSION, '4.5', '<')) {
-                            //reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ?
-                            $message = preg_replace('/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]' .
-                                '|[\x00-\x7F][\x80-\xBF]+' .
-                                '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*' .
-                                '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})' .
-                                '|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/S',
-                                '', $media->getCaption());
-                        } else {
-                            $message = $media->getCaption();
-                        }
-
-                        // add/fetch file from DBAFS
-                        $objFile = \Dbafs::addResource($imgPath . $media->getId() . '.jpg');
-
-                        // create new news
-                        $objNews->pid = $obj->pdir_sf_fb_news_archive;
-
-                        $objNews->singleSRC = $objFile->uuid;
-                        $objNews->addImage = 1;
-
-                        $objNews->tstamp = time();
-
-                        if( strlen($message ) > 50 ) $more = " ...";
-                        else $more = "";
-                        $objNews->headline = substr($message,0,50).$more;
-
-                        $objNews->teaser = $message;
-                        $objNews->date = $media->getCreatedTime();
-                        $objNews->time = $media->getCreatedTime();
-                        $objNews->published = 1;
-                        $objNews->pdir_sf_fb_id = $media->getId();
-                        $objNews->pdir_sf_fb_account = $account->getFullName();
-                        $objNews->pdir_sf_fb_account_picture = "";
-                        $objNews->source = 'external';
-                        $objNews->url = $media->getLink();
-                        $objNews->target = 1;
-                        $objNews->save();
                     }
                     \System::log('Social Feed: Instagram Import Account '.$accountName, __METHOD__, TL_GENERAL);
-                    // set timestamp
-                    $this->import('Database');
-                    $this->Database->prepare("UPDATE tl_social_feed SET pdir_sf_fb_news_last_import_date = ".time().", pdir_sf_fb_news_last_import_time = ".time()." WHERE instagram_account=?")->execute($accountName);
                     $this->import('Automator');
                     $this->Automator->generateSymlinks();
                 }
@@ -149,8 +83,10 @@ class CronListener extends \System
                 $tstamp = time();
                 if($lastImport == "") $lastImport = 0;
                 $interval = $tstamp - $lastImport;
+
+                $this->setLastImportDate($id = $obj->id);
+
                 if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == "" && $cron != "no_cronjob") ) {
-                    echo "Cron ausgeführt<br>";
                     $appId = $obj->pdir_sf_fb_app_id;
                     $appSecret = $obj->pdir_sf_fb_app_secret;
                     $accessToken = $obj->pdir_sf_fb_access_token;
@@ -179,7 +115,7 @@ class CronListener extends \System
                     // Write in Database
                     foreach($response->getDecodedBody()['data'] as $post) {
                         $objNews = new \NewsModel();
-                        if (null !== $objNews->findBy("pdir_sf_fb_id", $post['id']) ) {
+                        if (null !== $objNews->findBy("social_feed_id", $post['id']) ) {
                             continue;
                         }
                         if($post['from']['name'] != "") {
@@ -192,17 +128,9 @@ class CronListener extends \System
                             } else {
                                 $title = substr($post['message'],0);
                             }
-                            if (version_compare(VERSION, '4.5', '<')) {
-                                //reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ?
-                                $message = preg_replace('/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]' .
-                                    '|[\x00-\x7F][\x80-\xBF]+' .
-                                    '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*' .
-                                    '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})' .
-                                    '|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/S',
-                                    '', $post['message']);
-                            } else {
-                                $message = $post['message'];
-                            }
+
+                            $message = $this->getPostMessage($messageText = $post['message']);
+
                             $message = str_replace("\n","<br>",$message);
                             $timestamp = strtotime($post['created_time']);
                             if($imageSrc != "") {
@@ -228,9 +156,10 @@ class CronListener extends \System
                             $objNews->date = $timestamp;
                             $objNews->time = $timestamp;
                             $objNews->published = 1;
-                            $objNews->pdir_sf_fb_id = $post['id'];
-                            $objNews->pdir_sf_fb_account = $post['from']['name'];
-                            $objNews->pdir_sf_fb_account_picture = $objFileAccount->uuid;
+                            $objNews->social_feed_type = $obj->socialFeedType;
+                            $objNews->social_feed_id = $post['id'];
+                            $objNews->social_feed_account = $post['from']['name'];
+                            $objNews->social_feed_account_picture = $objFileAccount->uuid;
                             $objNews->source = 'external';
                             $objNews->url = $post['permalink_url'];
                             $objNews->target = 1;
@@ -238,9 +167,6 @@ class CronListener extends \System
                         }
                     }
                     \System::log('Social Feed: Facebook Import Account '.$account, __METHOD__, TL_GENERAL);
-                    // set timestamp
-                    $this->import('Database');
-                    $this->Database->prepare("UPDATE tl_social_feed SET pdir_sf_fb_news_last_import_date = ".time().", pdir_sf_fb_news_last_import_time = ".time()." WHERE pdir_sf_fb_account=?")->execute($account);
                     $this->import('Automator');
                     $this->Automator->generateSymlinks();
                 }
@@ -248,6 +174,7 @@ class CronListener extends \System
         }
         //echo "<pre>"; print_r($objSocialFeed); echo "</pre>";
     }
+
     private function getFbPostList($fb, $accessToken, $account) {
         try {
             $response = $fb->get(
@@ -262,6 +189,7 @@ class CronListener extends \System
             exit;
         }
     }
+
     private function getFbFeed($fb, $accessToken, $account) {
         try {
             $response = $fb->get(
@@ -276,6 +204,7 @@ class CronListener extends \System
             exit;
         }
     }
+
     private function getFbAttachments($fb,$id,$accessToken, $imgPath) {
         try {
             $resMedia = $fb->get('/'. $id .'/attachments', $accessToken);
@@ -301,6 +230,7 @@ class CronListener extends \System
             exit;
         }
     }
+
     private function getFbAccountPicture($fb, $accessToken, $account) {
         try {
             $responsePage = $fb->get(
@@ -313,6 +243,69 @@ class CronListener extends \System
         } catch(Facebook\Exceptions\FacebookSDKException $e) {
             echo 'Facebook SDK returned an error: ' . $e->getMessage();
             exit;
+        }
+    }
+
+    private function getPostMessage($messageText) {
+        if (version_compare(VERSION, '4.5', '<')) {
+            //reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ?
+            $message = preg_replace('/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]' .
+                '|[\x00-\x7F][\x80-\xBF]+' .
+                '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*' .
+                '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})' .
+                '|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/S',
+                '', $messageText);
+        } else {
+            $message = $messageText;
+        }
+        return $message;
+    }
+
+    private function setLastImportDate($id) {
+        $this->import('Database');
+        $this->Database->prepare("UPDATE tl_social_feed SET pdir_sf_fb_news_last_import_date = ".time().", pdir_sf_fb_news_last_import_time = ".time()." WHERE id=?")->execute($id);
+    }
+
+    private function saveAccountPicture($accountPicture, $account) {
+        if (!file_exists($accountPicture)) {
+            $strImage = file_get_contents($account->getProfilePicUrl());
+            $file = new \File($accountPicture);
+            $file->write($strImage);
+            $file->close();
+        }
+    }
+
+    private function saveInstagramNews($objNews, $obj, $objFile, $message, $media, $account, $accountPicture) {
+        $objNews->pid = $obj->pdir_sf_fb_news_archive;
+        $objNews->singleSRC = $objFile->uuid;
+        $objNews->addImage = 1;
+        $objNews->tstamp = time();
+
+        if (strlen($message) > 50) $more = " ...";
+        else $more = "";
+        $objNews->headline = substr($message, 0, 50) . $more;
+
+        $message = str_replace("\n", "<br>", $message);
+        $objNews->teaser = $message;
+        $objNews->date = $media->getCreatedTime();
+        $objNews->time = $media->getCreatedTime();
+        $objNews->published = 1;
+        $objNews->social_feed_type = $obj->socialFeedType;
+        $objNews->social_feed_id = $media->getId();
+        $objNews->social_feed_account = $account->getUsername();
+        $objNews->social_feed_account_picture = \Dbafs::addResource($accountPicture)->uuid;
+        $objNews->source = 'external';
+        $objNews->url = $media->getLink();
+        $objNews->target = 1;
+        $objNews->save();
+    }
+
+    private function savePostPictures($picturePath, $media) {
+        if (!file_exists($picturePath)) {
+            $strImage = file_get_contents($media->getImageHighResolutionUrl());
+            $file = new \File($picturePath);
+            $file->write($strImage);
+            $file->close();
         }
     }
 }

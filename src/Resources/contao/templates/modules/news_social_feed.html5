@@ -7,7 +7,10 @@
             </div>
 
             <?php if ($this->hasMetaFields): ?>
-            <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished"><?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?> <i class="fa fa-facebook" aria-hidden="true"></i></p>
+            <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished">
+                <?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?>
+                <?php if($this->socialFeedType == "Facebook" || $this->socialFeedType == ""): ?><i class="fa fa-facebook" aria-hidden="true"></i><?php elseif($this->socialFeedType == "Instagram"): ?><i class="fa fa-instagram" aria-hidden="true"></i><?php endif; ?>
+            </p>
             <?php endif; ?>
 
             <div class="title"><?= $this->sfFbAccount ?></div>
