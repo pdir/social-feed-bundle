@@ -26,7 +26,7 @@ System requirements
 
 Installation & Configuration
 ----------------------------
-* [Dokumentation](https://docs.pdir.de/social-feed.html)
+* [Dokumentation](https://docs.pdir.de/#/social-feed/index)
 
 See this Extension in the Contao Extension-Repository
 ---------------
