@@ -22,7 +22,7 @@
 
         <a href="<?= $this->url ?>" target="_blank">
             <div class="ce_text block" itemprop="description">
-                <?= $this->teaser ?>
+                <p><?= preg_replace('#(?:<br\s*/?>\s*?){2,}#', '</p><p>', $this->teaser) ?></p>
             </div>
         </a>
 
