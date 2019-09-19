@@ -65,7 +65,9 @@ class CronListener extends \System
 
                     if($post['from']['name'] != "") {
 
-                        $imageSrc = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
+                        $image = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
+                        $imageSrc = $image['src'];
+                        $imageTitle = $image['title'];
 
                         // set variables
                         if(strpos($post['message'],"\n")) {
@@ -112,7 +114,13 @@ class CronListener extends \System
                         }
                         $objNews->tstamp = time();
                         $objNews->headline = $title;
-                        $objNews->teaser = $message;
+
+                        if($message == "" && $imageTitle != "") {
+                            $objNews->teaser = $imageTitle;
+                        } else {
+                            $objNews->teaser = $message;
+                        }
+
                         $objNews->date = $timestamp;
                         $objNews->time = $timestamp;
                         $objNews->published = 1;
@@ -192,7 +200,12 @@ class CronListener extends \System
                 $file->close();
             }
 
-            return $imageSrc;
+            $image = [
+                'src' => $arrMedia['media']['image']['src'],
+                'title' => $arrMedia['title']
+            ];
+
+            return $image;
         } catch(Facebook\Exceptions\FacebookResponseException $e) {
             echo 'Graph returned an error: ' . $e->getMessage();
             exit;
