@@ -113,7 +113,7 @@ class CronListener extends \System
                             $objNews->addImage = 1;
                         }
                         $objNews->tstamp = time();
-                        $objNews->headline = $title;
+                        $objNews->headline = substr($title,0,255);
 
                         if($message == "" && $imageTitle != "") {
                             $objNews->teaser = $imageTitle;
