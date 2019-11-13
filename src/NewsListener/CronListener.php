@@ -119,7 +119,9 @@ class CronListener extends \System
                             continue;
                         }
                         if($post['from']['name'] != "") {
-                            $imageSrc = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
+                            $image = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
+                            $imageSrc = $image['src'];
+                            $imageTitle = $image['title'];
                             // set variables
                             if(strpos($post['message'],"\n")) {
                                 $title = substr($post['message'],0,strpos($post['message'],"\n"));
@@ -151,8 +153,14 @@ class CronListener extends \System
                                 $objNews->addImage = 1;
                             }
                             $objNews->tstamp = time();
-                            $objNews->headline = $title;
-                            $objNews->teaser = $message;
+                            $objNews->headline = substr($title,0,255);
+
+                            if($message == "" && $imageTitle != "") {
+                                $objNews->teaser = $imageTitle;
+                            } else {
+                                $objNews->teaser = $message;
+                            }
+
                             $objNews->date = $timestamp;
                             $objNews->time = $timestamp;
                             $objNews->published = 1;
@@ -221,7 +229,11 @@ class CronListener extends \System
                 $file->write($strImage);
                 $file->close();
             }
-            return $imageSrc;
+            $image = [
+                'src' => $arrMedia['media']['image']['src'],
+                'title' => $arrMedia['title']
+            ];
+            return $image;
         } catch(Facebook\Exceptions\FacebookResponseException $e) {
             echo 'Graph returned an error: ' . $e->getMessage();
             exit;
