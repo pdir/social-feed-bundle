@@ -30,6 +30,10 @@ Installation & Configuration
 ----------------------------
 * [Dokumentation](https://docs.pdir.de/#/social-feed/index)
 
+Demo
+----------------------------
+* [Social Feed Demo](https://demo.pdir.de/social-feed)
+
 See this Extension in the Contao Extension-Repository
 ---------------
 not available for ER2
