@@ -38,6 +38,7 @@ $GLOBALS['TL_MODELS']['tl_social_feed'] = 'Pdir\SocialFeedBundle\Model\SocialFee
 $GLOBALS['FE_MOD']['news']['newslist'] = ModuleCustomNewslist::class;
 
 $GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\NewsListener\CronListener', 'getFbPosts');
+$GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\NewsListener\CronListener', 'getInstagramPosts');
 
 /**
  * CSS for Frontend

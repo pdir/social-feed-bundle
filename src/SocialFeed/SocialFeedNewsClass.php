@@ -6,7 +6,7 @@ class SocialFeedNewsClass {
 
     public function parseNews($objTemplate, $arrRow, $objModule)
     {
-        if($arrRow['pdir_sf_fb_id'] != "") {
+        if($arrRow['social_feed_id'] != "") {
 
             if($objModule->pdir_sf_text_length > 0) {
                 $teaser = $arrRow['teaser'];
@@ -23,9 +23,10 @@ class SocialFeedNewsClass {
             $objTemplate->sfElementWidth = $objModule->pdir_sf_columns;
             $objTemplate->sfImages = $objModule->pdir_sf_enableImages;
             $objTemplate->sfFbLink = $arrRow['pdir_sf_fb_link'];
-            $objTemplate->sfFbAccountPicture = $arrRow['pdir_sf_fb_account_picture'];
-            $objTemplate->sfFbAccount = $arrRow['pdir_sf_fb_account'];
+            $objTemplate->sfFbAccountPicture = $arrRow['social_feed_account_picture'];
+            $objTemplate->sfFbAccount = $arrRow['social_feed_account'];
             $objTemplate->teaser = $teaser;
+            $objTemplate->socialFeedType = $arrRow['social_feed_type'];
         }
     }
 

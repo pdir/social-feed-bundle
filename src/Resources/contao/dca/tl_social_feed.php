@@ -17,14 +17,14 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     'list' => [
         'sorting' => [
             'mode' => 2,
-            'fields' => ['pdir_sf_fb_account'],
+            'fields' => ['socialFeedType'],
             'flag' => 1,
             'panelLayout' => 'sort,search,limit',
         ],
 
         'label' => [
-            'fields' => ['pdir_sf_fb_account', 'pdir_sf_fb_app_id', 'pdir_sf_fb_app_secret', 'pdir_sf_fb_news_archive'],
-            'format' => '%s',
+            'fields' => ['socialFeedType, pdir_sf_fb_account', 'instagram_account'],
+            'label_callback' => ['Pdir\\SocialFeedBundle\\Dca\\tl_social_feed', 'onGenerateLabel'],
         ],
 
         'global_operations' => [
@@ -60,8 +60,15 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     ],
 
     'palettes' => [
-        'default' => '{pdir_sf_fb_legend},pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
+        '__selector__'  => array('socialFeedType'),
+        'default' => '{pdir_sf_type_legend},socialFeedType;',
     ],
+
+    'subpalettes' => array
+    (
+        'socialFeedType_Facebook' => 'pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
+        'socialFeedType_Instagram' => 'instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time'
+    ),
 
     'fields' => [
         'id' => [
@@ -70,6 +77,17 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 
         'tstamp' => [
             'sql' => "int(10) unsigned NOT NULL default '0'",
+        ],
+
+        'socialFeedType' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['socialFeedType'],
+            'exclude'                 => true,
+            'filter'                  => true,
+            'sorting'                 => true,
+            'inputType'               => 'select',
+            'options'                 => array('Facebook','Instagram'),
+            'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50', 'submitOnChange'     => true),
+            'sql'                     => "varchar(255) NOT NULL default ''"
         ],
 
         'pdir_sf_fb_account' => [
@@ -171,6 +189,30 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'text',
             'sql' => "varchar(255) NOT NULL default ''",
             'eval' => array('rgxp' => 'time', 'tl_class' => 'w50')
+        ],
+
+        'instagram_account' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['instagram_account'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50'
+            ],
+            'sql' => "varchar(255) NOT NULL default ''",
+        ],
+
+        'number_posts' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['number_posts'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50'
+            ],
+            'sql' => "int(10) unsigned NOT NULL default '20'",
         ],
     ],
 ];
