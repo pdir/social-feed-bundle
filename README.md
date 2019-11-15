@@ -12,7 +12,7 @@ The Social Feed Extension shows a user feed from the most popular social network
 
 **Deutsch**
 
-Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an (Facebook und Instagram). Zur Zeit wird Facebook und Instagram unterstützt, weitere Kanäle folgen in Zukunft. Die Posts werden direkt in die Datenbank geschrieben, als News angelegt und können anschließend mit dem Modultyp Nachrichtenliste auf der Webseite angezeigt werden.
+Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an. Zur Zeit wird Facebook und Instagram unterstützt, weitere Kanäle folgen in Zukunft. Die Posts werden direkt in die Datenbank geschrieben, als News angelegt und können anschließend mit dem Modultyp Nachrichtenliste auf der Webseite angezeigt werden.
 
 Auf [contao-themes.net](https://contao-themes.net/sponsoring.html?isorc=3) können Sie die Weiterentwicklung unserer Themes und Erweiterungen durch das Kaufen von speziellen Paketen oder das Spenden von Entwicklungsstunden unterstützen.
 
