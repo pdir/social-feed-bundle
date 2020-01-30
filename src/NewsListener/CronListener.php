@@ -4,6 +4,7 @@ namespace Pdir\SocialFeedBundle\NewsListener;
 
 use Pdir\SocialFeedBundle\Model\SocialFeedModel as SocialFeedModel;
 use InstagramScraper\Instagram;
+use Abraham\TwitterOAuth\TwitterOAuth;
 
 class CronListener extends \System
 {
@@ -255,6 +256,101 @@ class CronListener extends \System
         } catch(Facebook\Exceptions\FacebookSDKException $e) {
             echo 'Facebook SDK returned an error: ' . $e->getMessage();
             exit;
+        }
+    }
+
+    public function getTwitterPosts() {
+        echo "GET TWITTER POSTS<br><br>";
+
+        $api_key = "XaII4HG3qAgBFgKD75nCrYZn5";
+        $api_secret_key = "sN8hJll5fIMpv2c8EY1HqKPFzeIMrQSxQDsKHRQGRmFzN7n9cK";
+        $access_token = "802498411580784640-EJm3QWNkNX42etfw4fRfZBewPYKTvn7";
+        $access_token_secret = "t0FQHYe3MBVhPhpXfUGOo02bRrhDm1Q4RpXU8SHZXzsad";
+
+        //$posts = $connection->get("search/tweets", ["q" => "@contaocms"]);
+
+        $objSocialFeed = SocialFeedModel::findAll();
+
+        foreach($objSocialFeed as $obj) {
+            echo $obj->socialFeedType;
+            if($obj->socialFeedType == "Twitter") {
+                $cron = $obj->pdir_sf_fb_news_cronjob;
+                $lastImport = $obj->pdir_sf_fb_news_last_import_date;
+                $tstamp = time();
+                if($lastImport == "") $lastImport = 0;
+                $interval = $tstamp - $lastImport;
+
+                $this->setLastImportDate($id = $obj->id);
+
+                //if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == "" && $cron != "no_cronjob") ) {
+                    echo "import<br>";
+                    $accountName = $obj->twitter_account;
+                    $connection = new TwitterOAuth($api_key, $api_secret_key, $access_token, $access_token_secret);
+                    $posts = $connection->get("statuses/user_timeline", ["screen_name" => $accountName, "tweet_mode" => 'extended']);
+
+                    echo "<pre>"; print_r($posts); echo "</pre>";
+
+                    foreach($posts as $post) {
+                        $objNews = new \NewsModel();
+
+                        echo "ID: ".$post->id."<br>";
+                        if (null !== $objNews->findBy("social_feed_id", $post->id)) {
+                            continue;
+                        }
+
+                        $imgPath = $this->createImageFolder($accountName);
+
+                        // save account picture
+                        $accountPicture = $imgPath . $post->user->id . '.jpg';
+                        if (!file_exists($accountPicture)) {
+                            $strImage = file_get_contents($post->user->profile_image_url_https);
+                            $file = new \File($accountPicture);
+                            $file->write($strImage);
+                            $file->close();
+                        }
+
+                        // save post picture
+                        if($post->entities->media[0]->media_url_https) {
+                            $picturePath = $imgPath . $post->id . '.jpg';
+                            if (!file_exists($picturePath)) {
+                                $strImage = file_get_contents($post->entities->media[0]->media_url_https);
+                                $file = new \File($picturePath);
+                                $file->write($strImage);
+                                $file->close();
+                            }
+                            $objFile = \Dbafs::addResource($imgPath . $post->id . '.jpg');
+                            $objNews->singleSRC = $objFile->uuid;
+                            $objNews->addImage = 1;
+                        }
+
+
+                        // write in database
+
+                        $objNews->pid = $obj->pdir_sf_fb_news_archive;
+                        $objNews->tstamp = time();
+                        if (strlen($post->full_text) > 50) $more = " ...";
+                        else $more = "";
+                        $objNews->headline = substr($post->full_text, 0, 50) . $more;
+                        $objNews->teaser = str_replace("\n", "<br>", $post->full_text);
+                        $objNews->date = strtotime($post->created_at);
+                        $objNews->time = strtotime($post->created_at);
+                        $objNews->published = 1;
+                        $objNews->social_feed_type = $obj->socialFeedType;
+                        $objNews->social_feed_id = $post->id;
+                        $objNews->social_feed_account = $post->user->screen_name;
+                        $objNews->social_feed_account_picture = \Dbafs::addResource($accountPicture)->uuid;
+                        $objNews->source = 'external';
+                        $objNews->url = $post->entities->urls[0]->url;
+                        $objNews->target = 1;
+
+                        $objNews->save();
+                    }
+
+                    \System::log('Social Feed: Twitter Import Account '.$accountName, __METHOD__, TL_GENERAL);
+                    $this->import('Automator');
+                    $this->Automator->generateSymlinks();
+                //}
+            }
         }
     }
 

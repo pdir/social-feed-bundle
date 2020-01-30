@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'label' => [
-            'fields' => ['socialFeedType, pdir_sf_fb_account', 'instagram_account'],
+            'fields' => ['socialFeedType, pdir_sf_fb_account', 'instagram_account', 'twitter_account'],
             'label_callback' => ['Pdir\\SocialFeedBundle\\Dca\\tl_social_feed', 'onGenerateLabel'],
         ],
 
@@ -67,7 +67,8 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     'subpalettes' => array
     (
         'socialFeedType_Facebook' => 'pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
-        'socialFeedType_Instagram' => 'instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time'
+        'socialFeedType_Instagram' => 'instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
+        'socialFeedType_Twitter' => 'twitter_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time'
     ),
 
     'fields' => [
@@ -85,7 +86,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'filter'                  => true,
             'sorting'                 => true,
             'inputType'               => 'select',
-            'options'                 => array('Facebook','Instagram'),
+            'options'                 => array('Facebook','Instagram','Twitter'),
             'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50', 'submitOnChange'     => true),
             'sql'                     => "varchar(255) NOT NULL default ''"
         ],
@@ -213,6 +214,18 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
                 'tl_class' => 'w50'
             ],
             'sql' => "int(10) unsigned NOT NULL default '20'",
+        ],
+
+        'twitter_account' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['twitter_account'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50'
+            ],
+            'sql' => "varchar(255) NOT NULL default ''",
         ],
     ],
 ];

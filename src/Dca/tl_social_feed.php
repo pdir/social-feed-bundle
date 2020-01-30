@@ -19,8 +19,10 @@ class tl_social_feed
             $account = $row['pdir_sf_fb_account'];
         } else if($row['instagram_account'] != "") {
             $account = $row['instagram_account'];
+        } else if($row['twitter_account'] != "") {
+            $account = $row['twitter_account'];
         } else {
-            $account = "Kein Account angegegen";
+            $account = "Kein Account angegeben";
         }
 
         if($row['socialFeedType'] != "") {

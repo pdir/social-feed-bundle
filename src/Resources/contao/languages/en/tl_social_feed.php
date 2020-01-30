@@ -25,3 +25,4 @@ $GLOBALS['TL_LANG']['tl_social_feed']['daily'] = 'daily';
 $GLOBALS['TL_LANG']['tl_social_feed']['weekly'] = 'weekly';
 $GLOBALS['TL_LANG']['tl_social_feed']['monthly'] = 'monthly';
 $GLOBALS['TL_LANG']['tl_social_feed']['number_posts'] = array("Maximum number of posts","Enter the maximum number of posts to be imported here.");
+$GLOBALS['TL_LANG']['tl_social_feed']['twitter_account'] = array("Twitter Account","Please enter the twitter acount name (without @).");
