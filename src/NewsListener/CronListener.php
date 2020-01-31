@@ -262,11 +262,6 @@ class CronListener extends \System
     public function getTwitterPosts() {
         echo "GET TWITTER POSTS<br><br>";
 
-        $api_key = "XaII4HG3qAgBFgKD75nCrYZn5";
-        $api_secret_key = "sN8hJll5fIMpv2c8EY1HqKPFzeIMrQSxQDsKHRQGRmFzN7n9cK";
-        $access_token = "802498411580784640-EJm3QWNkNX42etfw4fRfZBewPYKTvn7";
-        $access_token_secret = "t0FQHYe3MBVhPhpXfUGOo02bRrhDm1Q4RpXU8SHZXzsad";
-
         //$posts = $connection->get("search/tweets", ["q" => "@contaocms"]);
 
         $objSocialFeed = SocialFeedModel::findAll();
@@ -284,13 +279,34 @@ class CronListener extends \System
 
                 //if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == "" && $cron != "no_cronjob") ) {
                     echo "import<br>";
+                    $api_key = $obj->twitter_api_key;
+                    $api_secret_key = $obj->twitter_api_secret_key;
+                    $access_token = $obj->twitter_access_token;
+                    $access_token_secret = $obj->twitter_access_token_secret;
+
                     $accountName = $obj->twitter_account;
+                    $search = $obj->search;
                     $connection = new TwitterOAuth($api_key, $api_secret_key, $access_token, $access_token_secret);
-                    $posts = $connection->get("statuses/user_timeline", ["screen_name" => $accountName, "tweet_mode" => 'extended']);
+
+                    if($accountName != "") {
+                        $posts = $connection->get("statuses/user_timeline", ["screen_name" => $accountName, "tweet_mode" => 'extended', "count" => $obj->number_posts]);
+                    } else if($search != "") {
+                        $posts = $connection->get("search/tweets", ["q" => $search, "tweet_mode" => 'extended', "count" => $obj->number_posts])->statuses;
+                    } else {
+                        $posts = [];
+                    }
 
                     echo "<pre>"; print_r($posts); echo "</pre>";
 
                     foreach($posts as $post) {
+                        if($post->retweeted_status && $obj->show_retweets != 1) {
+                            continue;
+                        }
+
+                        if($post->retweeted_status && $obj->show_retweets == 1) {
+                            $post->full_text = "RT @".$post->entities->user_mentions[0]->screen_name.": ".$post->retweeted_status->full_text;
+                        }
+
                         $objNews = new \NewsModel();
 
                         echo "ID: ".$post->id."<br>";
@@ -331,18 +347,49 @@ class CronListener extends \System
                         if (strlen($post->full_text) > 50) $more = " ...";
                         else $more = "";
                         $objNews->headline = substr($post->full_text, 0, 50) . $more;
+
+                        if($obj->hashtags_link == 1) {
+                            if($post->retweeted_status && $obj->show_retweets == 1) {
+                                $post->entities->hashtags = $post->retweeted_status->entities->hashtags;
+                                $post->entities->user_mentions = $post->retweeted_status->entities->user_mentions;
+                            }
+                            // replace hashtags
+                            foreach($post->entities->hashtags as $hashtag) {
+                                $post->full_text = str_replace(
+                                    "#".$hashtag->text." ",
+                                    "<a href='https://twitter.com/hashtag/".$hashtag->text."' target='_blank' rel='noreferrer noopener'>#".$hashtag->text."</a> ",
+                                    $post->full_text
+                                );
+                            }
+
+                            // replace mentions
+                            foreach($post->entities->user_mentions as $mention) {
+                                $post->full_text = str_replace(
+                                    "@".$mention->screen_name,
+                                    "<a href='https://twitter.com/".$mention->screen_name."' target='_blank' rel='noreferrer noopener'>@".$mention->screen_name."</a>",
+                                    $post->full_text
+                                );
+                            }
+                        }
+
                         $objNews->teaser = str_replace("\n", "<br>", $post->full_text);
                         $objNews->date = strtotime($post->created_at);
                         $objNews->time = strtotime($post->created_at);
                         $objNews->published = 1;
                         $objNews->social_feed_type = $obj->socialFeedType;
                         $objNews->social_feed_id = $post->id;
-                        $objNews->social_feed_account = $post->user->screen_name;
+                        $objNews->social_feed_account = $post->user->name;
                         $objNews->social_feed_account_picture = \Dbafs::addResource($accountPicture)->uuid;
                         $objNews->source = 'external';
-                        $objNews->url = $post->entities->urls[0]->url;
-                        $objNews->target = 1;
 
+                        if($post->entities->urls[0]->url) {
+                            $url = $post->entities->urls[0]->url;
+                        } else {
+                            $url = "https://twitter.com/".$post->user->screen_name."/status/".$post->id;
+                        }
+
+                        $objNews->url = $url;
+                        $objNews->target = 1;
                         $objNews->save();
                     }
 

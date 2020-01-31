@@ -21,8 +21,10 @@ class tl_social_feed
             $account = $row['instagram_account'];
         } else if($row['twitter_account'] != "") {
             $account = $row['twitter_account'];
+        } else if($row['search'] != "") {
+            $account = $row['search'];
         } else {
-            $account = "Kein Account angegeben";
+            $account = "Kein Account/Suchbegriff angegeben";
         }
 
         if($row['socialFeedType'] != "") {

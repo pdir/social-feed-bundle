@@ -26,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_type'] = array
     'filter'                  => true,
     'sorting'                 => true,
     'inputType'               => 'select',
-    'options'                 => array('Facebook','Instagram'),
+    'options'                 => array('Facebook','Instagram','Twitter'),
     'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
     'sql'                     => "varchar(255) NOT NULL default ''"
 );

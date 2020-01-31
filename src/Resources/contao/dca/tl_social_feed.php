@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'label' => [
-            'fields' => ['socialFeedType, pdir_sf_fb_account', 'instagram_account', 'twitter_account'],
+            'fields' => ['socialFeedType, pdir_sf_fb_account', 'instagram_account', 'twitter_account', 'search'],
             'label_callback' => ['Pdir\\SocialFeedBundle\\Dca\\tl_social_feed', 'onGenerateLabel'],
         ],
 
@@ -68,7 +68,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     (
         'socialFeedType_Facebook' => 'pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
         'socialFeedType_Instagram' => 'instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
-        'socialFeedType_Twitter' => 'twitter_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time'
+        'socialFeedType_Twitter' => 'twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account,search,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,show_retweets,hashtags_link,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time'
     ),
 
     'fields' => [
@@ -218,6 +218,84 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 
         'twitter_account' => [
             'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['twitter_account'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'maxlength' => 255,
+                'tl_class' => 'w50'
+            ],
+            'sql' => "varchar(255) NOT NULL default ''",
+        ],
+
+        'search' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['search'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'maxlength' => 255,
+                'tl_class' => 'w50'
+            ],
+            'sql' => "varchar(255) NOT NULL default ''",
+        ],
+
+        'show_retweets' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['show_retweets'],
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => [
+                'tl_class' => 'clr'
+            ],
+            'sql' => "char(1) NOT NULL default ''",
+        ],
+
+        'hashtags_link' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['hashtags_link'],
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => [
+                'tl_class' => 'clr'
+            ],
+            'sql' => "char(1) NOT NULL default ''",
+        ],
+
+        'twitter_api_key' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_key'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50'
+            ],
+            'sql' => "varchar(255) NOT NULL default ''",
+        ],
+
+        'twitter_api_secret_key' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_secret_key'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50'
+            ],
+            'sql' => "varchar(255) NOT NULL default ''",
+        ],
+
+        'twitter_access_token' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50'
+            ],
+            'sql' => "varchar(255) NOT NULL default ''",
+        ],
+
+        'twitter_access_token_secret' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token_secret'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
