@@ -8,11 +8,11 @@ Social Feed extension for Contao 4
 About
 -----
 
-The Social Feed Extension shows a user feed from the most popular social networks (Facebook and Instagram). The posts are written directly into the database, created as news and can then displayed on the website using the module type news list.
+The Social Feed Extension shows a user feed from the most popular social networks (Facebook, Instagram and Twitter). The posts are written directly into the database, created as news and can then displayed on the website using the module type news list.
 
 **Deutsch**
 
-Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an. Zur Zeit wird Facebook und Instagram unterstützt, weitere Kanäle folgen in Zukunft. Die Posts werden direkt in die Datenbank geschrieben, als News angelegt und können anschließend mit dem Modultyp Nachrichtenliste auf der Webseite angezeigt werden.
+Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an. Zur Zeit wird Facebook, Instagram und Twitter unterstützt, weitere Kanäle folgen in Zukunft. Die Posts werden direkt in die Datenbank geschrieben, als News angelegt und können anschließend mit dem Modultyp Nachrichtenliste auf der Webseite angezeigt werden.
 
 Auf [contao-themes.net](https://contao-themes.net/sponsoring.html?isorc=3) können Sie die Weiterentwicklung unserer Themes und Erweiterungen durch das Kaufen von speziellen Paketen oder das Spenden von Entwicklungsstunden unterstützen.
 
@@ -34,15 +34,12 @@ Demo
 ----------------------------
 * [Social Feed Demo](https://demo.pdir.de/social-feed)
 
-See this Extension in the Contao Extension-Repository
----------------
-not available for ER2
-
 Dependencies
 ------------
 
-- facebook/graph-sdk
-- raiym/instagram-php-scraper
+- [facebook/graph-sdk](https://github.com/facebook/php-graph-sdk)
+- [raiym/instagram-php-scraper](https://github.com/postaddictme/instagram-php-scraper)
+- [abraham/twitteroauth](https://github.com/abraham/twitteroauth)
 
 License
 -------

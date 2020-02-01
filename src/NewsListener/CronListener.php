@@ -41,7 +41,7 @@ class CronListener extends \System
                     if(is_array($medias)) {
                         foreach ($medias as $media) {
                             $objNews = new \NewsModel();
-                            echo "ID: ".$media->getId();
+
                             if (null !== $objNews->findBy("social_feed_id", $media->getId())) {
                                 continue;
                             }
@@ -181,7 +181,6 @@ class CronListener extends \System
                 }
             }
         }
-        //echo "<pre>"; print_r($objSocialFeed); echo "</pre>";
     }
 
     private function getFbPostList($fb, $accessToken, $account) {
@@ -260,14 +259,10 @@ class CronListener extends \System
     }
 
     public function getTwitterPosts() {
-        echo "GET TWITTER POSTS<br><br>";
-
-        //$posts = $connection->get("search/tweets", ["q" => "@contaocms"]);
-
         $objSocialFeed = SocialFeedModel::findAll();
 
         foreach($objSocialFeed as $obj) {
-            echo $obj->socialFeedType;
+
             if($obj->socialFeedType == "Twitter") {
                 $cron = $obj->pdir_sf_fb_news_cronjob;
                 $lastImport = $obj->pdir_sf_fb_news_last_import_date;
@@ -277,8 +272,8 @@ class CronListener extends \System
 
                 $this->setLastImportDate($id = $obj->id);
 
-                //if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == "" && $cron != "no_cronjob") ) {
-                    echo "import<br>";
+                if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == "" && $cron != "no_cronjob") ) {
+
                     $api_key = $obj->twitter_api_key;
                     $api_secret_key = $obj->twitter_api_secret_key;
                     $access_token = $obj->twitter_access_token;
@@ -296,8 +291,6 @@ class CronListener extends \System
                         $posts = [];
                     }
 
-                    echo "<pre>"; print_r($posts); echo "</pre>";
-
                     foreach($posts as $post) {
                         if($post->retweeted_status && $obj->show_retweets != 1) {
                             continue;
@@ -309,7 +302,6 @@ class CronListener extends \System
 
                         $objNews = new \NewsModel();
 
-                        echo "ID: ".$post->id."<br>";
                         if (null !== $objNews->findBy("social_feed_id", $post->id)) {
                             continue;
                         }
@@ -339,9 +331,7 @@ class CronListener extends \System
                             $objNews->addImage = 1;
                         }
 
-
                         // write in database
-
                         $objNews->pid = $obj->pdir_sf_fb_news_archive;
                         $objNews->tstamp = time();
                         if (strlen($post->full_text) > 50) $more = " ...";
@@ -353,23 +343,15 @@ class CronListener extends \System
                                 $post->entities->hashtags = $post->retweeted_status->entities->hashtags;
                                 $post->entities->user_mentions = $post->retweeted_status->entities->user_mentions;
                             }
-                            // replace hashtags
-                            foreach($post->entities->hashtags as $hashtag) {
-                                $post->full_text = str_replace(
-                                    "#".$hashtag->text." ",
-                                    "<a href='https://twitter.com/hashtag/".$hashtag->text."' target='_blank' rel='noreferrer noopener'>#".$hashtag->text."</a> ",
-                                    $post->full_text
-                                );
-                            }
+
+                            // remove all t.co links
+                            $post->full_text = $this->removeTwitterLinks($post->full_text);
+
+                            // replace all hash tags
+                            $post->full_text = $this->replaceHashTags($post->full_text);
 
                             // replace mentions
-                            foreach($post->entities->user_mentions as $mention) {
-                                $post->full_text = str_replace(
-                                    "@".$mention->screen_name,
-                                    "<a href='https://twitter.com/".$mention->screen_name."' target='_blank' rel='noreferrer noopener'>@".$mention->screen_name."</a>",
-                                    $post->full_text
-                                );
-                            }
+                            $post->full_text = $this->replaceMentions($post->full_text);
                         }
 
                         $objNews->teaser = str_replace("\n", "<br>", $post->full_text);
@@ -396,7 +378,7 @@ class CronListener extends \System
                     \System::log('Social Feed: Twitter Import Account '.$accountName, __METHOD__, TL_GENERAL);
                     $this->import('Automator');
                     $this->Automator->generateSymlinks();
-                //}
+                }
             }
         }
     }
@@ -462,5 +444,36 @@ class CronListener extends \System
             $file->write($strImage);
             $file->close();
         }
+    }
+
+    private function replaceHashTags($str) {
+        return preg_replace(
+            '/(\#)([^\s]+)/',
+            '<a href="https://twitter.com/hashtag/$2" target="_blank" rel="noreferrer noopener">#$2</a>',
+            $str
+        );
+    }
+
+    private function removeTwitterLinks($str) {
+        return preg_replace('/\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i',
+            '',
+            $str
+        );
+    }
+
+    private function replaceLinks($str) {
+        return preg_replace(
+            '/(^|[\n ])([\w]*?)((ht|f)tp(s)?:\/\/[\w]+[^ \,\"\n\r\t&lt;]*)/is',
+            '<a href="$3" target="_blank" rel="noreferrer noopener">$3</a>',
+            $str
+        );
+    }
+
+    private function replaceMentions($str) {
+        return preg_replace(
+            '/@(\w+)/',
+            '<a href="https://www.twitter.com/$1" target="_blank" rel="noreferrer noopener">@$1</a>',
+            $str
+        );
     }
 }

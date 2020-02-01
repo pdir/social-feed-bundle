@@ -19,7 +19,7 @@ class SocialFeedSetup extends \BackendModule
     /**
      * social-feed-bundle version
      */
-    const VERSION = '2.3.1';
+    const VERSION = '3.0.0';
 
     /**
      * Template
