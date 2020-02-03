@@ -31,9 +31,9 @@ class CronListener extends \System
                 if($lastImport == "") $lastImport = 0;
                 $interval = $tstamp - $lastImport;
 
-                $this->setLastImportDate($id = $obj->id);
+                if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == 0 && $cron != "no_cronjob") ) {
+                    $this->setLastImportDate($id = $obj->id);
 
-                if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == "" && $cron != "no_cronjob") ) {
                     $accountName = $obj->instagram_account;
                     $instagram = new \InstagramScraper\Instagram();
                     $medias = $instagram->getMedias($accountName, $obj->number_posts);
@@ -85,9 +85,9 @@ class CronListener extends \System
                 if($lastImport == "") $lastImport = 0;
                 $interval = $tstamp - $lastImport;
 
-                $this->setLastImportDate($id = $obj->id);
+                if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == 0 && $cron != "no_cronjob") ) {
+                    $this->setLastImportDate($id = $obj->id);
 
-                if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == "" && $cron != "no_cronjob") ) {
                     $appId = $obj->pdir_sf_fb_app_id;
                     $appSecret = $obj->pdir_sf_fb_app_secret;
                     $accessToken = $obj->pdir_sf_fb_access_token;
@@ -270,9 +270,8 @@ class CronListener extends \System
                 if($lastImport == "") $lastImport = 0;
                 $interval = $tstamp - $lastImport;
 
-                $this->setLastImportDate($id = $obj->id);
-
-                if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == "" && $cron != "no_cronjob") ) {
+                if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == 0 && $cron != "no_cronjob") ) {
+                    $this->setLastImportDate($id = $obj->id);
 
                     $api_key = $obj->twitter_api_key;
                     $api_secret_key = $obj->twitter_api_secret_key;
