@@ -171,7 +171,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
                                '60'   => $GLOBALS['TL_LANG']['tl_social_feed']['minutely'],
                                '3600'     => $GLOBALS['TL_LANG']['tl_social_feed']['hourly'],
                                '86400'      => $GLOBALS['TL_LANG']['tl_social_feed']['daily'],
-                               '604800.02'     => $GLOBALS['TL_LANG']['tl_social_feed']['weekly'],
+                               '604800'     => $GLOBALS['TL_LANG']['tl_social_feed']['weekly'],
                                '2629800'    => $GLOBALS['TL_LANG']['tl_social_feed']['monthly']),
             'sql' => "varchar(64) NOT NULL default ''",
         ],
