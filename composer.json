@@ -7,6 +7,11 @@
   "license":"LGPL-3.0-or-later",
   "authors":[
     {
+      "name":"Philipp Seibt",
+      "homepage":"https://pdir.de/",
+      "role":"Developer"
+    },
+    {
       "name":"Mathias Arzberger",
       "homepage":"https://pdir.de/",
       "role":"Developer"
@@ -44,6 +49,21 @@
       "src/Resources/contao/languages/",
       "src/Resources/contao/templates/"
     ]
+  },
+  "funding": [
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/user?u=28241718"
+    },
+    {
+      "type": "corporate",
+      "url": "https://contao-themes.net/sponsoring.html"
+    }
+  ],
+  "suggest": {
+    "contao-themes-net/mate-theme-bundle": "MATE Theme includes all styles for social feed bundle. / MATE Theme enthält Stylesheets für das Social Feed Bundle.",
+    "contao-themes-net/odd-theme-bundle": "ODD Theme includes all styles for social feed bundle. / ODD Theme enthält Stylesheets für das Social Feed Bundle.",
+    "contao-themes-net/nature-theme-bundle": "NATURE Theme includes all styles for social feed bundle. / NATURE Theme enthält Stylesheets für das Social Feed Bundle."
   },
   "extra": {
     "contao-manager-plugin": "Pdir\\SocialFeedBundle\\ContaoManagerPlugin"
