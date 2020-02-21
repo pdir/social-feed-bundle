@@ -63,7 +63,8 @@
   "suggest": {
     "contao-themes-net/mate-theme-bundle": "MATE Theme includes all styles for social feed bundle. / MATE Theme enthält Stylesheets für das Social Feed Bundle.",
     "contao-themes-net/odd-theme-bundle": "ODD Theme includes all styles for social feed bundle. / ODD Theme enthält Stylesheets für das Social Feed Bundle.",
-    "contao-themes-net/nature-theme-bundle": "NATURE Theme includes all styles for social feed bundle. / NATURE Theme enthält Stylesheets für das Social Feed Bundle."
+    "contao-themes-net/nature-theme-bundle": "NATURE Theme includes all styles for social feed bundle. / NATURE Theme enthält Stylesheets für das Social Feed Bundle.",
+    "contao-themes-net/zero-one-theme-bundle": "Show a social feed in the 0.1 Theme. / Zeige einen Social Feed im 0.1 Theme an."
   },
   "extra": {
     "contao-manager-plugin": "Pdir\\SocialFeedBundle\\ContaoManagerPlugin"
