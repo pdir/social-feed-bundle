@@ -46,5 +46,9 @@ $GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\NewsListener\Cr
  */
 if (TL_MODE == 'FE')
 {
-    $GLOBALS['TL_CSS'][] =  'bundles/pdirsocialfeed/css/social_feed.scss||static';
+    $GLOBALS['TL_CSS'][] = 'bundles/pdirsocialfeed/css/social_feed.scss||static';
+}
+
+if (TL_MODE == 'BE') {
+    $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/pdirsocialfeed/js/backend.js';
 }

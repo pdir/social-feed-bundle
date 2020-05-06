@@ -26,6 +26,7 @@ class CronListener extends \System
         foreach($objSocialFeed as $obj) {
             if($obj->socialFeedType == "Instagram") {
                 $cron = $obj->pdir_sf_fb_news_cronjob;
+                if($cron == 60) $cron = 3600;
                 $lastImport = $obj->pdir_sf_fb_news_last_import_date;
                 $tstamp = time();
                 if($lastImport == "") $lastImport = 0;

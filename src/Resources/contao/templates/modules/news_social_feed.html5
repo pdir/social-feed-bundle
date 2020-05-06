@@ -10,11 +10,11 @@
             <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished">
                 <?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?>
                 <?php if($this->socialFeedType == "Facebook" || $this->socialFeedType == ""): ?>
-                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                    <img src="bundles/pdirsocialfeed/img/icon_facebook.svg" alt="Facebook Icon">
                 <?php elseif($this->socialFeedType == "Instagram"): ?>
-                    <i class="fa fa-instagram" aria-hidden="true"></i>
+                    <img src="bundles/pdirsocialfeed/img/icon_instagram.svg" alt="Instagram Icon">
                 <?php elseif($this->socialFeedType == "Twitter"): ?>
-                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                    <img src="bundles/pdirsocialfeed/img/icon_twitter.svg" alt="Twitter Icon">
                 <?php endif; ?>
             </p>
             <?php endif; ?>

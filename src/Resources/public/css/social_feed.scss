@@ -71,6 +71,9 @@
   }
 
   .icon {
+    position: static;
+    text-indent: 0;
+
     img {
       position: absolute;
       top: -20px;
@@ -89,6 +92,14 @@
     text-align: right;
     font-size: 14px;
     color: #989898;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    img {
+      width: 15px;
+      margin-left: 10px;
+    }
   }
 
   .title {
@@ -110,6 +121,10 @@
   .fa {
     font-size: 18px;
     padding-left: 5px;
+  }
+
+  .image_container > a {
+    padding: 0;
   }
 }
 
