@@ -67,7 +67,6 @@
     "contao-themes-net/zero-one-theme-bundle": "Show a social feed in the 0.1 Theme. / Zeige einen Social Feed im 0.1 Theme an."
   },
   "extra": {
-    "contao-manager-plugin": "Pdir\\SocialFeedBundle\\ContaoManagerPlugin"
-  },
-  "minimum-stability": "dev"
+    "contao-manager-plugin": "Pdir\\SocialFeedBundle\\ContaoManager\\Plugin"
+  }
 }

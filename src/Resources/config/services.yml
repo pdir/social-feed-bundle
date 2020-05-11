@@ -1,0 +1,16 @@
+services:
+  _instanceof:
+    Contao\CoreBundle\Framework\FrameworkAwareInterface:
+      calls:
+        - ["setFramework", ["@contao.framework"]]
+
+    Symfony\Component\DependencyInjection\ContainerAwareInterface:
+      calls:
+        - ["setContainer", ["@service_container"]]
+
+  pdir_social_feed_moderate.controller:
+    class: Pdir\SocialFeedBundle\Controller\ModerateController
+    public: true
+    arguments:
+      - "@contao.framework"
+      - "@request_stack"

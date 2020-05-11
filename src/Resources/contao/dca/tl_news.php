@@ -1,6 +1,19 @@
 <?php
 
 /**
+ * add global operation
+ */
+array_insert($GLOBALS['TL_DCA']['tl_news']['list']['global_operations'], 0, [
+    'sf_moderate' => [
+        'label' => &$GLOBALS['TL_LANG']['tl_news']['sf_moderate'],
+        'href' => 'key=moderate',
+        'class' => 'header_new header_sf_moderate',
+        'attributes' => 'onclick="Backend.getScrollOffset()"',
+        #'button_callback' => ''
+    ],
+]);
+
+/**
  * Add palette to tl_module
  */
 
