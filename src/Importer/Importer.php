@@ -90,13 +90,13 @@ class Importer
 
         switch ($objSocialFeed->socialFeedType) {
             case "Facebook":
-                return 'fb posts';
+                return 'Facebook is currently not supported.';
                 break;
             case "Instagram":
                 return $this->getInstagramPosts($objSocialFeed->instagram_account, $objSocialFeed->number_posts);
                 break;
             case "Twitter":
-                return 'twitter posts';
+                return 'Twitter is currently not supported.';
                 break;
         }
 

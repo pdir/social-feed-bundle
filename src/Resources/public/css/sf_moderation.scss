@@ -1,4 +1,17 @@
 /** moderation **/
+
+.mod_sf_moderate {
+  h1 {
+    width: 80%;
+  }
+  h2.sub_headline {
+    margin: 3px 15px;
+  }
+  #tl_buttons {
+    float: right;
+  }
+}
+
 .be_sf_morderation_list {
   .list {
     display: flex;

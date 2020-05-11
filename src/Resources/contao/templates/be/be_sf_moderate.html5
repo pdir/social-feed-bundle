@@ -1,22 +1,25 @@
-<form action="<?= ampersand($this->action) ?>" id="tl_news_moderate" class="tl_form" method="post">
-
-  <?php $this->block('headline'); ?>
-    <?php if ($this->headline): ?>
-      <h1 id="main_headline"><?= $this->headline ?></h1>
-    <?php endif; ?>
-  <?php $this->endblock(); ?>
-
-  <div id="tl_buttons">
-    <a href="<?= ampersand($this->backUrl) ?>" class="header_back"
-       title="<?= \Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) ?>"
-       accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT'] ?></a>
-  </div>
-
-  <h2 class="sub_headline"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['moderate'][1] ?></h2>
-
-  <?= $this->message ?>
+<div class="mod_sf_moderate">
+  <form action="<?= ampersand($this->action) ?>" id="tl_news_moderate" class="tl_form" method="post">
 
   <div class="tl_formbody_edit">
+
+    <div id="tl_buttons">
+      <a href="<?= ampersand($this->backUrl) ?>" class="header_back"
+         title="<?= \Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) ?>"
+         accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT'] ?></a>
+    </div>
+
+    <?php $this->block('headline'); ?>
+      <?php if ($this->headline): ?>
+        <h1 id="main_headline"><?= $this->headline ?></h1>
+
+      <?php endif; ?>
+    <?php $this->endblock(); ?>
+
+    <h2 class="sub_headline"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['moderate'][1] ?></h2>
+
+    <?= $this->message ?>
+
     <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
 
@@ -46,4 +49,5 @@
     <?= $this->moderationList ?>
   <?php endif; ?>
 
-</form>
+  </form>
+</div>

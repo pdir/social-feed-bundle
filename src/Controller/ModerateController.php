@@ -32,6 +32,11 @@ class ModerateController
     private $template;
 
     /**
+     * @var string
+     */
+    private $message;
+
+    /**
      * ExportController constructor.
      *
      * @param ContaoFramework $framework
@@ -101,6 +106,11 @@ class ModerateController
             }
         }
 
+        if(!is_array($items)) {
+            $this->message = $items;
+        }
+
+
         // get items for moderation list
         $moderationItems = $objImporter->moderation($items);
         if(count($moderationItems) > 0) {
@@ -132,6 +142,11 @@ class ModerateController
         $environment = $this->framework->getAdapter(Environment::class);
         $message = $this->framework->getAdapter(Message::class);
         $system = $this->framework->getAdapter(System::class);
+
+        if($this->message)
+        {
+            $message->addInfo($this->message);
+        }
 
         $this->template->backUrl = $system->getReferer();
         $this->template->action = $environment->get('request');
