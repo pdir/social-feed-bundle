@@ -35,7 +35,7 @@ class NewsImporter
         // social feed
         $objNews->social_feed_type = $socialFeedType;
         $objNews->social_feed_id = $this->objModel->getId();
-        $objNews->social_feed_account = $socialFeedAccount;
+        $objNews->social_feed_account = $this->objModel->getOwner()->getUSername();
 
         // images
         $imgPath = $this->createImageFolder($socialFeedAccount); // create image folder
