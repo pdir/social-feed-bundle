@@ -23,9 +23,9 @@
         </a>
 
         <?php if ($this->addImage): ?>
-        <?php if ($this->sfImages): ?>
-        <?php $this->insert('image', $this->arrData); ?>
-        <?php endif; ?>
+            <?php if ($this->sfImages): ?>
+                <?php $this->insert('image', $this->arrData); ?>
+            <?php endif; ?>
         <?php endif; ?>
 
 

@@ -3,6 +3,9 @@
 namespace Pdir\SocialFeedBundle\Importer;
 
 use Contao\Dbafs;
+use Contao\File;
+use Contao\FilesModel;
+use Contao\Folder;
 use Contao\Input;
 use Contao\NewsModel;
 
@@ -71,6 +74,7 @@ class NewsImporter
         $objNews->published = 1;
         $objNews->source = 'external';
         $objNews->target = 1;
+        $objNews->url = $this->objModel->getLink();
         $objNews->tstamp = time();
 
         $objNews->save();
@@ -95,8 +99,8 @@ class NewsImporter
         // Create Public Image Folder
         $imgPath = "files/social-feed/".$account."/";
         if( !file_exists($imgPath) ) {
-            new \Folder($imgPath);
-            $file = new \File("files/social-feed/.public");
+            new Folder($imgPath);
+            $file = new File("files/social-feed/.public");
             $file->write("");
             $file->close();
         }
@@ -106,12 +110,19 @@ class NewsImporter
     private function saveImage($strPath, $strUrl) {
         if (!file_exists($strPath)) {
             $strImage = file_get_contents($strUrl);
-            $file = new \File($strPath);
+            $file = new File($strPath);
             $file->write($strImage);
             $file->close();
 
-            return $file->uuid;
+            // add resource
+            $objFile = Dbafs::addResource($file->path);
+
+            return $objFile->uuid;
         }
-        return;
+
+        // use existing file
+        $objFile = FilesModel::findByPath($strPath);
+
+        return $objFile->uuid;
     }
 }
