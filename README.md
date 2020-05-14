@@ -8,18 +8,31 @@ Social Feed extension for Contao 4
 About
 -----
 
-The Social Feed Extension shows a user feed from the most popular social networks (Facebook, Instagram and Twitter). The posts are written directly into the database, created as news and can then displayed on the website using the module type news list.
+The Social Feed Extension shows a user feed from the most popular social
+networks (Facebook, Instagram and Twitter). The posts are written directly
+into the database, created as news and can then displayed on the website
+using the module type news list. Since version 2.5.0 modaration of posts
+in news archive for instagram is available.
 
 **Deutsch**
 
-Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an. Zur Zeit wird Facebook, Instagram und Twitter unterstützt, weitere Kanäle folgen in Zukunft. Die Posts werden direkt in die Datenbank geschrieben, als News angelegt und können anschließend mit dem Modultyp Nachrichtenliste auf der Webseite angezeigt werden.
+Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen
+Netzwerken an. Zur Zeit wird Facebook, Instagram und Twitter unterstützt,
+weitere Kanäle folgen in Zukunft. Die Posts werden direkt in die Datenbank
+geschrieben, als News angelegt und können anschließend mit dem Modultyp
+Nachrichtenliste auf der Webseite angezeigt werden. Seit Version 2.5.0
+kannst du Instagram Beiträge direkt im News Archiv auswählen und entscheiden
+welche Beiträge importiert werden sollen.
+
 
 Auf [contao-themes.net](https://contao-themes.net/sponsoring.html?isorc=3) können Sie die Weiterentwicklung unserer Themes und Erweiterungen durch das Kaufen von speziellen Paketen oder das Spenden von Entwicklungsstunden unterstützen.
 
 
 Screenshot
 -----------
-![Social Feed Stream](http://pdir.de/files/pdir/01_inhalte/social_feed_demo.png)
+![Social Feed Stream](https://pdir.de/files/pdir/01_inhalte/social_feed_demo.png)
+
+![Moderate Instagram](https://pdir.de/files/pdir/01_inhalte/moderiere-instagram-im-backend.png)
 
 System requirements
 -------------------
