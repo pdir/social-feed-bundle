@@ -21,56 +21,60 @@ class CronListener extends \System
     }
 
     public function getInstagramPosts() {
-        $objSocialFeed = SocialFeedModel::findAll();
+        $objSocialFeed = SocialFeedModel::findBy('socialFeedType', 'Instagram');
 
-        foreach($objSocialFeed as $obj) {
-            if($obj->socialFeedType == "Instagram") {
-                $cron = $obj->pdir_sf_fb_news_cronjob;
-                if($cron == 60) $cron = 3600;
-                $lastImport = $obj->pdir_sf_fb_news_last_import_date;
-                $tstamp = time();
-                if($lastImport == "") $lastImport = 0;
-                $interval = $tstamp - $lastImport;
+        foreach ($objSocialFeed as $obj) {
 
-                if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == 0 && $cron != "no_cronjob") ) {
-                    $this->setLastImportDate($id = $obj->id);
+            $cron = $obj->pdir_sf_fb_news_cronjob;
+            $lastImport = $obj->pdir_sf_fb_news_last_import_date;
+            $tstamp = time();
+            if ($lastImport == "") $lastImport = 0;
+            $interval = $tstamp - $lastImport;
 
-                    $accountName = $obj->instagram_account;
-                    $instagram = new \InstagramScraper\Instagram();
-                    $medias = $instagram->getMedias($accountName, $obj->number_posts);
+            // set account name for log an import
+            $accountName = $obj->instagram_account;
 
-                    if(is_array($medias)) {
-                        foreach ($medias as $media) {
-                            $objNews = new \NewsModel();
+            if (($interval >= $cron && $cron != "no_cronjob") || ($lastImport == 0 && $cron != "no_cronjob")) {
+                $this->setLastImportDate($id = $obj->id);
 
-                            if (null !== $objNews->findBy("social_feed_id", $media->getId())) {
-                                continue;
-                            }
+                // get instagram account data
+                $account = Importer::getInstagramAccount($accountName);
 
-                            $imgPath = $this->createImageFolder($accountName);
-                            $account = $instagram->getAccount($accountName);
+                // get instagram posts for account
+                $medias = Importer::importInstagram($accountName, $obj->number_posts);
 
-                            // save account picture
-                            $accountPicture = $imgPath . $account->getId() . '.jpg';
-                            $this->saveAccountPicture($accountPicture, $account);
+                if (!is_array($medias))
+                    continue;
 
-                            // save pictures
-                            $picturePath = $imgPath . $media->getId() . '.jpg';
-                            $this->savePostPictures($picturePath, $media);
+                foreach ($medias as $media) {
+                    $objNews = new \NewsModel();
 
-                            // Write in Database
-                            $message = $this->getPostMessage($messageText = $media->getCaption());
-
-                            // add/fetch file from DBAFS
-                            $objFile = \Dbafs::addResource($imgPath . $media->getId() . '.jpg');
-                            $this->saveInstagramNews($objNews, $obj, $objFile, $message, $media, $account, $accountPicture);
-                        }
+                    if (null !== $objNews->findBy("social_feed_id", $media->getId())) {
+                        continue;
                     }
-                    \System::log('Social Feed: Instagram Import Account '.$accountName, __METHOD__, TL_GENERAL);
-                    $this->import('Automator');
-                    $this->Automator->generateSymlinks();
+
+                    $imgPath = $this->createImageFolder($accountName);
+
+                    // save account picture
+                    $accountPicture = $imgPath . $account->getId() . '.jpg';
+                    $this->saveAccountPicture($accountPicture, $account);
+
+                    // save pictures
+                    $picturePath = $imgPath . $media->getId() . '.jpg';
+                    $this->savePostPictures($picturePath, $media);
+
+                    // Write in Database
+                    $message = $this->getPostMessage($messageText = $media->getCaption());
+
+                    // add/fetch file from DBAFS
+                    $objFile = \Dbafs::addResource($imgPath . $media->getId() . '.jpg');
+                    $this->saveInstagramNews($objNews, $obj, $objFile, $message, $media, $account, $accountPicture);
                 }
             }
+            \System::log('Social Feed: Instagram Import Account ' . $accountName, __METHOD__, TL_GENERAL);
+            $this->import('Automator');
+            $this->Automator->generateSymlinks();
+
         }
     }
 

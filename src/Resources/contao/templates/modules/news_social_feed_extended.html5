@@ -21,9 +21,9 @@
         <div class="title"><?= $this->sfFbAccount ?></div>
 
         <?php if ($this->addImage): ?>
-        <?php if ($this->sfImages): ?>
-        <?php $this->insert('image', $this->arrData); ?>
-        <?php endif; ?>
+            <?php if ($this->sfImages): ?>
+                <?php $this->insert('image', $this->arrData); ?>
+            <?php endif; ?>
         <?php endif; ?>
 
         <div class="ce_text block" itemprop="description">

@@ -3,7 +3,7 @@
 use Pdir\SocialFeedBundle\Module\ModuleCustomNewslist;
 
 /**
- * Add back end modules
+ * Backend modules
  */
 if (!is_array($GLOBALS['BE_MOD']['pdir']))
 {
@@ -33,10 +33,23 @@ array_insert($GLOBALS['BE_MOD']['pdir'], 0, array
     ),
 ));
 
+
+$GLOBALS['BE_MOD']['content']['news']['moderate'] = ['pdir_social_feed_moderate.controller', 'run'];
+
+/*
+ * Models
+ */
+
 $GLOBALS['TL_MODELS']['tl_social_feed'] = 'Pdir\SocialFeedBundle\Model\SocialFeedModel';
 
+/*
+ * Frontend modules
+ */
 $GLOBALS['FE_MOD']['news']['newslist'] = ModuleCustomNewslist::class;
 
+/*
+ * Crons
+ */
 $GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\NewsListener\CronListener', 'getFbPosts');
 $GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\NewsListener\CronListener', 'getInstagramPosts');
 $GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\NewsListener\CronListener', 'getTwitterPosts');
@@ -48,7 +61,8 @@ if (TL_MODE == 'FE')
 {
     $GLOBALS['TL_CSS'][] = 'bundles/pdirsocialfeed/css/social_feed.scss||static';
 }
-
-if (TL_MODE == 'BE') {
+if (TL_MODE == 'BE')
+{
     $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/pdirsocialfeed/js/backend.js';
+    $GLOBALS['TL_CSS'][] =  'bundles/pdirsocialfeed/css/sf_moderation.scss||static';
 }

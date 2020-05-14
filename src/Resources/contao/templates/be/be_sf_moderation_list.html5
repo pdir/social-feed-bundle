@@ -1,0 +1,36 @@
+
+<div class="be_sf_morderation_list">
+    <ul class="list">
+    <?php foreach($this->arr as $key => $item): ?>
+      <li class="list-item first even">
+        <div class="list-content">
+          <img src="<?= $item['image'] ?>" width="100">
+          <p class="info">
+            <time><?= $item['time'] ?></time>
+          </p>
+          <div class="title" onclick="document.getElementById('opt_items_<?= $key ?>').click();"><b><?= $item['title'] ?></b></div>
+          <div class="actions">
+            <p><a href="<?= $item['link'] ?>" class="btn tl_submit" target="_blank">Öffnen</a></p>
+            <label for="opt_items_<?= $key ?>" class="checkbox-container">
+              <input type="checkbox" name="importItems[]" id="opt_items_<?= $key ?>" class="tl_checkbox" value="<?= $item['id'] ?>">
+              <span class="checkmark"></span>
+            </label>
+           </div>
+        </div>
+      </li>
+    <?php endforeach; ?>
+    </ul>
+    <div class="tl_formbody_submit">
+      <div id="sfSubmitContainer" class="tl_submit_container">
+        <button type="submit" class="btn tl_submit">Einträge importieren</button>
+      </div>
+    </div>
+</div>
+<script>
+  function resizer() {
+      var width = document.querySelector('.tl_formbody_submit').offsetWidth;
+      document.getElementById('sfSubmitContainer').style.width = (width - 31) + 'px';
+  }
+  window.addEventListener('resize', resizer);
+  resizer();
+</script>
