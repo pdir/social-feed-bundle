@@ -30,9 +30,9 @@ Auf [contao-themes.net](https://contao-themes.net/sponsoring.html?isorc=3) könn
 
 Screenshot
 -----------
-![Social Feed Stream](https://pdir.de/files/pdir/01_inhalte/social_feed_demo.png)
+![Social Feed Stream](https://pdir.de/files/pdir/01_inhalte/social_feed_demo.png "Social Feed Stream Example")
 
-![Moderate Instagram](https://pdir.de/files/pdir/01_inhalte/moderiere-instagram-im-backend.png)
+![Moderate Instagram](https://pdir.de/files/pdir/01_inhalte/moderiere-instagram-im-backend.png "Moderate Instagram Example")
 
 System requirements
 -------------------
