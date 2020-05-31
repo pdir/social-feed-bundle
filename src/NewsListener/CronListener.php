@@ -2,6 +2,7 @@
 
 namespace Pdir\SocialFeedBundle\NewsListener;
 
+use Pdir\SocialFeedBundle\Importer\Importer;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel as SocialFeedModel;
 use InstagramScraper\Instagram;
 use Abraham\TwitterOAuth\TwitterOAuth;
@@ -37,11 +38,13 @@ class CronListener extends \System
             if (($interval >= $cron && $cron != "no_cronjob") || ($lastImport == 0 && $cron != "no_cronjob")) {
                 $this->setLastImportDate($id = $obj->id);
 
+                $objImporter = new Importer();
+
                 // get instagram account data
-                $account = Importer::getInstagramAccount($accountName);
+                $account = $objImporter->getInstagramAccount($accountName);
 
                 // get instagram posts for account
-                $medias = Importer::importInstagram($accountName, $obj->number_posts);
+                $medias = $objImporter->getInstagramPosts($accountName, $obj->number_posts);
 
                 if (!is_array($medias))
                     continue;
