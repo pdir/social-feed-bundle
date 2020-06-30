@@ -1,12 +1,15 @@
 <?php
 
+/**
+ * add Dca
+ */
 $GLOBALS['TL_DCA']['tl_social_feed'] = [
     'config' => [
         'dataContainer' => 'Table',
         'enableVersioning' => true,
-        /*'onsubmit_callback' => [
-            ['Pdir\SocialFeedBundle\NewsListener\CronListener', 'getFbPosts'],
-        ],*/
+        'onsubmit_callback' => [
+            ['Pdir\SocialFeedBundle\EventListener\SocialFeedListener', 'onSubmitCallback'],
+        ],
         'sql' => [
             'keys' => [
                 'id' => 'primary',
@@ -67,7 +70,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     'subpalettes' => array
     (
         'socialFeedType_Facebook' => 'pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
-        'socialFeedType_Instagram' => 'instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
+        'socialFeedType_Instagram' => 'psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,psf_instagramRequestToken,instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
         'socialFeedType_Twitter' => 'twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account,search,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,show_retweets,hashtags_link,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time'
     ),
 
@@ -201,7 +204,56 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
                 'maxlength' => 255,
                 'tl_class' => 'w50'
             ],
-            'sql' => "varchar(255) NOT NULL default ''",
+            'sql' => "text NULL",
+        ],
+
+        'psf_instagramAppId' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppId'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50'
+            ],
+            'sql' => "text NULL",
+        ],
+
+        'psf_instagramAppSecret' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppSecret'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50'
+            ],
+            'sql' => "text NULL",
+        ],
+
+        'psf_instagramAccessToken' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAccessToken'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'readonly' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50'
+            ],
+            'sql' => "text NULL",
+        ],
+
+        'psf_instagramRequestToken' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramRequestToken'],
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => [
+                'doNotSaveEmpty' => true,
+                'tl_class' => 'w50'
+            ],
+            'save_callback' => [
+                [\Pdir\SocialFeedBundle\EventListener\SocialFeedListener::class, 'onRequestTokenSave'],
+            ],
         ],
 
         'number_posts' => [
