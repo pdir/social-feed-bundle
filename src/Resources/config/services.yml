@@ -24,24 +24,6 @@ services:
             - "@session"
             - "@security.token_storage"
 
-    Pdir\SocialFeedBundle\Importer\FacebookClient:
-        public: true
-        arguments:
-            - "@Pdir\\SocialFeedBundle\\Importer\\InstagramRequestCache"
-            - "@contao.framework"
-            - "@?logger"
-        tags:
-            - { name: monolog.logger, channel: contao }
-
-    Pdir\SocialFeedBundle\Controller\FacebookController:
-        public: true
-        arguments:
-            - "@Pdir\\SocialFeedBundle\\Importer\\FacebookClient"
-            - "@database_connection"
-            - "@router"
-            - "@session"
-            - "@security.token_storage"
-
     Pdir\SocialFeedBundle\EventListener\SocialFeedListener:
         public: true
         arguments:
