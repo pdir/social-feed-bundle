@@ -46,7 +46,7 @@ class CronListener extends \System
                 $objImporter = new Importer();
 
                 // get instagram account data
-                $account = $objImporter->getInstagramAccount($obj->id, $obj->psf_instagramAppId, $obj->psf_instagramAccessToken);
+                //$account = $objImporter->getInstagramAccount($obj->id, $obj->psf_instagramAppId, $obj->psf_instagramAccessToken);
 
 
                 // get instagram posts for account
