@@ -13,7 +13,7 @@ class PdirSocialFeedExtension extends ConfigurableExtension
     /**
      * {@inheritdoc}
      */
-    public function loadInternal(array $mergedConfig, ContainerBuilder $container)
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
