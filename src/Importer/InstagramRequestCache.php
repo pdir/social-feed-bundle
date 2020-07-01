@@ -47,9 +47,9 @@ class InstagramRequestCache
     /**
      * Get the cache dir.
      */
-    public function getCacheDir(int $moduleId = null): ?string
+    public function getCacheDir(int $socialFeedId = null): ?string
     {
-        return $this->projectDir.'/var/cache/instagram/'.($moduleId ?? '_');
+        return $this->projectDir.'/var/cache/instagram/'.($socialFeedId ?? '_');
     }
 
     /**

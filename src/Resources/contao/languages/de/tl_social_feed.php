@@ -17,6 +17,10 @@ $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'] = arra
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_time'] = array("Letzter Import (Zeit) - wird automatisch ausgefüllt","Dieses Feld wird automatisch ausgefüllt und sollten Sie nicht ausfüllen.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_posts'] = array("Nur Posts der Seite importieren","Wenn diese Option aktiviert ist, werden nur die Posts der Seite importiert und keine Posts, die Nutzer an Ihre Pinnwand geschrieben haben.");
 $GLOBALS['TL_LANG']['tl_social_feed']['instagram_account'] = array("Instagram-Account","Geben Sie hier den Namen Ihres Instagram-Accounts ein (entspricht dem Namen in der URL).");
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppId'] = ['Instagram App ID', 'Bitte geben Sie die Instagram App ID ein.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppSecret'] = ['Instagram App Secret', 'Bitte geben Sie das Instagram App Secret ein.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAccessToken'] = ['Instagram Access Token', 'Dies ist ein automatich erzeugter Wert, welcher beim Abschicken des Formulars generiert wird.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramRequestToken'] = ['Access Token anfordern', 'Aktivieren Sie diese Option um einen neuen Instagram Access Token anzufordern.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['socialFeedType'] = array("Typ","Wählen Sie hier zuerst den Typ aus.");
 $GLOBALS['TL_LANG']['tl_social_feed']['no_cronjob'] = "Kein Cronjob";
 $GLOBALS['TL_LANG']['tl_social_feed']['minutely'] = "Minütlich";
@@ -33,3 +37,4 @@ $GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_key'] = array("API Key","Gebe
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_secret_key'] = array("API Secret Key","Geben Sie hier den API Secret Key ein.");
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token'] = array("Access Token","Geben Sie hier den Access Token ein.");
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token_secret'] = array("Access Token Secret","Geben Sie hier den Access Token Secret ein.");
+

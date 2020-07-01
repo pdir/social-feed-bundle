@@ -13,13 +13,9 @@ class PdirSocialFeedExtension extends ConfigurableExtension
     /**
      * {@inheritdoc}
      */
-    public function load(array $mergedConfig, ContainerBuilder $container)
+    public function loadInternal(array $mergedConfig, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader(
-            $container,
-            new FileLocator(__DIR__.'/../Resources/config')
-        );
-
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
         $container->getDefinition(InstagramRequestCache::class)->setArgument(1, (int) $mergedConfig['cache_ttl']);

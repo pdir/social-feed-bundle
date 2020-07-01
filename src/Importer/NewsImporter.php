@@ -12,13 +12,13 @@ use Contao\NewsModel;
 
 class NewsImporter
 {
-    protected $objModel;
+    protected $arrNews;
 
     public $accountImage;
 
-    public function __construct($objModel)
+    public function __construct($arrNews)
     {
-        $this->objModel = $objModel;
+        $this->arrNews = $arrNews;
     }
 
     public function execute($newsArchiveId, $socialFeedType, $socialFeedAccount) {
@@ -26,7 +26,7 @@ class NewsImporter
         $objNews = new NewsModel();
 
         // check if news exists
-        if (null !== $objNews->findBy("social_feed_id", $this->objModel->getId())) {
+        if (null !== $objNews->findBy("social_feed_id", $this->arrNews['id'])) {
             return;
         }
 
@@ -34,27 +34,31 @@ class NewsImporter
 
         // social feed
         $objNews->social_feed_type = $socialFeedType;
-        $objNews->social_feed_id = $this->objModel->getId();
-        $objNews->social_feed_account = $this->objModel->getOwner()->getUSername();
+        $objNews->social_feed_id = $this->arrNews['id'];
+        $objNews->social_feed_account = $socialFeedAccount;
 
         // images
         $imgPath = $this->createImageFolder($socialFeedAccount); // create image folder
 
         // account image
-        $accountPicturePath = $imgPath . $this->objModel->getOwner()->getUSername() . '.jpg';
-        $accountPictureUuid = $this->saveImage($accountPicturePath, $this->accountImage);
+        $accountPicturePath = $imgPath . $socialFeedAccount . '.jpg';
+        // $accountPictureUuid = $this->saveImage($accountPicturePath, $this->accountImage);
 
-        $objNews->social_feed_account_picture = $accountPictureUuid;
+        // $objNews->social_feed_account_picture = $accountPictureUuid;
 
         // post images
-        $picturePath = $imgPath . $objNews->social_feed_id . '.jpg';
-        $pictureUuid = $this->saveImage($picturePath, $this->objModel->getImageHighResolutionUrl());
+        if('VIDEO' == $this->arrNews['media_type'] || 'IMAGE' == $this->arrNews['media_type']) {
+            $imgSrc = strpos($this->arrNews['media_url'],"jpg")!==false ? $this->arrNews['media_url'] : $this->arrNews['thumbnail_url'];
 
-        $objNews->addImage = 1;
-        $objNews->singleSRC = $pictureUuid;
+            $picturePath = $imgPath . $objNews->social_feed_id . '.jpg';
+            $pictureUuid = $this->saveImage($picturePath, $imgSrc);
+
+            $objNews->addImage = 1;
+            $objNews->singleSRC = $pictureUuid;
+        }
 
         // message and teaser
-        $message = $this->getPostMessage($this->objModel->getCaption());
+        $message = $this->getPostMessage($this->arrNews['caption']);
         $more = "";
         if (strlen($message) > 50)
         {
@@ -63,18 +67,24 @@ class NewsImporter
 
         $objNews->headline = substr($message, 0, 50) . $more;
 
+        // set headline to id if headline is not set
+        if('' == $objNews->headline)
+        {
+            $objNews->headline = $this->arrNews['id'];
+        }
+
         $message = str_replace("\n", "<br>", $message);
         $objNews->teaser = $message;
 
         // date and time
-        $objNews->date = $this->objModel->getCreatedTime();
-        $objNews->time = $this->objModel->getCreatedTime();
+        $objNews->date = $this->arrNews['timestamp'];
+        $objNews->time = $this->arrNews['timestamp'];
 
         // default
         $objNews->published = 1;
         $objNews->source = 'external';
         $objNews->target = 1;
-        $objNews->url = $this->objModel->getLink();
+        $objNews->url = $this->arrNews['permalink'];
         $objNews->tstamp = time();
 
         $objNews->save();

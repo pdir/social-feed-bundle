@@ -10,6 +10,9 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         'onsubmit_callback' => [
             ['Pdir\SocialFeedBundle\EventListener\SocialFeedListener', 'onSubmitCallback'],
         ],
+        /*'onload_callback' => [
+            ['Pdir\\SocialFeedBundle\\Dca\\tl_social_feed', 'renderFooter'],
+        ],*/
         'sql' => [
             'keys' => [
                 'id' => 'primary',
@@ -64,7 +67,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 
     'palettes' => [
         '__selector__'  => array('socialFeedType'),
-        'default' => '{pdir_sf_type_legend},socialFeedType;',
+        'default' => '{pdir_sf_type_legend},socialFeedType,psf_setup;',
     ],
 
     'subpalettes' => array
@@ -202,7 +205,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50 clr'
             ],
             'sql' => "text NULL",
         ],
@@ -249,7 +252,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'checkbox',
             'eval' => [
                 'doNotSaveEmpty' => true,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50 m12'
             ],
             'save_callback' => [
                 [\Pdir\SocialFeedBundle\EventListener\SocialFeedListener::class, 'onRequestTokenSave'],
@@ -356,6 +359,11 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
                 'tl_class' => 'w50'
             ],
             'sql' => "varchar(255) NOT NULL default ''",
+        ],
+
+        'psf_setup' => [
+            'exclude' => true,
+            'input_field_callback' => ['Pdir\\SocialFeedBundle\\Dca\\tl_social_feed', 'setupExplanation']
         ],
     ],
 ];

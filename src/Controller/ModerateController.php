@@ -98,7 +98,7 @@ class ModerateController
         {
             foreach($items as $item)
             {
-                if(in_array($item->getId(), $importItems)) {
+                if(in_array($item['id'], $importItems)) {
                     $importer = new NewsImporter($item);
                     $importer->accountImage = $objImporter->getAccountImage();
                     $importer->execute($newsArchiveId, $objSocialFeedModel->socialFeedType, $objSocialFeedModel->id);
@@ -109,7 +109,6 @@ class ModerateController
         if(!is_array($items)) {
             $this->message = $items;
         }
-
 
         // get items for moderation list
         $moderationItems = $objImporter->moderation($items);

@@ -57,14 +57,14 @@ class InstagramClient
     /**
      * Get the data from Instagram.
      */
-    public function getData(string $url, array $query = [], int $moduleId = null, bool $cache = true): ?array
+    public function getData(string $url, array $query = [], int $socialFeedId = null, bool $cache = true): ?array
     {
         if (!$cache) {
-            $this->cache->purge($this->cache->getCacheDir($moduleId));
+            $this->cache->purge($this->cache->getCacheDir($socialFeedId));
         }
 
         try {
-            $response = $this->getCachedClient($moduleId)->get($url, ['query' => $query]);
+            $response = $this->getCachedClient($socialFeedId)->get($url, ['query' => $query]);
         } catch (ClientException | ServerException $e) {
             if (null !== $this->logger) {
                 $this->logger->error(sprintf('Unable to fetch Instagram data from "%s": %s', $url, $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]);
@@ -89,23 +89,23 @@ class InstagramClient
     /**
      * Get the media data.
      */
-    public function getMediaData(string $accessToken, int $moduleId = null, bool $cache = true): ?array
+    public function getMediaData(string $accessToken, int $socialFeedId = null, bool $cache = true): ?array
     {
         return $this->getData('https://graph.instagram.com/me/media', [
             'access_token' => $accessToken,
-            'fields' => 'id,caption,media_type,media_url,permalink,timestamp',
-        ], $moduleId, $cache);
+            'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp',
+        ], $socialFeedId, $cache);
     }
 
     /**
      * Get the user data.
      */
-    public function getUserData(string $accessToken, int $moduleId = null, bool $cache = true): ?array
+    public function getUserData(string $accessToken, int $socialFeedId = null, bool $cache = true): ?array
     {
         return $this->getData('https://graph.instagram.com/me', [
             'access_token' => $accessToken,
             'fields' => 'id,username',
-        ], $moduleId, $cache);
+        ], $socialFeedId, $cache);
     }
 
     /**

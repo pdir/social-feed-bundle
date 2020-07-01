@@ -86,13 +86,13 @@ class InstagramController
 
         $sessionData = $this->session->get(SocialFeedListener::SESSION_KEY);
 
-        // Module ID not found in session
-        if (null === $sessionData || !isset($sessionData['moduleId'])) {
+        // Social feed ID not found in session
+        if (null === $sessionData || !isset($sessionData['socialFeedId'])) {
             return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
         }
 
-        // Module not found
-        if (false === ($module = $this->db->fetchAssoc('SELECT * FROM tl_module WHERE id=?', [$sessionData['socialFeedId']]))) {
+        // Social feed account not found
+        if (false === ($module = $this->db->fetchAssoc('SELECT * FROM tl_social_feed WHERE id=?', [$sessionData['socialFeedId']]))) {
             return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
         }
 
@@ -112,7 +112,7 @@ class InstagramController
         $mediaData = $this->client->getMediaData($accessToken, (int) $module['id'], false);
 
         // Store the access token and remove temporary session key
-        $this->db->update('tl_module', ['psf_instagramAccessToken' => $accessToken], ['id' => $sessionData['socialFeedId']]);
+        $this->db->update('tl_social_feed', ['psf_instagramAccessToken' => $accessToken], ['id' => $sessionData['socialFeedId']]);
         $this->session->remove(SocialFeedListener::SESSION_KEY);
 
         return new RedirectResponse($sessionData['backUrl']);
