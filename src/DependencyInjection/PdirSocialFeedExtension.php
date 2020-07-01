@@ -2,12 +2,13 @@
 
 namespace Pdir\SocialFeedBundle\DependencyInjection;
 
+use Pdir\SocialFeedBundle\Importer\InstagramRequestCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
-class PdirSocialFeedExtension extends Extension
+class PdirSocialFeedExtension extends ConfigurableExtension
 {
     /**
      * {@inheritdoc}
@@ -20,5 +21,7 @@ class PdirSocialFeedExtension extends Extension
         );
 
         $loader->load('services.yml');
+
+        $container->getDefinition(InstagramRequestCache::class)->setArgument(1, (int) $mergedConfig['cache_ttl']);
     }
 }
