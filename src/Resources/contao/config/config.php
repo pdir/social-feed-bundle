@@ -47,7 +47,6 @@ if (TL_MODE == 'FE')
 }
 if (TL_MODE == 'BE')
 {
-    $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/pdirsocialfeed/js/backend.js';
     $GLOBALS['TL_CSS'][] =  'bundles/pdirsocialfeed/css/sf_moderation.scss||static';
     $GLOBALS['TL_CSS'][] =  'bundles/pdirsocialfeed/css/backend.css||static';
 }
