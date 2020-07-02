@@ -1,40 +1,25 @@
 <div class="tl_listing_container">
-    <div id="pdir" class="be_socialfeed_setup clr">
-        <h1 id="tl_welcome">SocialFeedBundle (Version: <?= $this->version ?>)</h1>
-        <div class="intro">
-            <div class="right">
-                <p>Das SocialFeedBundle ist gesponsert von der <a href="http://www.pdir.de/" target="_blank">pdir / digital agentur</a></p>
-                <h2>Interessante Links</h2>
-                <ul class="link-list">
-                    <li><a href="https://docs.pdir.de/#/social-feed/index" target="_blank"
-                           style="text-decoration: underline;">Dokumentation</a></li>
-                    <li><a href="https://github.com/pdir/social-feed-bundle/issues" target="_blank"
-                           style="text-decoration: underline;">Probleme melden</a></li>
-                    <li><a href="https://github.com/pdir/social-feed-bundle/" target="_blank"
-                           style="text-decoration: underline;">Github</a></li>
-                    <li><a href="https://contao-themes.net/sponsoring.html?isorc=3" target="_blank"
-                           style="text-decoration: underline;">Sponsoring / Unterstützen</a></li>
-                </ul>
-            </div>
-            <div class="left">
-                <h2>Willkommen beim SocialFeedBundle für Contao</h2>
-                <p>Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an.
-                    Zur Zeit wird Facebook und Instagram unterstützt, weitere Kanäle werden in Zukunft folgen.</p>
-                <p>Ihr Team der pdir / digital agentur</p>
-            </div>
-            <div class="clr"></div>
+  <div id="pdir" class="be_socialfeed_setup clr">
+    <hr>
+    <h1 id="tl_welcome">SocialFeedBundle (Version: <?= $this->version ?>)</h1>
+    <div class="intro">
+      <div class="right">
+        <p>Das SocialFeedBundle ist gesponsert von der <a href="http://www.pdir.de/" target="_blank">pdir / digital agentur</a></p>
+        <h2>Interessante Links</h2>
+        <ul class="link-list">
+          <li><a href="https://pdir.de/docs/de/contao/extensions/socialfeed/" target="_blank" style="text-decoration: underline;">Dokumentation</a></li>
+          <li><a href="https://github.com/pdir/social-feed-bundle/issues" target="_blank" style="text-decoration: underline;">Probleme melden</a></li>
+          <li><a href="https://github.com/pdir/social-feed-bundle/" target="_blank" style="text-decoration: underline;">Github</a></li>
+          <li><a href="https://contao-themes.net/sponsoring.html?isorc=3" target="_blank" style="text-decoration: underline;">Sponsoring / Unterstützen</a></li>
+        </ul>
         </div>
-        <hr>
-        <div class="tools">
-
-            <h2>Tools</h2>
-            <div class="left">
-                no tools available yet
-            </div>
-            <div class="right">
-
-            </div>
-            <div class="clr"></div>
+        <div class="left">
+          <h2>Willkommen beim SocialFeedBundle für Contao</h2>
+          <p>Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an.
+          Zur Zeit wird Facebook, Twitter und Instagram unterstützt, weitere Kanäle werden in Zukunft folgen.</p>
+          <p>Ihr Team der pdir / digital agentur</p>
         </div>
-</div>
+        <div class="clr"></div>
+      </div>
+    </div>
 </div>

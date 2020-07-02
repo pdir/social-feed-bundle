@@ -1,10 +1,9 @@
 <?php
 
-namespace Pdir\SocialFeedBundle\NewsListener;
+namespace Pdir\SocialFeedBundle\EventListener;
 
 use Pdir\SocialFeedBundle\Importer\Importer;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel as SocialFeedModel;
-use InstagramScraper\Instagram;
 use Abraham\TwitterOAuth\TwitterOAuth;
 
 class CronListener extends \System
@@ -24,6 +23,11 @@ class CronListener extends \System
     public function getInstagramPosts() {
         $objSocialFeed = SocialFeedModel::findBy('socialFeedType', 'Instagram');
 
+        if(NULL === $objSocialFeed)
+        {
+            return;
+        }
+
         foreach ($objSocialFeed as $obj) {
 
             $cron = $obj->pdir_sf_fb_news_cronjob;
@@ -36,54 +40,64 @@ class CronListener extends \System
             $accountName = $obj->instagram_account;
 
             if (($interval >= $cron && $cron != "no_cronjob") || ($lastImport == 0 && $cron != "no_cronjob")) {
+
                 $this->setLastImportDate($id = $obj->id);
 
                 $objImporter = new Importer();
 
-                // get instagram account data
-                $account = $objImporter->getInstagramAccount($accountName);
+                // get instagram picture # not supported
+                // $picture = $objImporter->getInstagramAccountImage($obj->psf_instagramAccessToken, $obj->id);
 
                 // get instagram posts for account
-                $medias = $objImporter->getInstagramPosts($accountName, $obj->number_posts);
+                $medias = $objImporter->getInstagramPosts($obj->psf_instagramAccessToken, $obj->id);
 
                 if (!is_array($medias))
                     continue;
 
+                $counter = 1;
                 foreach ($medias as $media) {
-                    $objNews = new \NewsModel();
 
-                    if (null !== $objNews->findBy("social_feed_id", $media->getId())) {
+                    if($counter++ > $obj->number_posts)
+                    {
                         continue;
                     }
 
-                    $imgPath = $this->createImageFolder($accountName);
+                    $objNews = new \NewsModel();
 
-                    // save account picture
-                    $accountPicture = $imgPath . $account->getId() . '.jpg';
-                    $this->saveAccountPicture($accountPicture, $account);
+                    if (null !== $objNews->findBy("social_feed_id", $media['id'])) {
+                        continue;
+                    }
+
+                    $imgPath = $this->createImageFolder($obj->id);
 
                     // save pictures
-                    $picturePath = $imgPath . $media->getId() . '.jpg';
+                    $picturePath = $imgPath . $media['id'] . '.jpg';
                     $this->savePostPictures($picturePath, $media);
 
                     // Write in Database
-                    $message = $this->getPostMessage($messageText = $media->getCaption());
+                    $message = $this->getPostMessage($media['caption']);
 
                     // add/fetch file from DBAFS
-                    $objFile = \Dbafs::addResource($imgPath . $media->getId() . '.jpg');
-                    $this->saveInstagramNews($objNews, $obj, $objFile, $message, $media, $account, $accountPicture);
+                    $objFile = \Dbafs::addResource($imgPath . $media['id'] . '.jpg');
+                    $this->saveInstagramNews($objNews, $obj, $objFile, $message, $media); //, $account, $accountPicture);
                 }
-            }
-            \System::log('Social Feed: Instagram Import Account ' . $accountName, __METHOD__, TL_GENERAL);
-            $this->import('Automator');
-            $this->Automator->generateSymlinks();
 
+                \System::log('Social Feed: Instagram Import Account ' . $accountName, __METHOD__, TL_GENERAL);
+                $this->import('Automator');
+                $this->Automator->generateSymlinks();
+            }
         }
     }
 
     public function getFbPosts()
     {
         $objSocialFeed = SocialFeedModel::findAll();
+
+        if(NULL == $objSocialFeed)
+        {
+            return;
+        }
+
         foreach($objSocialFeed as $obj) {
             if($obj->socialFeedType == "" || $obj->socialFeedType == "Facebook") {
                 // Get Facebook Feed
@@ -269,6 +283,11 @@ class CronListener extends \System
     public function getTwitterPosts() {
         $objSocialFeed = SocialFeedModel::findAll();
 
+        if(NULL === $objSocialFeed)
+        {
+            return;
+        }
+
         foreach($objSocialFeed as $obj) {
 
             if($obj->socialFeedType == "Twitter") {
@@ -419,11 +438,16 @@ class CronListener extends \System
         }
     }
 
-    private function saveInstagramNews($objNews, $obj, $objFile, $message, $media, $account, $accountPicture) {
+    private function saveInstagramNews($objNews, $obj, $objFile, $message, $media, $account = '', $accountPicture = '') {
         $objNews->pid = $obj->pdir_sf_fb_news_archive;
         $objNews->singleSRC = $objFile->uuid;
         $objNews->addImage = 1;
         $objNews->tstamp = time();
+
+        if('' == $message)
+        {
+            $message = $media['id'];
+        }
 
         if (strlen($message) > 50) $more = " ...";
         else $more = "";
@@ -431,22 +455,22 @@ class CronListener extends \System
 
         $message = str_replace("\n", "<br>", $message);
         $objNews->teaser = $message;
-        $objNews->date = $media->getCreatedTime();
-        $objNews->time = $media->getCreatedTime();
+        $objNews->date = strtotime($media['timestamp']);
+        $objNews->time = strtotime($media['timestamp']);
         $objNews->published = 1;
         $objNews->social_feed_type = $obj->socialFeedType;
-        $objNews->social_feed_id = $media->getId();
-        $objNews->social_feed_account = $account->getUsername();
-        $objNews->social_feed_account_picture = \Dbafs::addResource($accountPicture)->uuid;
+        $objNews->social_feed_id = $media['id'];
+        #$objNews->social_feed_account = $account;
+        #$objNews->social_feed_account_picture = \Dbafs::addResource($accountPicture)->uuid;
         $objNews->source = 'external';
-        $objNews->url = $media->getLink();
+        $objNews->url = $media['link'];
         $objNews->target = 1;
         $objNews->save();
     }
 
     private function savePostPictures($picturePath, $media) {
         if (!file_exists($picturePath)) {
-            $strImage = file_get_contents($media->getImageHighResolutionUrl());
+            $strImage = file_get_contents(strpos($media['media_url'],"jpg")!==false ? $media['media_url'] : $media['thumbnail_url']);
             $file = new \File($picturePath);
             $file->write($strImage);
             $file->close();

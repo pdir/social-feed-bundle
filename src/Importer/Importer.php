@@ -2,12 +2,19 @@
 
 namespace Pdir\SocialFeedBundle\Importer;
 
-use InstagramScraper\Instagram;
-use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 use Contao\Date;
+use Contao\CoreBundle\Exception\ResponseException;
+use Contao\System;
+use Pdir\SocialFeedBundle\Importer\InstagramClient;
+use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 
 class Importer
 {
+    /**
+     * @var InstagramClient
+     */
+    protected $client;
+
     /*
      * account image uuid
      */
@@ -17,19 +24,18 @@ class Importer
      * Collect data from the instagram api and return array.
      *
      * @return void | array
+     * @throws \RuntimeException
      */
-    public function getInstagramPosts($accountName, $numberOfPosts = 10)
+    public function getInstagramPosts($accessToken, $socialFeedId)
     {
-        $instagram = new Instagram();
 
-        if ('' === $accountName)
-            return 'no account given';
+        if ('' === $accessToken)
+            return 'no access token given';
 
-        $items = $instagram->getMedias($accountName, $numberOfPosts);
-        $this->accountImage = $this->getInstagramAccountImage($accountName);
-        // echo "<br>insta: <pre style='height: 200px;overflow:hidden;'>"; print_r($items); echo "</pre>";
+        $client = System::getContainer()->get(InstagramClient::class);
+        $items = $client->getMediaData($accessToken, (int) $socialFeedId);
 
-        return $items;
+        return $items['data'];
     }
 
     /**
@@ -44,11 +50,13 @@ class Importer
      *
      * @return void | array
      */
-    public function getInstagramAccount($accountName)
+    public function getInstagramAccount($accessToken, $socialFeedId)
     {
-        $instagram = new Instagram();
 
-        return $instagram->getAccount($accountName);
+        $client = System::getContainer()->get(InstagramClient::class);
+        $username = $client->getUserData($accessToken, (int) $socialFeedId);
+
+        return $username;
     }
 
     /**
@@ -56,11 +64,12 @@ class Importer
      *
      * @return void | array
      */
-    public function getInstagramAccountImage($accountName)
+    public function getInstagramAccountImage($accessToken, $socialFeedId)
     {
-        $instagram = new Instagram();
+        $client = System::getContainer()->get(InstagramClient::class);
+        $image = $client->getUserImage($accessToken, (int) $socialFeedId, false);
 
-        return $instagram->getAccount($accountName)->getProfilePicUrl();
+        return $image;
     }
 
     public function moderation($items) {
@@ -69,11 +78,11 @@ class Importer
 
         foreach ($items as $item) {
             $listItems[] = [
-                'id' => $item->getId(),
-                'title' => $item->getCaption(),
-                'time' => Date::parse($GLOBALS['TL_CONFIG']['datimFormat'], $item->getCreatedTime()),
-                'image' => $item->getImageThumbnailUrl(),
-                'link' => $item->getLink()
+                'id' => $item['id'],
+                'title' => $item['caption'],
+                'time' => Date::parse($GLOBALS['TL_CONFIG']['datimFormat'], strtotime($item['timestamp'])),
+                'image' => strpos($item['media_url'],"jpg")!==false ? $item['media_url'] : $item['thumbnail_url'],
+                'link' => $item['permalink'],
             ];
         }
 
@@ -84,7 +93,7 @@ class Importer
 
         $objSocialFeed = SocialFeedModel::findBy('id', $id);
 
-        if (null === $objSocialFeed) {
+        if (NULL === $objSocialFeed) {
             return;
         }
 
@@ -93,7 +102,7 @@ class Importer
                 return 'Facebook is currently not supported.';
                 break;
             case "Instagram":
-                return $this->getInstagramPosts($objSocialFeed->instagram_account, $objSocialFeed->number_posts);
+                return $this->getInstagramPosts($objSocialFeed->id, $objSocialFeed->psf_instagramAppId, $objSocialFeed->psf_instagramAccessToken, $objSocialFeed->number_posts);
                 break;
             case "Twitter":
                 return 'Twitter is currently not supported.';

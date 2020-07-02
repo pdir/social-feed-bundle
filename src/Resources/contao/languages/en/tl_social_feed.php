@@ -17,6 +17,11 @@ $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'] = arra
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_time'] = array("Last import (time) - will be filled out automatically","This field will be filled out automatically and you should not fill it out.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_posts'] = array("Import only own posts","If this option is activated, only the posts of the page will be imported and not the posts that users have written to your feed.");
 $GLOBALS['TL_LANG']['tl_social_feed']['instagram_account'] = array("Instagram Account","Please enter the instagram acount name (from the URL).");
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppId'] = ['Instagram App ID', 'Please enter the Instagram App ID.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppSecret'] = ['Instagram App Secret', 'Please enter the Instagram App Secret.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAccessToken'] = ['Instagram access token', 'This is an auto-generated value that will be filled in when you submit the form.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramRequestToken'] = ['Request access token and update feed', 'Check this box and save the record to request the access token and update the feed.'];
+
 $GLOBALS['TL_LANG']['tl_social_feed']['socialFeedType'] = array("Type","Please choose here the typ of the social feed.");
 $GLOBALS['TL_LANG']['tl_social_feed']['no_cronjob'] = 'no cronjob';
 $GLOBALS['TL_LANG']['tl_social_feed']['minutely'] = 'minutely';
