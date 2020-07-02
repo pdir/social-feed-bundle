@@ -45,17 +45,23 @@ class CronListener extends \System
 
                 $objImporter = new Importer();
 
-                // get instagram account data
-                //$account = $objImporter->getInstagramAccount($obj->id, $obj->psf_instagramAppId, $obj->psf_instagramAccessToken);
-
+                // get instagram picture # not supported
+                // $picture = $objImporter->getInstagramAccountImage($obj->psf_instagramAccessToken, $obj->id);
 
                 // get instagram posts for account
-                $medias = $objImporter->getInstagramPosts($obj->id, $obj->psf_instagramAppId, $obj->psf_instagramAccessToken, $obj->number_posts);
+                $medias = $objImporter->getInstagramPosts($obj->psf_instagramAccessToken, $obj->id);
 
                 if (!is_array($medias))
                     continue;
 
+                $counter = 1;
                 foreach ($medias as $media) {
+
+                    if($counter++ > $obj->number_posts)
+                    {
+                        continue;
+                    }
+
                     $objNews = new \NewsModel();
 
                     if (null !== $objNews->findBy("social_feed_id", $media['id'])) {
@@ -64,16 +70,12 @@ class CronListener extends \System
 
                     $imgPath = $this->createImageFolder($obj->id);
 
-                    // save account picture
-                    // $accountPicture = $imgPath . $account->getId() . '.jpg';
-                    // $this->saveAccountPicture($accountPicture, $account);
-
                     // save pictures
-                    $picturePath = $imgPath . $obj->id . '.jpg';
+                    $picturePath = $imgPath . $media['id'] . '.jpg';
                     $this->savePostPictures($picturePath, $media);
 
                     // Write in Database
-                    $message = $this->getPostMessage($messageText = $media['caption']);
+                    $message = $this->getPostMessage($media['caption']);
 
                     // add/fetch file from DBAFS
                     $objFile = \Dbafs::addResource($imgPath . $media['id'] . '.jpg');
@@ -453,8 +455,8 @@ class CronListener extends \System
 
         $message = str_replace("\n", "<br>", $message);
         $objNews->teaser = $message;
-        $objNews->date = $media['timestamp'];
-        $objNews->time = $media['timestamp'];
+        $objNews->date = strtotime($media['timestamp']);
+        $objNews->time = strtotime($media['timestamp']);
         $objNews->published = 1;
         $objNews->social_feed_type = $obj->socialFeedType;
         $objNews->social_feed_id = $media['id'];

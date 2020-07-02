@@ -109,6 +109,17 @@ class InstagramClient
     }
 
     /**
+     * Get the user image.
+     */
+    public function getUserImage(string $accessToken, int $socialFeedId = null, bool $cache = true): ?array
+    {
+        # not supported by instagram
+        return $this->getData('https://graph.instagram.com/me/picture', [
+            'access_token' => $accessToken,
+        ], $socialFeedId, $cache);
+    }
+
+    /**
      * Store the media files locally.
      *
      * @throws \RuntimeException

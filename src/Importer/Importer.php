@@ -26,10 +26,8 @@ class Importer
      * @return void | array
      * @throws \RuntimeException
      */
-    public function getInstagramPosts($socialFeedId, $appId, $accessToken, $numberOfPosts = 10)
+    public function getInstagramPosts($accessToken, $socialFeedId)
     {
-        if ('' === $appId)
-            return 'no app id given';
 
         if ('' === $accessToken)
             return 'no access token given';
@@ -52,7 +50,7 @@ class Importer
      *
      * @return void | array
      */
-    public function getInstagramAccount($socialFeedId, $accessToken)
+    public function getInstagramAccount($accessToken, $socialFeedId)
     {
 
         $client = System::getContainer()->get(InstagramClient::class);
@@ -66,11 +64,12 @@ class Importer
      *
      * @return void | array
      */
-    public function getInstagramAccountImage($accountName)
+    public function getInstagramAccountImage($accessToken, $socialFeedId)
     {
-        $instagram = new Instagram();
+        $client = System::getContainer()->get(InstagramClient::class);
+        $image = $client->getUserImage($accessToken, (int) $socialFeedId, false);
 
-        return $instagram->getAccount($accountName)->getProfilePicUrl();
+        return $image;
     }
 
     public function moderation($items) {
@@ -81,7 +80,7 @@ class Importer
             $listItems[] = [
                 'id' => $item['id'],
                 'title' => $item['caption'],
-                'time' => Date::parse($GLOBALS['TL_CONFIG']['datimFormat'], $item['timestamp']),
+                'time' => Date::parse($GLOBALS['TL_CONFIG']['datimFormat'], strtotime($item['timestamp'])),
                 'image' => strpos($item['media_url'],"jpg")!==false ? $item['media_url'] : $item['thumbnail_url'],
                 'link' => $item['permalink'],
             ];

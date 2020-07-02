@@ -41,9 +41,8 @@ class NewsImporter
         $imgPath = $this->createImageFolder($socialFeedAccount); // create image folder
 
         // account image
-        $accountPicturePath = $imgPath . $socialFeedAccount . '.jpg';
+        // $accountPicturePath = $imgPath . $socialFeedAccount . '.jpg';
         // $accountPictureUuid = $this->saveImage($accountPicturePath, $this->accountImage);
-
         // $objNews->social_feed_account_picture = $accountPictureUuid;
 
         // post images
@@ -77,8 +76,8 @@ class NewsImporter
         $objNews->teaser = $message;
 
         // date and time
-        $objNews->date = $this->arrNews['timestamp'];
-        $objNews->time = $this->arrNews['timestamp'];
+        $objNews->date = strtotime($this->arrNews['timestamp']);
+        $objNews->time = strtotime($this->arrNews['timestamp']);
 
         // default
         $objNews->published = 1;

@@ -94,6 +94,7 @@ class ModerateController
 
         // import selected items
         $importItems = $request->request->get('importItems');
+
         if($importItems && count($importItems) > 0)
         {
             foreach($items as $item)
@@ -106,8 +107,9 @@ class ModerateController
             }
         }
 
-        if(!is_array($items)) {
-            $this->message = $items;
+        // set import message
+        if(is_array($items) && count($importItems) > 0) {
+            $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], count($importItems));
         }
 
         // get items for moderation list
@@ -120,6 +122,7 @@ class ModerateController
 
         $this->template->activeAccount = $request->request->get('account');
         $this->template->moderationList = $html;
+        $this->template->message = $this->message;
     }
 
     /**
