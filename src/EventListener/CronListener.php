@@ -463,7 +463,7 @@ class CronListener extends \System
         #$objNews->social_feed_account = $account;
         #$objNews->social_feed_account_picture = \Dbafs::addResource($accountPicture)->uuid;
         $objNews->source = 'external';
-        $objNews->url = $media['link'];
+        $objNews->url = $media['permalink'];
         $objNews->target = 1;
         $objNews->save();
     }

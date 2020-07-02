@@ -102,7 +102,7 @@ class Importer
                 return 'Facebook is currently not supported.';
                 break;
             case "Instagram":
-                return $this->getInstagramPosts($objSocialFeed->id, $objSocialFeed->psf_instagramAppId, $objSocialFeed->psf_instagramAccessToken, $objSocialFeed->number_posts);
+                return $this->getInstagramPosts($objSocialFeed->psf_instagramAccessToken, $objSocialFeed->id);
                 break;
             case "Twitter":
                 return 'Twitter is currently not supported.';
