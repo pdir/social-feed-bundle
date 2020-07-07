@@ -17,7 +17,7 @@ array_insert($GLOBALS['TL_DCA']['tl_news']['list']['global_operations'], 0, [
  * Add palette to tl_module
  */
 
-$GLOBALS['TL_DCA']['tl_news']['palettes']['default'] = str_replace('stop','stop;{pdir_sf_settings_legend},social_feed_type,social_feed_id,social_feed_account,social_feed_account_picture', $GLOBALS['TL_DCA']['tl_news']['palettes']['default']);
+$GLOBALS['TL_DCA']['tl_news']['palettes']['default'] = str_replace('stop','stop;{pdir_sf_settings_legend},social_feed_type,social_feed_id,social_feed_account,social_feed_account_picture,social_feed_config', $GLOBALS['TL_DCA']['tl_news']['palettes']['default']);
 
 $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_id'] = array
 (
@@ -68,6 +68,19 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_account_picture'] = array
         array('tl_news_socialfeed', 'setSingleSrcFlags')
     ),
     'sql' => "binary(16) NULL"
+);
+
+$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_config'] = array
+(
+    'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_config'],
+    'exclude' => true,
+    'inputType' => 'text',
+    'eval' => array(
+        'mandatory'=>false,
+        'tl_class' => 'w50',
+        'readonly'=>'readonly'
+    ),
+    'sql' => "int(10) unsigned NULL",
 );
 
 class tl_news_socialfeed extends Backend
