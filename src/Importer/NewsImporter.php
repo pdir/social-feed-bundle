@@ -35,7 +35,7 @@ class NewsImporter
         // social feed
         $objNews->social_feed_type = $socialFeedType;
         $objNews->social_feed_id = $this->arrNews['id'];
-        $objNews->social_feed_account = $socialFeedAccount;
+        $objNews->social_feed_config = $socialFeedAccount;
 
         // images
         $imgPath = $this->createImageFolder($socialFeedAccount); // create image folder
@@ -46,7 +46,7 @@ class NewsImporter
         // $objNews->social_feed_account_picture = $accountPictureUuid;
 
         // post images
-        if('VIDEO' == $this->arrNews['media_type'] || 'IMAGE' == $this->arrNews['media_type']) {
+        if('VIDEO' == $this->arrNews['media_type'] || 'IMAGE' == $this->arrNews['media_type'] || 'CAROUSEL_ALBUM' == $this->arrNews['media_type']) {
             $imgSrc = strpos($this->arrNews['media_url'],"jpg")!==false ? $this->arrNews['media_url'] : $this->arrNews['thumbnail_url'];
 
             $picturePath = $imgPath . $objNews->social_feed_id . '.jpg';

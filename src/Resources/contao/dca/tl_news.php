@@ -17,7 +17,11 @@ array_insert($GLOBALS['TL_DCA']['tl_news']['list']['global_operations'], 0, [
  * Add palette to tl_module
  */
 
-$GLOBALS['TL_DCA']['tl_news']['palettes']['default'] = str_replace('stop','stop;{pdir_sf_settings_legend},social_feed_type,social_feed_id,social_feed_account,social_feed_account_picture,social_feed_config', $GLOBALS['TL_DCA']['tl_news']['palettes']['default']);
+if(version_compare(VERSION, '4.9','>=')) {
+    $GLOBALS['TL_DCA']['tl_news']['palettes']['external'] .= ';{pdir_sf_settings_legend},social_feed_type,social_feed_id,social_feed_account,social_feed_account_picture,social_feed_config';
+} else {
+    $GLOBALS['TL_DCA']['tl_news']['palettes']['default'] .= ';{pdir_sf_settings_legend},social_feed_type,social_feed_id,social_feed_account,social_feed_account_picture,social_feed_config';
+}
 
 $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_id'] = array
 (
