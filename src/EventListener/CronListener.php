@@ -333,6 +333,11 @@ class CronListener extends \System
                             continue;
                         }
 
+                        echo $post->in_reply_to_status_id."<br>";
+                        if($post->in_reply_to_status_id != "" && $obj->show_reply != 1) {
+                            continue;
+                        }
+
                         if($post->retweeted_status && $obj->show_retweets == 1) {
                             $post->full_text = "RT @".$post->entities->user_mentions[0]->screen_name.": ".$post->retweeted_status->full_text;
                         }
@@ -471,6 +476,7 @@ class CronListener extends \System
         $objNews->published = 1;
         $objNews->social_feed_type = $obj->socialFeedType;
         $objNews->social_feed_id = $media['id'];
+        $objNews->social_feed_config = $obj->id;
         #$objNews->social_feed_account = $account;
         #$objNews->social_feed_account_picture = \Dbafs::addResource($accountPicture)->uuid;
         $objNews->source = 'external';

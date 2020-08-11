@@ -2,6 +2,8 @@
 
 namespace Pdir\SocialFeedBundle\SocialFeed;
 
+use Pdir\SocialFeedBundle\Model\SocialFeedModel as SocialFeedModel;
+
 class SocialFeedNewsClass {
 
     public function parseNews($objTemplate, $arrRow, $objModule)
@@ -19,14 +21,32 @@ class SocialFeedNewsClass {
                 $teaser = $arrRow['teaser'];
             }
 
+            $objTemplate->sfFbAccountPicture = $arrRow['social_feed_account_picture'];
             $objTemplate->sfTextLength = $objModule->pdir_sf_text_length;
             $objTemplate->sfElementWidth = $objModule->pdir_sf_columns;
             $objTemplate->sfImages = $objModule->pdir_sf_enableImages;
             $objTemplate->sfFbLink = $arrRow['pdir_sf_fb_link'];
-            $objTemplate->sfFbAccountPicture = $arrRow['social_feed_account_picture'];
-            $objTemplate->sfFbAccount = $arrRow['social_feed_account'];
             $objTemplate->teaser = $teaser;
             $objTemplate->socialFeedType = $arrRow['social_feed_type'];
+
+            if($arrRow['social_feed_account_picture'] != "") {
+                $imagePath = \FilesModel::findByUuid($arrRow['social_feed_account_picture'])->path;
+                $objTemplate->accountPicture = \Picture::create($imagePath)->getTemplateData();
+            } else {
+                $socialFeedAccount = SocialFeedModel::findBy('id', $arrRow['social_feed_config']);
+                if($socialFeedAccount->instagram_account_picture != "") {
+                    $imagePath = \FilesModel::findByUuid($socialFeedAccount->instagram_account_picture)->path;
+                    $size = deserialize($socialFeedAccount->instagram_account_picture_size);
+                    $objTemplate->accountPicture = \Picture::create($imagePath, $size)->getTemplateData();
+                }
+            }
+
+            if($arrRow['social_feed_account'] != "") {
+                $objTemplate->sfFbAccount = $arrRow['social_feed_account'];
+            } else {
+                $socialFeedAccount = SocialFeedModel::findBy('id', $arrRow['social_feed_config']);
+                $objTemplate->sfFbAccount = $socialFeedAccount->instagram_account;
+            }
         }
     }
 

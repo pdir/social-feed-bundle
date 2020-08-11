@@ -2,9 +2,11 @@
     <div class="inner">
 
         <a href="<?= $this->url ?>" target="_blank">
+            <?php if($this->accountPicture): ?>
             <div class="icon">
-                {{picture::<?php echo \StringUtil::binToUuid($this->sfFbAccountPicture); ?>}}
+                <?php $this->insert('picture_default', $this->accountPicture); ?>
             </div>
+            <?php endif; ?>
 
             <?php if ($this->hasMetaFields): ?>
             <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished">
