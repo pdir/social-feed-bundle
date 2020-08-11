@@ -309,15 +309,26 @@ class CronListener extends \System
                     $search = $obj->search;
                     $connection = new TwitterOAuth($api_key, $api_secret_key, $access_token, $access_token_secret);
 
-                    if($accountName != "") {
-                        $posts = $connection->get("statuses/user_timeline", ["screen_name" => $accountName, "tweet_mode" => 'extended', "count" => $obj->number_posts]);
+                    $posts = [];
+
+                    if($accountName != "" && $search == "") {
+                        $posts = $connection->get('statuses/user_timeline', ['screen_name' => $accountName, 'tweet_mode' => 'extended', 'count' => $obj->number_posts]);
+                    } else if($search != "" && $accountName != "") {
+                        $posts = $connection->get("search/tweets", ["q" => $accountName, 'tweet_mode' => 'extended', 'count' => $obj->number_posts])->statuses;
                     } else if($search != "") {
-                        $posts = $connection->get("search/tweets", ["q" => $search, "tweet_mode" => 'extended', "count" => $obj->number_posts])->statuses;
-                    } else {
-                        $posts = [];
+                        $posts = $connection->get("search/tweets", ["q" => $search, 'tweet_mode' => 'extended', 'count' => $obj->number_posts])->statuses;
                     }
 
                     foreach($posts as $post) {
+
+                        if(!$post) {
+                            continue;
+                        }
+
+                        if($search != "" && $accountName != "" && strpos($post->full_text, $search)===false) { // remove unwanted tweets
+                            continue;
+                        }
+
                         if($post->retweeted_status && $obj->show_retweets != 1) {
                             continue;
                         }
