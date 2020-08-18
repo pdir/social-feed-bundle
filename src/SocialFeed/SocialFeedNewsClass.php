@@ -31,8 +31,6 @@ class SocialFeedNewsClass {
 
             if('' != $arrRow['social_feed_account_picture']) {
                 $imagePath = \FilesModel::findByUuid($arrRow['social_feed_account_picture'])->path;
-                echo "imagePath: " . $imagePath;
-                var_dump($imagePath);
                 if(null === $imagePath) {
                     $objTemplate->accountPicture = '';
                 }
