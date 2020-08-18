@@ -29,9 +29,18 @@ class SocialFeedNewsClass {
             $objTemplate->teaser = $teaser;
             $objTemplate->socialFeedType = $arrRow['social_feed_type'];
 
-            if($arrRow['social_feed_account_picture'] != "") {
+            if('' != $arrRow['social_feed_account_picture']) {
                 $imagePath = \FilesModel::findByUuid($arrRow['social_feed_account_picture'])->path;
-                $objTemplate->accountPicture = \Picture::create($imagePath)->getTemplateData();
+                echo "imagePath: " . $imagePath;
+                var_dump($imagePath);
+                if(null === $imagePath) {
+                    $objTemplate->accountPicture = '';
+                }
+
+                if(null !== $imagePath) {
+                    $pictureObj = \Picture::create($imagePath);
+                    $objTemplate->accountPicture = $pictureObj->getTemplateData();
+                }
             } else {
                 $socialFeedAccount = SocialFeedModel::findBy('id', $arrRow['social_feed_config']);
                 if($socialFeedAccount->instagram_account_picture != "") {

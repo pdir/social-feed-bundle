@@ -43,10 +43,10 @@ $GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\EventListener\C
  */
 if (TL_MODE == 'FE')
 {
-    $GLOBALS['TL_CSS']['social_feed'] = 'bundles/pdirsocialfeed/css/social_feed.scss||static';
+    $GLOBALS['TL_CSS']['social_feed'] = 'bundles/pdirsocialfeed/css/social_feed.scss|static';
 }
 if (TL_MODE == 'BE')
 {
-    $GLOBALS['TL_CSS'][] =  'bundles/pdirsocialfeed/css/sf_moderation.scss||static';
-    $GLOBALS['TL_CSS'][] =  'bundles/pdirsocialfeed/css/backend.css||static';
+    $GLOBALS['TL_CSS'][] =  'bundles/pdirsocialfeed/css/sf_moderation.scss|static';
+    $GLOBALS['TL_CSS'][] =  'bundles/pdirsocialfeed/css/backend.css|static';
 }
