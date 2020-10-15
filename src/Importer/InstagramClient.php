@@ -86,7 +86,6 @@ class InstagramClient
         $data = $json_data['data'];
 
         if($json_data['paging']['next']) {
-            \System::log('Next Page: '.$json_data['paging']['next'], __METHOD__, TL_GENERAL);
             parse_str(parse_url($json_data['paging']['next'], PHP_URL_QUERY),$query);
             $next_page = $this->getData($url, $query, $socialFeedId, $cache);
             $data = array_merge($data,$next_page['data']);
