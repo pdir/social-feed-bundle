@@ -73,9 +73,9 @@ class InstagramClient
             return null;
         }
 
-        $data = json_decode($response->getBody(), true);
+        $json_data = json_decode($response->getBody(), true);
 
-        if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
+        if (!\is_array($json_data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
                 $this->logger->error(sprintf('Unable to decode Instagram data from "%s": %s', $url, json_last_error_msg()), ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]);
             }
@@ -83,7 +83,15 @@ class InstagramClient
             return null;
         }
 
-        return $data;
+        $data = $json_data['data'];
+
+        if($json_data['paging']['next']) {
+            parse_str(parse_url($json_data['paging']['next'], PHP_URL_QUERY),$query);
+            $next_page = $this->getData($url, $query, $socialFeedId, $cache);
+            $data = array_merge($data,$next_page['data']);
+        }
+
+        return ['data' => $data];
     }
 
     /**
