@@ -64,7 +64,7 @@ class NewsImporter
             $more = " ...";
         }
 
-        $objNews->headline = substr($message, 0, 50) . $more;
+        $objNews->headline = mb_substr($message, 0, 50) . $more;
 
         // set headline to id if headline is not set
         if('' == $objNews->headline)

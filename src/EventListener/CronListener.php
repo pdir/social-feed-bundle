@@ -147,11 +147,11 @@ class CronListener extends \System
                             $imageTitle = $image['title'];
                             // set variables
                             if(strpos($post['message'],"\n")) {
-                                $title = substr($post['message'],0,strpos($post['message'],"\n"));
+                                $title = mb_substr($post['message'],0,strpos($post['message'],"\n"));
                             } else if($post['message'] == "") {
                                 $title = "Kein Titel";
                             } else {
-                                $title = substr($post['message'],0);
+                                $title = mb_substr($post['message'],0);
                             }
 
                             $message = $this->getPostMessage($messageText = $post['message']);
@@ -176,7 +176,7 @@ class CronListener extends \System
                                 $objNews->addImage = 1;
                             }
                             $objNews->tstamp = time();
-                            $objNews->headline = substr($title,0,255);
+                            $objNews->headline = mb_substr($title,0,255);
 
                             if($message == "" && $imageTitle != "") {
                                 $objNews->teaser = $imageTitle;
@@ -378,7 +378,7 @@ class CronListener extends \System
                         $objNews->tstamp = time();
                         if (strlen($post->full_text) > 50) $more = " ...";
                         else $more = "";
-                        $objNews->headline = substr($post->full_text, 0, 50) . $more;
+                        $objNews->headline = mb_substr($post->full_text, 0, 50) . $more;
 
                         if($obj->hashtags_link == 1) {
                             if($post->retweeted_status && $obj->show_retweets == 1) {
@@ -467,7 +467,7 @@ class CronListener extends \System
 
         if (strlen($message) > 50) $more = " ...";
         else $more = "";
-        $objNews->headline = substr($message, 0, 50) . $more;
+        $objNews->headline = mb_substr($message, 0, 50) . $more;
 
         $message = str_replace("\n", "<br>", $message);
         $objNews->teaser = $message;
