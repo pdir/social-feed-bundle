@@ -108,7 +108,7 @@ class ModerateController
         }
 
         // set import message
-        if(is_array($items) && count($importItems) > 0) {
+        if(is_array($items) && isset($importItems) && count($importItems) > 0) {
             $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], count($importItems));
         }
 
