@@ -1,5 +1,7 @@
 <?php
 
+\Contao\System::loadLanguageFile('tl_social_feed');
+
 /**
  * add Dca
  */
