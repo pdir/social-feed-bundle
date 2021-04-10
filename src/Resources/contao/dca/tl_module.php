@@ -9,6 +9,8 @@
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
+\Contao\System::loadLanguageFile('tl_module');
+
 /**
  * Add palette to tl_module
  */
