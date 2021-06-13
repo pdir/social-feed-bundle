@@ -225,7 +225,10 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'label' => &$GLOBALS['TL_LANG']['tl_news']['instagram_account_picture_size'],
             'exclude' => true,
             'inputType'  => 'imageSize',
-            'options' => \Contao\System::getImageSizes(),
+            'options_callback' => static function ()
+            {
+                return \Contao\System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+            },
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
             'eval' => ['rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'],
             'sql' => "varchar(64) NOT NULL default ''"
