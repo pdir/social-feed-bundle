@@ -29,7 +29,7 @@
     "donate": "https://contao-themes.net/sponsoring.html"
   },
   "require": {
-    "php": ">=7.1",
+    "php": "^7.3 || ^8.0",
     "contao/core-bundle": "^4.4",
     "nickdnk/graph-sdk": "^6.0",
     "abraham/twitteroauth": "~1.1 || ~2.0",

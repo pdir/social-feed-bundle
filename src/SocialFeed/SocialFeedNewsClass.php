@@ -25,7 +25,6 @@ class SocialFeedNewsClass {
             $objTemplate->sfTextLength = $objModule->pdir_sf_text_length;
             $objTemplate->sfElementWidth = $objModule->pdir_sf_columns;
             $objTemplate->sfImages = $objModule->pdir_sf_enableImages;
-            $objTemplate->sfFbLink = $arrRow['pdir_sf_fb_link'];
             $objTemplate->teaser = $teaser;
             $objTemplate->socialFeedType = $arrRow['social_feed_type'];
 
