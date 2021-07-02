@@ -9,3 +9,4 @@ $GLOBALS['TL_LANG']['tl_news']['social_feed_account_picture'] = array('Social Fe
 $GLOBALS['TL_LANG']['tl_news_moderate']['sf_moderate'] = ['Social Feed', 'Social Feed Eintrag hinzufügen.'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['moderate'] = ['Feed abrufen', 'Social Feed Einträge moderieren'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['account'] = ['Social Feed Konto'];
+$GLOBALS['TL_LANG']['tl_news_moderate']['number_posts'] = ['Anzahl der Posts', 'Hier kannst du die Anzahl der Posts, die abgerufen werden sollen, begrenzen.'];

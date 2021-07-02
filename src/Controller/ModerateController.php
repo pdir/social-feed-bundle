@@ -86,11 +86,12 @@ class ModerateController
         }
 
         $socialFeedAccount = $request->request->get('account');
+        //$numberPosts = $request->request->get('number_posts');
         $objSocialFeedModel = SocialFeedModel::findById($socialFeedAccount);
         $newsArchiveId = Input::get('id');
 
         $objImporter = new Importer();
-        $items = $objImporter->getPostsByAccount($request->request->get('account'));
+        $items = $objImporter->getPostsByAccount($request->request->get('account'), $request->request->get('number_posts'));
 
         // import selected items
         $importItems = $request->request->get('importItems');
@@ -108,7 +109,7 @@ class ModerateController
         }
 
         // set import message
-        if(is_array($items) && count($importItems) > 0) {
+        if(is_array($items) && isset($importItems) && count($importItems) > 0) {
             $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], count($importItems));
         }
 
