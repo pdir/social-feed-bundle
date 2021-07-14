@@ -97,11 +97,12 @@ class InstagramClient
     /**
      * Get the media data.
      */
-    public function getMediaData(string $accessToken, int $socialFeedId = null, bool $cache = true): ?array
+    public function getMediaData(string $accessToken, int $socialFeedId = null, int $numberPosts, bool $cache = true): ?array
     {
         return $this->getData('https://graph.instagram.com/me/media', [
             'access_token' => $accessToken,
             'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp',
+            'limit' => $numberPosts
         ], $socialFeedId, $cache);
     }
 
@@ -112,7 +113,7 @@ class InstagramClient
     {
         return $this->getData('https://graph.instagram.com/me', [
             'access_token' => $accessToken,
-            'fields' => 'id,username',
+            'fields' => 'id,username'
         ], $socialFeedId, $cache);
     }
 

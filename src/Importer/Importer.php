@@ -26,14 +26,13 @@ class Importer
      * @return void | array
      * @throws \RuntimeException
      */
-    public function getInstagramPosts($accessToken, $socialFeedId)
+    public function getInstagramPosts($accessToken, $socialFeedId, $numberPosts)
     {
-
         if ('' === $accessToken)
             return 'no access token given';
 
         $client = System::getContainer()->get(InstagramClient::class);
-        $items = $client->getMediaData($accessToken, (int) $socialFeedId);
+        $items = $client->getMediaData($accessToken, (int) $socialFeedId, (int) $numberPosts);
 
         return $items['data'];
     }
@@ -89,7 +88,7 @@ class Importer
         return $listItems;
     }
 
-    function getPostsByAccount($id) {
+    function getPostsByAccount($id, $numberPosts) {
 
         $objSocialFeed = SocialFeedModel::findBy('id', $id);
 
@@ -102,7 +101,7 @@ class Importer
                 return 'Facebook is currently not supported.';
                 break;
             case "Instagram":
-                return $this->getInstagramPosts($objSocialFeed->psf_instagramAccessToken, $objSocialFeed->id);
+                return $this->getInstagramPosts($objSocialFeed->psf_instagramAccessToken, $objSocialFeed->id, $numberPosts);
                 break;
             case "Twitter":
                 return 'Twitter is currently not supported.';

@@ -74,7 +74,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 
     'subpalettes' => array
     (
-        'socialFeedType_Facebook' => 'pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
+        'socialFeedType_Facebook' => 'pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,psf_facebookRequestToken,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
         'socialFeedType_Instagram' => 'psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,psf_instagramRequestToken,instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time;{pdir_sf_account_image_legend},instagram_account_picture,instagram_account_picture_size',
         'socialFeedType_Twitter' => 'twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account,search,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,show_retweets,hashtags_link,show_reply,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time'
     ),
@@ -139,9 +139,8 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
-                'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'clr'
+                'tl_class' => 'w50'
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -227,7 +226,10 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'label' => &$GLOBALS['TL_LANG']['tl_news']['instagram_account_picture_size'],
             'exclude' => true,
             'inputType'  => 'imageSize',
-            'options' => \Contao\System::getImageSizes(),
+            'options_callback' => static function ()
+            {
+                return \Contao\System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+            },
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
             'eval' => ['rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'],
             'sql' => "varchar(64) NOT NULL default ''"
@@ -270,6 +272,19 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 
         'psf_instagramRequestToken' => [
             'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramRequestToken'],
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => [
+                'doNotSaveEmpty' => true,
+                'tl_class' => 'w50 m12'
+            ],
+            'save_callback' => [
+                [\Pdir\SocialFeedBundle\EventListener\SocialFeedListener::class, 'onRequestTokenSave'],
+            ],
+        ],
+
+        'psf_facebookRequestToken' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_facebookRequestToken'],
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => [

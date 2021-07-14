@@ -25,7 +25,7 @@
 
     <fieldset class="tl_tbox nolegend">
 
-      <div class="widget w50 clr">
+      <div class="widget w50">
         <h3><label for="account"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['account'][0] ?></label></h3>
         <br>acc: <?= $this->activeAccount ?><br>
         <select name="account" id="account" class="tl_select">
@@ -35,6 +35,13 @@
         </select>
         <p class="tl_help tl_tip"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['account'][1] ?></p>
       </div>
+
+      <div class="widget w50">
+        <h3><label for="account"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['number_posts'][0] ?></label></h3>
+        <input class="tl_text" type="text" name="number_posts" value="20">
+        <p class="tl_help tl_tip"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['number_posts'][1] ?></p>
+      </div>
+
     </fieldset>
   </div>
 

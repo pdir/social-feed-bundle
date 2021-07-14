@@ -86,11 +86,12 @@ class ModerateController
         }
 
         $socialFeedAccount = $request->request->get('account');
+        //$numberPosts = $request->request->get('number_posts');
         $objSocialFeedModel = SocialFeedModel::findById($socialFeedAccount);
         $newsArchiveId = Input::get('id');
 
         $objImporter = new Importer();
-        $items = $objImporter->getPostsByAccount($request->request->get('account'));
+        $items = $objImporter->getPostsByAccount($request->request->get('account'), $request->request->get('number_posts'));
 
         // import selected items
         $importItems = $request->request->get('importItems');
