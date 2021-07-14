@@ -406,11 +406,7 @@ class CronListener extends \System
                         $objNews->social_feed_account_picture = \Dbafs::addResource($accountPicture)->uuid;
                         $objNews->source = 'external';
 
-                        if($post->entities->urls[0]->url) {
-                            $url = $post->entities->urls[0]->url;
-                        } else {
-                            $url = "https://twitter.com/".$post->user->screen_name."/status/".$post->id;
-                        }
+                        $url = "https://twitter.com/".$post->user->screen_name."/status/".$post->id;
 
                         $objNews->url = $url;
                         $objNews->target = 1;

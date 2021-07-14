@@ -5,7 +5,7 @@ use Pdir\SocialFeedBundle\Module\ModuleCustomNewslist;
 /**
  * Backend modules
  */
-if (!is_array($GLOBALS['BE_MOD']['pdir']))
+if (!isset($GLOBALS['BE_MOD']['pdir']) || !is_array($GLOBALS['BE_MOD']['pdir']))
 {
     array_insert($GLOBALS['BE_MOD'], 1, array('pdir' => array()));
 }
