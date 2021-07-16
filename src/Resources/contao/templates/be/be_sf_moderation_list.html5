@@ -1,5 +1,11 @@
 
 <div class="be_sf_morderation_list">
+    <div class="selectAll">
+        <label class="checkbox">
+            <input type="checkbox" name="selectAll" class="checkbox" value="selectAll"> Alles auswählen
+        </label>
+    </div>
+
     <ul class="list">
     <?php foreach($this->arr as $key => $item): ?>
       <li class="list-item first even">
@@ -33,4 +39,20 @@
   }
   window.addEventListener('resize', resizer);
   resizer();
+
+  var checkbox = document.querySelector("input[name=selectAll]");
+
+  checkbox.addEventListener('change', function() {
+      if (this.checked) {
+          var listItems = document.getElementsByName("importItems[]");
+          for (var i=0; i<listItems.length; i++) {
+              listItems[i].checked = true;
+          }
+      } else {
+          var listItems = document.getElementsByName("importItems[]");
+          for (var i=0; i<listItems.length; i++) {
+              listItems[i].checked = false;
+          }
+      }
+  });
 </script>

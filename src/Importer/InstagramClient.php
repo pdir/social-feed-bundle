@@ -85,7 +85,7 @@ class InstagramClient
 
         $data = $json_data['data'];
 
-        if($query['limit'] > 100) {
+        if($query['limit'] > 100 && isset($json_data['paging']['next'])) {
             if(isset($json_data['paging']['next'])) {
                 $query['limit'] = $query['limit'] - 100;
                 $json_data['paging']['next'] = str_replace('limit=100', 'limit='.$query['limit'], $json_data['paging']['next']);
