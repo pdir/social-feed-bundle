@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.9.0](https://github.com/pdir/social-feed-bundle/tree/2.9.0) – 2021-07-19
+
+- [feature] added select all function in moderation list
+- [feature] added php 8 support
+- [feature] added italian translation
+- [feature] added facebook moderation feature
+- [feature] set number of posts when moderating instagram feed
+- [feature] generate facebook access token via checkbox
+- [feature] replace facebook/graph-sdk with nickdnk/graph-sdk
+- [feature] use options callback for image sizes
+- [fix] fix missing array keys + translations
+- [fix] twitter link
+- [fix] fix install with empty database
+- use PaletteManipulator in dca file
+
 ## [2.8.5](https://github.com/pdir/social-feed-bundle/tree/2.8.5) – 2021-03-16
 
 - [fix] use mb_substr instead of substr to avoid utf 8 problems
