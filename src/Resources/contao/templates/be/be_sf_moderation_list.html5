@@ -43,14 +43,11 @@
   var checkbox = document.querySelector("input[name=selectAll]");
 
   checkbox.addEventListener('change', function() {
-      if (this.checked) {
-          var listItems = document.getElementsByName("importItems[]");
-          for (var i=0; i<listItems.length; i++) {
+      var listItems = document.getElementsByName("importItems[]");
+      for (var i=0; i<listItems.length; i++) {
+          if (this.checked) {
               listItems[i].checked = true;
-          }
-      } else {
-          var listItems = document.getElementsByName("importItems[]");
-          for (var i=0; i<listItems.length; i++) {
+          } else {
               listItems[i].checked = false;
           }
       }
