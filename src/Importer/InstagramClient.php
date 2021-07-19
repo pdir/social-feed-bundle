@@ -86,13 +86,11 @@ class InstagramClient
         $data = $json_data['data'];
 
         if($query['limit'] > 100 && isset($json_data['paging']['next'])) {
-            if(isset($json_data['paging']['next'])) {
-                $query['limit'] = $query['limit'] - 100;
-                $json_data['paging']['next'] = str_replace('limit=100', 'limit='.$query['limit'], $json_data['paging']['next']);
-                parse_str(parse_url($json_data['paging']['next'], PHP_URL_QUERY),$query);
-                $next_page = $this->getData($url, $query, $socialFeedId, $cache);
-                $data = array_merge($data,$next_page['data']);
-            }
+            $query['limit'] = $query['limit'] - 100;
+            $json_data['paging']['next'] = str_replace('limit=100', 'limit='.$query['limit'], $json_data['paging']['next']);
+            parse_str(parse_url($json_data['paging']['next'], PHP_URL_QUERY),$query);
+            $next_page = $this->getData($url, $query, $socialFeedId, $cache);
+            $data = array_merge($data,$next_page['data']);
         }
 
         return ['data' => $data];
