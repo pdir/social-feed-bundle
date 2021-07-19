@@ -85,3 +85,13 @@
 	padding: 10px;
 	margin-top: 15px;
 }
+
+.selectAll {
+	margin: 15px 15px 10px;
+	display: flex;
+	align-items: center;
+}
+
+.selectAll input {
+	margin-right: 5px;
+}
