@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.9.1](https://github.com/pdir/social-feed-bundle/tree/2.9.1) – 2021-08-10
+
+- [fix] broken account image
+
 ## [2.9.0](https://github.com/pdir/social-feed-bundle/tree/2.9.0) – 2021-07-19
 
 - [feature] added select all function in moderation list
