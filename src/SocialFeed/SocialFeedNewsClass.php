@@ -30,17 +30,21 @@ class SocialFeedNewsClass {
 
             if('' != $arrRow['social_feed_account_picture']) {
                 $imagePath = \FilesModel::findByUuid($arrRow['social_feed_account_picture'])->path;
+                
                 if(null === $imagePath) {
                     $objTemplate->accountPicture = '';
                 }
 
                 if(null !== $imagePath) {
                     $pictureObj = \Picture::create($imagePath);
-                    $objTemplate->accountPicture = $pictureObj->getTemplateData();
+                    
+                    if ($pictureObj !== null && $pictureObj->size > 0) {
+                      $objTemplate->accountPicture = $pictureObj->getTemplateData();
+                    }
                 }
             } else {
                 $socialFeedAccount = SocialFeedModel::findBy('id', $arrRow['social_feed_config']);
-                if($socialFeedAccount->instagram_account_picture != "") {
+                if ($socialFeedAccount->instagram_account_picture != "") {
                     $imagePath = \FilesModel::findByUuid($socialFeedAccount->instagram_account_picture)->path;
                     $size = deserialize($socialFeedAccount->instagram_account_picture_size);
                     $objTemplate->accountPicture = \Picture::create($imagePath, $size)->getTemplateData();
