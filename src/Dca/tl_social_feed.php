@@ -11,7 +11,7 @@ class tl_social_feed
     /**
      * social-feed-bundle version
      */
-    const VERSION = '2.9.0';
+    const VERSION = '2.9.1';
 
     /**
      * Template
