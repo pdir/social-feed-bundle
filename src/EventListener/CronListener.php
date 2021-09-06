@@ -49,7 +49,7 @@ class CronListener extends \System
                 // $picture = $objImporter->getInstagramAccountImage($obj->psf_instagramAccessToken, $obj->id);
 
                 // get instagram posts for account
-                $medias = $objImporter->getInstagramPosts($obj->psf_instagramAccessToken, $obj->id);
+                $medias = $objImporter->getInstagramPosts($obj->psf_instagramAccessToken, $obj->id, $obj->number_posts);
 
                 if (!is_array($medias))
                     continue;

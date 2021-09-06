@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.9.2](https://github.com/pdir/social-feed-bundle/tree/2.9.2) – 2021-09-06
+
+- [fix] instagram import
+
 ## [2.9.1](https://github.com/pdir/social-feed-bundle/tree/2.9.1) – 2021-08-10
 
 - [fix] broken account image
