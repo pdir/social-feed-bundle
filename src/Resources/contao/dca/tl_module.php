@@ -9,7 +9,6 @@
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
-\Contao\System::loadLanguageFile('tl_module');
 
 /**
  * Add palette to tl_module
@@ -48,12 +47,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_columns'] = array
     'eval' => [
         'tl_class' => 'w50'
     ],
-    'options' => array(
-        'column1' => $GLOBALS['TL_LANG']['tl_module']['column1'],
-        'columns2' => $GLOBALS['TL_LANG']['tl_module']['columns2'],
-        'columns3' => $GLOBALS['TL_LANG']['tl_module']['columns3'],
-        'columns4' => $GLOBALS['TL_LANG']['tl_module']['columns4']
-    ),
+    'options' => array('column1', 'columns2', 'columns3', 'columns4'),
+    'reference' => &$GLOBALS['TL_LANG']['tl_module'],
     'sql' => "varchar(64) NOT NULL default 'columns3'",
 );
 
