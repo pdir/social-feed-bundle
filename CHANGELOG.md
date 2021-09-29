@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.10.0](https://github.com/pdir/social-feed-bundle/tree/2.10.0) – 2021-xx-xx
+
+- [feature] linkedin import
+
 ## [2.9.2](https://github.com/pdir/social-feed-bundle/tree/2.9.2) – 2021-09-06
 
 - [fix] instagram import
