@@ -35,7 +35,8 @@
     "abraham/twitteroauth": "~1.1 || ~2.0",
     "guzzlehttp/guzzle": "~6.0",
     "kevinrob/guzzle-cache-middleware": "^3.2",
-    "doctrine/cache": "^1.9"
+    "doctrine/cache": "^1.9",
+    "zoonman/linkedin-api-php-client": "dev-master"
   },
   "require-dev": {
     "contao/manager-plugin": "^2.0"

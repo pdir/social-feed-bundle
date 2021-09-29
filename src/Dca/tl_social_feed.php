@@ -11,7 +11,7 @@ class tl_social_feed
     /**
      * social-feed-bundle version
      */
-    const VERSION = '2.9.2';
+    const VERSION = '2.10.0';
 
     /**
      * Template
@@ -33,6 +33,8 @@ class tl_social_feed
             $account = $row['instagram_account'];
         } else if($row['twitter_account'] != "") {
             $account = $row['twitter_account'];
+        } else if($row['linkedin_company_id'] != "") {
+            $account = $row['linkedin_company_id'];
         } else if($row['search'] != "") {
             $account = $row['search'];
         } else {

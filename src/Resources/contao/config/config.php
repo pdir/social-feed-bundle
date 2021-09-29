@@ -37,6 +37,7 @@ $GLOBALS['FE_MOD']['news']['newslist'] = ModuleCustomNewslist::class;
 $GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\EventListener\CronListener', 'getFbPosts');
 $GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\EventListener\CronListener', 'getInstagramPosts');
 $GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\EventListener\CronListener', 'getTwitterPosts');
+$GLOBALS['TL_CRON']['minutely'][] = array('Pdir\SocialFeedBundle\EventListener\CronListener', 'getLinkedinPosts');
 
 /**
  * CSS for Frontend

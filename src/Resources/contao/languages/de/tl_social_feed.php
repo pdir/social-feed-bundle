@@ -42,4 +42,10 @@ $GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_key'] = array("API Key","Gebe
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_secret_key'] = array("API Secret Key","Geben Sie hier den API Secret Key ein.");
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token'] = array("Access Token","Geben Sie hier den Access Token ein.");
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token_secret'] = array("Access Token Secret","Geben Sie hier den Access Token Secret ein.");
-
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_client_id'] = array("Client ID","Geben Sie hier die Client ID aus der App ein.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_client_secret'] = array("Client Secret","Geben Sie hier den Client Secret aus der App ein.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_company_id'] = array("ID der Unternehmens-Seite","Geben Sie hier die ID der Unternehmens-Seite ein.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_access_token'] = array("Access Token","Der Access Token wird nach dem Speichern und Setzen der Checkbox automatisch gesetzt.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_request_token'] = array("Generiere Access Token","Wenn Sie die Checkbox setzen und anschließend Speichern wird der Access Token generiert.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture'] = array("Profilbild","Wählen Sie hier ein Profilbild aus, welches auf der Webseite angezeigt wird.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture_size'] = array("Bildgröße","Hier können Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.");

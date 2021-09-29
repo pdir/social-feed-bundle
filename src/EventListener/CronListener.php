@@ -5,6 +5,9 @@ namespace Pdir\SocialFeedBundle\EventListener;
 use Pdir\SocialFeedBundle\Importer\Importer;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel as SocialFeedModel;
 use Abraham\TwitterOAuth\TwitterOAuth;
+use LinkedIn\Client;
+use LinkedIn\AccessToken;
+use LinkedIn\Scope;
 
 class CronListener extends \System
 {
@@ -280,6 +283,87 @@ class CronListener extends \System
         }
     }
 
+    public function getLinkedinPosts() {
+        $objSocialFeed = SocialFeedModel::findAll();
+
+        \System::log('getLinkedinPosts', __METHOD__, TL_GENERAL);
+
+        if(NULL === $objSocialFeed)
+        {
+            return;
+        }
+
+        foreach($objSocialFeed as $obj) {
+            if($obj->socialFeedType == "LinkedIn") {
+                $cron = $obj->pdir_sf_fb_news_cronjob;
+                $lastImport = $obj->pdir_sf_fb_news_last_import_date;
+                $tstamp = time();
+                if($lastImport == "") $lastImport = 0;
+                $interval = $tstamp - $lastImport;
+
+                if( ($interval >= $cron && $cron != "no_cronjob") || ($lastImport == 0 && $cron != "no_cronjob") ) {
+                    $this->setLastImportDate($id = $obj->id);
+
+                    $client = new Client(
+                        $obj->linkedin_client_id,
+                        $obj->linkedin_client_secret
+                    );
+
+                    $client->setAccessToken( $obj->linkedin_access_token);
+
+                    $posts = $client->get(
+                        'shares?q=owners&owners=urn:li:organization:'.$obj->linkedin_company_id
+                    );
+
+                    $organization = $client->get(
+                        'organizations/' . $obj->linkedin_company_id
+                    );
+
+                    if (!is_array($posts['elements']))
+                        continue;
+
+                    $counter = 1;
+                    foreach ($posts['elements'] as $element) {
+
+                        if($counter++ > $obj->number_posts)
+                        {
+                            continue;
+                        }
+
+                        $objNews = new \NewsModel();
+
+                        if (null !== $objNews->findBy("social_feed_id", $element['id'])) {
+                            continue;
+                        }
+
+                        $imgPath = $this->createImageFolder($obj->linkedin_company_id);
+                        $picturePath = $imgPath . $element['id'] . '.jpg';
+
+                        if (!file_exists($picturePath)) {
+                            $file = new \File($picturePath);
+                            $file->write(file_get_contents($element['content']['contentEntities'][0]['thumbnails'][0]['resolvedUrl']));
+                            $file->close();
+                        }
+
+                        $message = $this->getPostMessage($element['text']['text']);
+
+                        // add/fetch file from DBAFS
+                        $objFile = \Dbafs::addResource($imgPath . $element['id'] . '.jpg');
+                        $this->saveLinkedInNews($objNews, $obj, $objFile, $message, $element, $organization);
+                    }
+
+                    \System::log('Social Feed: LinkedIn Import Account ', __METHOD__, TL_GENERAL);
+                    $this->import('Automator');
+                    $this->Automator->generateSymlinks();
+                }
+
+                \System::log('Social Feed: LinkedIn Import ', __METHOD__, TL_GENERAL);
+                $this->import('Automator');
+                $this->Automator->generateSymlinks();
+            }
+        }
+    }
+
     public function getTwitterPosts() {
         $objSocialFeed = SocialFeedModel::findAll();
 
@@ -477,6 +561,32 @@ class CronListener extends \System
         #$objNews->social_feed_account_picture = \Dbafs::addResource($accountPicture)->uuid;
         $objNews->source = 'external';
         $objNews->url = $media['permalink'];
+        $objNews->target = 1;
+        $objNews->save();
+    }
+
+    private function saveLinkedInNews($objNews, $obj, $objFile, $message, $element, $organization) {
+        $objNews->pid = $obj->pdir_sf_fb_news_archive;
+        $objNews->singleSRC = $objFile->uuid;
+        $objNews->addImage = 1;
+        $objNews->tstamp = time();
+
+        if (strlen($message) > 50) $more = " ...";
+        else $more = "";
+        $objNews->headline = mb_substr($message, 0, 50) . $more;
+
+        $message = str_replace("\n", "<br>", $message);
+        $objNews->teaser = $message;
+        $objNews->date = $element['created']['time'] / 1000;
+        $objNews->time = $element['created']['time'] / 1000;
+        $objNews->published = 1;
+        $objNews->social_feed_type = $obj->socialFeedType;
+        $objNews->social_feed_id = $element['id'];
+        $objNews->social_feed_config = $obj->id;
+        $objNews->social_feed_account = $organization['localizedName'];
+        #$objNews->social_feed_account_picture = \Dbafs::addResource($accountPicture)->uuid;
+        $objNews->source = 'external';
+        $objNews->url = 'https://www.linkedin.com/feed/update/'.$element['activity'];
         $objNews->target = 1;
         $objNews->save();
     }

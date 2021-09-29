@@ -45,6 +45,10 @@ class SocialFeedListener
         if ('Facebook' === $dc->activeRecord->socialFeedType && $dc->activeRecord->pdir_sf_fb_app_id && $dc->activeRecord->pdir_sf_fb_app_secret && Input::post('psf_facebookRequestToken')) {
             $this->requestFbAccessToken($dc->activeRecord->pdir_sf_fb_app_id, $dc->activeRecord->pdir_sf_fb_app_secret, $dc->activeRecord->pdir_sf_fb_account);
         }
+
+        if ('LinkedIn' === $dc->activeRecord->socialFeedType && $dc->activeRecord->linkedin_client_id && $dc->activeRecord->linkedin_client_secret && Input::post('linkedin_request_token')) {
+            $this->requestLinkedinAccessToken($dc->activeRecord->linkedin_client_id, $dc->activeRecord->linkedin_client_secret);
+        }
     }
 
     /**
@@ -105,5 +109,32 @@ class SocialFeedListener
         ];
 
         throw new RedirectResponseException('https://www.facebook.com/v11.0/dialog/oauth?'.http_build_query($data));
+    }
+
+    /**
+     * Request the LinkedIn access token.
+     *
+     * @param string $clientId
+     * @param string $clientSecret
+     */
+    private function requestLinkedinAccessToken($clientId, $clientSecret)
+    {
+        $this->session->set(self::SESSION_KEY, [
+            'socialFeedId' => Input::get('id'),
+            'backUrl' => Environment::get('uri'),
+            'clientId' => $clientId,
+            'clientSecret' => $clientSecret
+        ]);
+
+        $this->session->save();
+
+        $data = [
+            'response_type' => 'code',
+            'client_id' => $clientId,
+            'redirect_uri' => $this->router->generate('auth_linkedin', [], RouterInterface::ABSOLUTE_URL),
+            'scope' => 'r_organization_social,rw_organization_admin'
+        ];
+
+        throw new RedirectResponseException('https://www.linkedin.com/oauth/v2/authorization?'.http_build_query($data));
     }
 }

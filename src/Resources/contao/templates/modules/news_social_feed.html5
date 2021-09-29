@@ -17,6 +17,8 @@
                     <img src="bundles/pdirsocialfeed/img/icon_instagram.svg" alt="Instagram Icon">
                 <?php elseif($this->socialFeedType == "Twitter"): ?>
                     <img src="bundles/pdirsocialfeed/img/icon_twitter.svg" alt="Twitter Icon">
+                <?php elseif($this->socialFeedType == "LinkedIn"): ?>
+                    <img src="bundles/pdirsocialfeed/img/linkedin-in-brands.svg" alt="LinkedIn Icon">
                 <?php endif; ?>
             </p>
             <?php endif; ?>

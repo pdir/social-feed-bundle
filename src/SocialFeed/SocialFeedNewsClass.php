@@ -30,14 +30,14 @@ class SocialFeedNewsClass {
 
             if('' != $arrRow['social_feed_account_picture']) {
                 $imagePath = \FilesModel::findByUuid($arrRow['social_feed_account_picture'])->path;
-                
+
                 if(null === $imagePath) {
                     $objTemplate->accountPicture = '';
                 }
 
                 if(null !== $imagePath) {
                     $pictureObj = \Picture::create($imagePath);
-                    
+
                     if ($pictureObj !== null && $pictureObj->size > 0) {
                       $objTemplate->accountPicture = $pictureObj->getTemplateData();
                     }
@@ -47,6 +47,10 @@ class SocialFeedNewsClass {
                 if ($socialFeedAccount->instagram_account_picture != "") {
                     $imagePath = \FilesModel::findByUuid($socialFeedAccount->instagram_account_picture)->path;
                     $size = deserialize($socialFeedAccount->instagram_account_picture_size);
+                    $objTemplate->accountPicture = \Picture::create($imagePath, $size)->getTemplateData();
+                } else if($socialFeedAccount->linkedin_account_picture != "") {
+                    $imagePath = \FilesModel::findByUuid($socialFeedAccount->linkedin_account_picture)->path;
+                    $size = deserialize($socialFeedAccount->linkedin_account_picture_size);
                     $objTemplate->accountPicture = \Picture::create($imagePath, $size)->getTemplateData();
                 }
             }
