@@ -455,8 +455,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
-                'tl_class' => 'w50 clr',
-                'readonly' => 'readonly'
+                'tl_class' => 'clr'
             ],
             'sql' => "text NULL",
         ],
@@ -467,7 +466,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'checkbox',
             'eval' => [
                 'doNotSaveEmpty' => true,
-                'tl_class' => 'w50 clr'
+                'tl_class' => 'clr'
             ],
             'save_callback' => [
                 [\Pdir\SocialFeedBundle\EventListener\SocialFeedListener::class, 'onRequestTokenSave'],
@@ -478,7 +477,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'label' => &$GLOBALS['TL_LANG']['tl_news']['linkedin_account_picture'],
             'exclude' => true,
             'inputType' => 'fileTree',
-            'eval' => array( 'filesOnly'=>true, 'fieldType'=>'radio', 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50 autoheight' ),
+            'eval' => array( 'filesOnly'=>true, 'fieldType'=>'radio', 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'clr w50 autoheight' ),
             'load_callback' => array
             (
                 array('tl_social_feed', 'setSingleSrcFlags')
