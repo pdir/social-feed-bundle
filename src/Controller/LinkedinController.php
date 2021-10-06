@@ -63,7 +63,7 @@ class LinkedinController
             $accessToken = $client->getAccessToken($request->query->get('code'));
 
             // Store the access token and remove temporary session key
-            $this->db->update('tl_social_feed', ['linkedin_access_token' => $accessToken], ['id' => $sessionData['socialFeedId']]);
+            $this->db->update('tl_social_feed', ['linkedin_access_token' => $accessToken, 'linkedin_access_token_date' => time()], ['id' => $sessionData['socialFeedId']]);
             $this->session->remove(SocialFeedListener::SESSION_KEY);
         }
 
