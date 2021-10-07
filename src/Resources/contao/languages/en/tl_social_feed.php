@@ -50,4 +50,4 @@ $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_access_token'] = array("Access T
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_request_token'] = array("Generate Access Token","Check this box and save the record to request the access token.");
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture'] = array("Account picture","Here you can choose a account picture which will displayed on the website.");
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture_size'] = array("Image size","Here you can set the image dimensions and the resize mode.");
-$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_access_token_date'] = array("Access Token created","Access Token should be regenerated after 2 months.");
+$GLOBALS['TL_LANG']['tl_social_feed']['access_token_expires'] = array("Access token expires in","");

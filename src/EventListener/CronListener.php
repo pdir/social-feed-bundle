@@ -608,6 +608,39 @@ class CronListener extends \System
         );
     }
 
+    public function refreshLinkedInAccessToken() {
+        $objSocialFeed = SocialFeedModel::findAll();
+
+        if(NULL === $objSocialFeed)
+        {
+            return;
+        }
+
+        $this->import('Database');
+
+        foreach($objSocialFeed as $obj) {
+
+            if ($obj->socialFeedType == "LinkedIn") {
+                echo "Token läuft ab: ".date('d.m.Y H:i', $obj->access_token_expires);
+                if($obj->access_token_expires <= strtotime("+1 week", time())) {
+                    $data = [
+                        'grant_type' => 'refresh_token',
+                        'refresh_token' => $obj->linkedin_refresh_token,
+                        'client_id' => $obj->linkedin_client_id,
+                        'client_secret' => $obj->linkedin_client_secret
+                    ];
+
+                    $token = json_decode(file_get_contents('https://www.linkedin.com/oauth/v2/accessToken?'.http_build_query($data)));
+
+                    // Store the access token
+                    $db = \Contao\Database::getInstance();
+                    $set = ['linkedin_access_token' => $token->access_token, 'access_token_expires' => time() + $token->expires_in, 'linkedin_refresh_token' => $token->refresh_token, 'linkedin_refresh_token_expires' => time() + $token->refresh_token_expires_in];
+                    $db->prepare('UPDATE tl_social_feed %s WHERE id = ?')->set($set)->execute($obj->id);
+                }
+            }
+        }
+    }
+
     private function removeTwitterLinks($str) {
         return preg_replace('/\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i',
             '',
