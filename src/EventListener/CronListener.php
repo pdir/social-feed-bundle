@@ -621,7 +621,6 @@ class CronListener extends \System
         foreach($objSocialFeed as $obj) {
 
             if ($obj->socialFeedType == "LinkedIn") {
-                echo "Token läuft ab: ".date('d.m.Y H:i', $obj->access_token_expires);
                 if($obj->access_token_expires <= strtotime("+1 week", time())) {
                     $data = [
                         'grant_type' => 'refresh_token',

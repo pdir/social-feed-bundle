@@ -12,7 +12,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use LinkedIn\Client;
-use Contao\CoreBundle\Exception\RedirectResponseException;
 
 /**
  * @Route("/auth", defaults={"_scope" = "backend", "_token_check" = false})
