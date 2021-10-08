@@ -12,6 +12,7 @@ $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_account'] = array("Account Fac
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_app_id'] = array("App ID","Inserisci qui l'ID app della tua app Facebook.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_app_secret'] = array("App Secret","Inserisci la chiave segreta della tua app di Facebook.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_access_token'] = array("Access Token","Inserisci il token di accesso. Le istruzioni per la generazione del token di accesso sono disponibili nella documentazione.");
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_facebookRequestToken'] = array("Genera token di accesso","Quando salvi, il token di accesso viene generato automaticamente.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_archive'] = ['Archivio News','Seleziona l\'archivio delle news dove devono essere importati i post.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_cronjob'] = ['Esecuzione del cron job','Inserisci la frequenza con cui deve essere richiamato il cron job per importare i post.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'] = array("Ultima importazione (data): verrà compilata automaticamente","Questo campo viene compilato automaticamente e non deve essere compilato.");
@@ -41,4 +42,14 @@ $GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_key'] = array("API Key","Inse
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_secret_key'] = array("API Secret Key","Inserisci qui la chiave segreta dell'API.");
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token'] = array("Access Token","Inserisci qui il token di accesso.");
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token_secret'] = array("Access Token Secret","Inserisci qui l\'Access Token Secret.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_client_id'] = array("Client ID","Inserisci qui l'ID cliente dall'app.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_client_secret'] = array("Client Secret","Inserisci qui il client secret dall'app.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_company_id'] = array("ID sito aziendale","Inserisci qui l'ID del sito aziendale.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_access_token'] = array("Access Token","Il token di accesso viene impostato automaticamente dopo aver salvato e impostato la casella di controllo.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_request_token'] = array("Genera access token","Se selezioni la casella e poi salvi, viene generato il token di accesso.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture'] = array("Immagine del profilo","Seleziona qui un'immagine del profilo, che verrà visualizzata sul sito web.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture_size'] = array("Dimensione dell'immagine","
+Qui puoi impostare le dimensioni dell'immagine e la modalità di ridimensionamento.");
+$GLOBALS['TL_LANG']['tl_social_feed']['access_token_expires'] = array("Access Token scade il","Finché il token di aggiornamento è valido, il token di accesso viene automaticamente esteso di 2 mesi alla volta.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_refresh_token_expires'] = array("Refresh Token scade il","Se il token di aggiornamento è scaduto, il token di accesso deve essere rigenerato manualmente.");
 

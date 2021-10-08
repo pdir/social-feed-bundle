@@ -49,4 +49,5 @@ $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_access_token'] = array("Access T
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_request_token'] = array("Generiere Access Token","Wenn Sie die Checkbox setzen und anschließend Speichern wird der Access Token generiert.");
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture'] = array("Profilbild","Wählen Sie hier ein Profilbild aus, welches auf der Webseite angezeigt wird.");
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture_size'] = array("Bildgröße","Hier können Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.");
-$GLOBALS['TL_LANG']['tl_social_feed']['access_token_expires'] = array("Access Token läuft ab","Date on which the access token expires.");
+$GLOBALS['TL_LANG']['tl_social_feed']['access_token_expires'] = array("Access Token läuft ab am","Solange der Refresh Token gültig ist verlängert sich der Access Token automatisch um jeweils 2 Monate.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_refresh_token_expires'] = array("Refresh Token läuft ab am","Wenn der Refresh Token abgelaufen ist muss der Access Token manuell neu generiert werden.");

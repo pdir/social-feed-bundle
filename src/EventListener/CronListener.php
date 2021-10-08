@@ -286,8 +286,6 @@ class CronListener extends \System
     public function getLinkedinPosts() {
         $objSocialFeed = SocialFeedModel::findAll();
 
-        \System::log('getLinkedinPosts', __METHOD__, TL_GENERAL);
-
         if(NULL === $objSocialFeed)
         {
             return;
@@ -312,7 +310,7 @@ class CronListener extends \System
                     $client->setAccessToken( $obj->linkedin_access_token);
 
                     $posts = $client->get(
-                        'shares?q=owners&owners=urn:li:organization:'.$obj->linkedin_company_id
+                        'shares?q=owners&owners=urn:li:organization:'.$obj->linkedin_company_id.'&sharesPerOwner='.$obj->number_posts
                     );
 
                     $organization = $client->get(
@@ -616,11 +614,18 @@ class CronListener extends \System
             return;
         }
 
-        $this->import('Database');
-
         foreach($objSocialFeed as $obj) {
 
-            if ($obj->socialFeedType == "LinkedIn") {
+            if ($obj->socialFeedType == "LinkedIn" && $obj->linkedin_access_token != "" && $obj->linkedin_refresh_token != "") {
+                if($obj->linkedin_refresh_token_expires <= strtotime("+1 week", time())) {
+                    $objMail = new \Email();
+                    $objMail->subject = 'LinkedIn Access Token Erinnerung';
+                    $objMail->html = 'Hallo Admin, <br><br>Der LinkedIn Access Token auf der Webseite '.$this->Environment->httpHost.' für den Account '.$obj->linkedin_company_id.' muss neu generiert werden. Melde dich dafür im Contao Backend an, rufe die Einstellungen des Social Feed Accounts auf, wähle die Checkbox "Generiere Access Token" aus und speichere. Anschließend musst du nur noch der App den Zugriff erlauben und der Access Token wird neu generiert. Dieser Vorgang muss jedes Jahr wiederholt werden.';
+                    $objMail->from = $GLOBALS['TL_CONFIG']['adminEmail'];
+                    $objMail->fromName = $this->Environment->httpHost;
+                    $objMail->sendTo($GLOBALS['TL_CONFIG']['adminEmail']);
+                }
+
                 if($obj->access_token_expires <= strtotime("+1 week", time())) {
                     $data = [
                         'grant_type' => 'refresh_token',
@@ -629,12 +634,16 @@ class CronListener extends \System
                         'client_secret' => $obj->linkedin_client_secret
                     ];
 
-                    $token = json_decode(file_get_contents('https://www.linkedin.com/oauth/v2/accessToken?'.http_build_query($data)));
+                    try {
+                        $token = json_decode(file_get_contents('https://www.linkedin.com/oauth/v2/accessToken?'.http_build_query($data)));
 
-                    // Store the access token
-                    $db = \Contao\Database::getInstance();
-                    $set = ['linkedin_access_token' => $token->access_token, 'access_token_expires' => time() + $token->expires_in, 'linkedin_refresh_token' => $token->refresh_token, 'linkedin_refresh_token_expires' => time() + $token->refresh_token_expires_in];
-                    $db->prepare('UPDATE tl_social_feed %s WHERE id = ?')->set($set)->execute($obj->id);
+                        // Store the access token
+                        $db = \Contao\Database::getInstance();
+                        $set = ['linkedin_access_token' => $token->access_token, 'access_token_expires' => time() + $token->expires_in, 'linkedin_refresh_token' => $token->refresh_token, 'linkedin_refresh_token_expires' => time() + $token->refresh_token_expires_in];
+                        $db->prepare('UPDATE tl_social_feed %s WHERE id = ?')->set($set)->execute($obj->id);
+                    } catch(Exception $e) {
+                        \System::log($e->getMessage(), __METHOD__, TL_GENERAL);
+                    }
                 }
             }
         }

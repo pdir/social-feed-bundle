@@ -50,4 +50,5 @@ $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_access_token'] = array("Access T
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_request_token'] = array("Generate Access Token","Check this box and save the record to request the access token.");
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture'] = array("Account picture","Here you can choose a account picture which will displayed on the website.");
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture_size'] = array("Image size","Here you can set the image dimensions and the resize mode.");
-$GLOBALS['TL_LANG']['tl_social_feed']['access_token_expires'] = array("Access token expires in","");
+$GLOBALS['TL_LANG']['tl_social_feed']['access_token_expires'] = array("Access token expires in","As long as the refresh token is valid, the access token is automatically extended by 2 months at a time.");
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_refresh_token_expires'] = array("Refresh token expires in","If the refresh token has expired, the access token must be regenerated manually.");

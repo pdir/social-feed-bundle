@@ -77,7 +77,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         'socialFeedType_Facebook' => 'pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,psf_facebookRequestToken,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
         'socialFeedType_Instagram' => 'psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,psf_instagramRequestToken,instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time;{pdir_sf_account_image_legend},instagram_account_picture,instagram_account_picture_size',
         'socialFeedType_Twitter' => 'twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account,search,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,show_retweets,hashtags_link,show_reply,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
-        'socialFeedType_LinkedIn' => 'linkedin_client_id,linkedin_client_secret,linkedin_company_id,linkedin_request_token,linkedin_access_token,access_token_expires,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time,linkedin_account_picture,linkedin_account_picture_size'
+        'socialFeedType_LinkedIn' => 'linkedin_client_id,linkedin_client_secret,linkedin_company_id,linkedin_request_token,linkedin_access_token,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,access_token_expires,linkedin_refresh_token_expires,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time,linkedin_account_picture,linkedin_account_picture_size'
     ),
 
     'fields' => [
@@ -444,6 +444,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
+                'mandatory' => true,
                 'maxlength' => 255,
                 'tl_class' => 'w50'
             ],
@@ -526,7 +527,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'text',
             'sql' => "varchar(255) NOT NULL default ''",
             'eval' => [
-                'rgxp' => 'date',
+                'rgxp' => 'datim',
                 'tl_class' => 'w50',
                 'readonly' => 'readonly'
             ]
