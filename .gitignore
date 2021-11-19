@@ -9,4 +9,3 @@ cypress.json
 # PhpUnit
 /.idea
 /.phpunit.result.cache
-/phpunit.xml
