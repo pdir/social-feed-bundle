@@ -39,7 +39,10 @@
     "zoonman/linkedin-api-php-client": "dev-master"
   },
   "require-dev": {
-    "contao/manager-plugin": "^2.0"
+    "contao/manager-plugin": "^2.0",
+    "contao/easy-coding-standard": "^3.0",
+    "phpunit/phpunit": "^8.4 || ^9.5",
+    "symfony/phpunit-bridge": "^4.4 || ^5.1"
   },
   "conflict": {
     "contao/manager-plugin": "<2.0 || >=3.0"

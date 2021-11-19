@@ -1,31 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * Instagram Bundle for Contao Open Source CMS.
+ * social feed bundle for Contao Open Source CMS
  *
- * Copyright (C) 2011-2019 Codefog
+ * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
  *
- * @author  Codefog <https://codefog.pl>
- * @author  Kamil Kuzminski <https://github.com/qzminski>
- * @license MIT
+ * @package    social-feed-bundle
+ * @link       https://github.com/pdir/social-feed-bundle
+ * @license    http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @author     Mathias Arzberger <develop@pdir.de>
+ * @author     Philipp Seibt <develop@pdir.de>
+ * @author     pdir GmbH <https://pdir.de>
  *
- * https://github.com/codefog/contao-instagram
- *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Pdir\SocialFeedBundle\Controller;
 
-use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
 use Doctrine\DBAL\Connection;
+use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Facebook\Facebook;
-use Contao\CoreBundle\Exception\RedirectResponseException;
 
 /**
  * @Route("/_facebook", defaults={"_scope" = "backend", "_token_check" = false})
@@ -68,7 +70,7 @@ class FacebookController
             'client_id' => $sessionData['clientId'],
             'client_secret' => $sessionData['clientSecret'],
             'redirect_uri' => $this->router->generate('facebook_auth', [], RouterInterface::ABSOLUTE_URL),
-            'code' => $request->query->get('code')
+            'code' => $request->query->get('code'),
         ];
 
         $json = file_get_contents('https://graph.facebook.com/v11.0/oauth/access_token?'.http_build_query($data));

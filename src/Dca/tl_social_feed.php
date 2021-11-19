@@ -1,50 +1,65 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * social feed bundle for Contao Open Source CMS
+ *
+ * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ *
+ * @package    social-feed-bundle
+ * @link       https://github.com/pdir/social-feed-bundle
+ * @license    http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @author     Mathias Arzberger <develop@pdir.de>
+ * @author     Philipp Seibt <develop@pdir.de>
+ * @author     pdir GmbH <https://pdir.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Pdir\SocialFeedBundle\Dca;
 
 use Contao\BackendTemplate;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 
 class tl_social_feed
 {
     /**
-     * social-feed-bundle version
+     * social-feed-bundle version.
      */
-    const VERSION = '2.10.0';
+    public const VERSION = '2.10.0';
 
     /**
-     * Template
+     * Template.
+     *
      * @var string
      */
     protected $strTemplate = 'be_socialfeed_setup';
+
     /**
      * On generate the label.
-     *
-     * @param array $row
-     *
-     * @return string
      */
     public function onGenerateLabel(array $row): string
     {
-        if($row['pdir_sf_fb_account'] != "") {
+        if ('' !== $row['pdir_sf_fb_account']) {
             $account = $row['pdir_sf_fb_account'];
-        } else if($row['instagram_account'] != "") {
+        } elseif ('' !== $row['instagram_account']) {
             $account = $row['instagram_account'];
-        } else if($row['twitter_account'] != "") {
+        } elseif ('' !== $row['twitter_account']) {
             $account = $row['twitter_account'];
-        } else if($row['linkedin_company_id'] != "") {
+        } elseif ('' !== $row['linkedin_company_id']) {
             $account = $row['linkedin_company_id'];
-        } else if($row['search'] != "") {
+        } elseif ('' !== $row['search']) {
             $account = $row['search'];
         } else {
-            $account = "Kein Account/Suchbegriff angegeben";
+            $account = 'Kein Account/Suchbegriff angegeben';
         }
 
-        if($row['socialFeedType'] != "") {
+        if ('' !== $row['socialFeedType']) {
             $type = $row['socialFeedType'];
         } else {
-            $type = "Kein Typ angegeben";
+            $type = 'Kein Typ angegeben';
         }
 
         return sprintf(
@@ -54,7 +69,6 @@ class tl_social_feed
         );
     }
 
-
     public function renderFooter(DataContainer $dc)
     {
         // add setupExplanation
@@ -62,7 +76,7 @@ class tl_social_feed
     }
 
     /**
-     * Gets the setup explanation
+     * Gets the setup explanation.
      *
      * @param Contao\DataContainer $dc
      *
@@ -72,6 +86,7 @@ class tl_social_feed
     {
         $template = new BackendTemplate($this->strTemplate);
         $template->version = self::VERSION;
+
         return $template->parse();
     }
 }

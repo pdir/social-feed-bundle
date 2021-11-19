@@ -1,5 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * social feed bundle for Contao Open Source CMS
+ *
+ * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ *
+ * @package    social-feed-bundle
+ * @link       https://github.com/pdir/social-feed-bundle
+ * @license    http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @author     Mathias Arzberger <develop@pdir.de>
+ * @author     Philipp Seibt <develop@pdir.de>
+ * @author     pdir GmbH <https://pdir.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Pdir\SocialFeedBundle\EventListener;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
@@ -9,10 +27,9 @@ use Contao\Input;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-
 class SocialFeedListener
 {
-    const SESSION_KEY = 'social-feed-id';
+    public const SESSION_KEY = 'social-feed-id';
 
     /**
      * @var RouterInterface
@@ -36,7 +53,7 @@ class SocialFeedListener
     /**
      * On submit callback.
      */
-    public function onSubmitCallback(DataContainer $dc)
+    public function onSubmitCallback(DataContainer $dc): void
     {
         if ('Instagram' === $dc->activeRecord->socialFeedType && $dc->activeRecord->psf_instagramAppId && Input::post('psf_instagramRequestToken')) {
             $this->requestAccessToken($dc->activeRecord->psf_instagramAppId);
@@ -53,8 +70,6 @@ class SocialFeedListener
 
     /**
      * On the request token save.
-     *
-     * @return null
      */
     public function onRequestTokenSave()
     {
@@ -66,7 +81,7 @@ class SocialFeedListener
      *
      * @param string $clientId
      */
-    private function requestAccessToken($clientId)
+    private function requestAccessToken($clientId): void
     {
         $this->session->set(self::SESSION_KEY, [
             'socialFeedId' => Input::get('id'),
@@ -88,16 +103,16 @@ class SocialFeedListener
     /**
      * Request the Facebook access token.
      *
-     * @param string $clientId
+     * @param string $appId
      */
-    private function requestFbAccessToken($appId, $appSecret, $page)
+    private function requestFbAccessToken($appId, $appSecret, $page): void
     {
         $this->session->set(self::SESSION_KEY, [
             'socialFeedId' => Input::get('id'),
             'backUrl' => Environment::get('uri'),
             'clientId' => $appId,
             'clientSecret' => $appSecret,
-            'page' => $page
+            'page' => $page,
         ]);
 
         $this->session->save();
@@ -105,7 +120,7 @@ class SocialFeedListener
         $data = [
             'client_id' => $appId,
             'redirect_uri' => $this->router->generate('facebook_auth', [], RouterInterface::ABSOLUTE_URL),
-            'scope' => 'pages_read_engagement'
+            'scope' => 'pages_read_engagement',
         ];
 
         throw new RedirectResponseException('https://www.facebook.com/v11.0/dialog/oauth?'.http_build_query($data));
@@ -117,13 +132,13 @@ class SocialFeedListener
      * @param string $clientId
      * @param string $clientSecret
      */
-    private function requestLinkedinAccessToken($clientId, $clientSecret)
+    private function requestLinkedinAccessToken($clientId, $clientSecret): void
     {
         $this->session->set(self::SESSION_KEY, [
             'socialFeedId' => Input::get('id'),
             'backUrl' => Environment::get('uri'),
             'clientId' => $clientId,
-            'clientSecret' => $clientSecret
+            'clientSecret' => $clientSecret,
         ]);
 
         $this->session->save();
@@ -132,7 +147,7 @@ class SocialFeedListener
             'response_type' => 'code',
             'client_id' => $clientId,
             'redirect_uri' => $this->router->generate('auth_linkedin', [], RouterInterface::ABSOLUTE_URL),
-            'scope' => 'r_organization_social,rw_organization_admin'
+            'scope' => 'r_organization_social,rw_organization_admin',
         ];
 
         throw new RedirectResponseException('https://www.linkedin.com/oauth/v2/authorization?'.http_build_query($data));

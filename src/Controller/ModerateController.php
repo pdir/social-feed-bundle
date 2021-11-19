@@ -1,13 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * social feed bundle for Contao Open Source CMS
+ *
+ * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ *
+ * @package    social-feed-bundle
+ * @link       https://github.com/pdir/social-feed-bundle
+ * @license    http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @author     Mathias Arzberger <develop@pdir.de>
+ * @author     Philipp Seibt <develop@pdir.de>
+ * @author     pdir GmbH <https://pdir.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Pdir\SocialFeedBundle\Controller;
 
 use Contao\BackendTemplate;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
+use Contao\Input;
 use Contao\Message;
 use Contao\System;
-use Contao\Input;
 use Pdir\SocialFeedBundle\Importer\Importer;
 use Pdir\SocialFeedBundle\Importer\NewsImporter;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
@@ -38,14 +56,8 @@ class ModerateController
 
     /**
      * ExportController constructor.
-     *
-     * @param ContaoFramework $framework
-     * @param RequestStack $requestStack
      */
-    public function __construct(
-        ContaoFramework $framework,
-        RequestStack $requestStack
-    )
+    public function __construct(ContaoFramework $framework, RequestStack $requestStack)
     {
         $this->framework = $framework;
         $this->requestStack = $requestStack;
@@ -75,11 +87,9 @@ class ModerateController
     /**
      * Process the form.
      *
-     * @param Request $request
-     *
      * @codeCoverageIgnore
      */
-    protected function processForm(Request $request)
+    protected function processForm(Request $request): void
     {
         if (!$request->request->get('account')) {
             return;
@@ -96,11 +106,9 @@ class ModerateController
         // import selected items
         $importItems = $request->request->get('importItems');
 
-        if($importItems && count($importItems) > 0)
-        {
-            foreach($items as $item)
-            {
-                if(in_array($item['id'], $importItems)) {
+        if ($importItems && \count($importItems) > 0) {
+            foreach ($items as $item) {
+                if (\in_array($item['id'], $importItems, true)) {
                     $importer = new NewsImporter($item);
                     $importer->accountImage = $objImporter->getAccountImage();
                     $importer->execute($newsArchiveId, $objSocialFeedModel->socialFeedType, $objSocialFeedModel->id);
@@ -109,13 +117,14 @@ class ModerateController
         }
 
         // set import message
-        if(is_array($items) && isset($importItems) && count($importItems) > 0) {
-            $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], count($importItems));
+        if (\is_array($items) && isset($importItems) && \count($importItems) > 0) {
+            $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($importItems));
         }
 
         // get items for moderation list
         $moderationItems = $objImporter->moderation($items);
-        if(count($moderationItems) > 0) {
+
+        if (\count($moderationItems) > 0) {
             $template = new BackendTemplate('be_sf_moderation_list');
             $template->arr = $moderationItems;
             $html = $template->parse();
@@ -139,15 +148,14 @@ class ModerateController
     {
         /**
          * @var Environment
-         * @var Message $message
-         * @var System $system
+         * @var Message     $message
+         * @var System      $system
          */
         $environment = $this->framework->getAdapter(Environment::class);
         $message = $this->framework->getAdapter(Message::class);
         $system = $this->framework->getAdapter(System::class);
 
-        if($this->message)
-        {
+        if ($this->message) {
             $message->addInfo($this->message);
         }
 
@@ -156,7 +164,7 @@ class ModerateController
         $this->template->formId = $formId;
         $this->template->message = $message->generate();
         $this->template->options = $this->generateOptions();
-        $this->template->headline = 'Nachrichten › Social Feed  › Moderate  ›  Achiv ' . Input::get('id');
+        $this->template->headline = 'Nachrichten › Social Feed  › Moderate  ›  Achiv '.Input::get('id');
 
         return $this->template;
     }
@@ -175,21 +183,19 @@ class ModerateController
         $objFeedModel = SocialFeedModel::findAll();
 
         foreach ($objFeedModel as $feed) {
-            if($feed->socialFeedType == 'Facebook')
-            {
-                $options[$feed->id] = $feed->socialFeedType . ' ' . $feed->pdir_sf_fb_account;
+            if ('Facebook' === $feed->socialFeedType) {
+                $options[$feed->id] = $feed->socialFeedType.' '.$feed->pdir_sf_fb_account;
             }
-            if($feed->socialFeedType == 'Instagram')
-            {
-                $options[$feed->id] = $feed->socialFeedType . ' ' . $feed->instagram_account;
+
+            if ('Instagram' === $feed->socialFeedType) {
+                $options[$feed->id] = $feed->socialFeedType.' '.$feed->instagram_account;
             }
-            if($feed->socialFeedType == 'Twitter')
-            {
-                $options[$feed->id] = $feed->socialFeedType . ' ' . $feed->twitter_account;
+
+            if ('Twitter' === $feed->socialFeedType) {
+                $options[$feed->id] = $feed->socialFeedType.' '.$feed->twitter_account;
             }
         }
 
         return $options;
     }
-
 }

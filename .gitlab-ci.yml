@@ -1,0 +1,29 @@
+cache:
+    paths:
+        - vendor/
+
+before_script:
+#    - cp ci/php.ini /usr/local/etc/php/conf.d/test.ini
+    - COMPOSER_MEMORY_LIMIT=-1 composer install -n --prefer-dist --no-progress --ignore-platform-reqs
+
+php:7.4:
+    # This docker image comes with composer and ant.
+    image: jorge07/alpine-php:7.4-dev
+    script:
+        - vendor/bin/phpunit --configuration phpunit.xml --coverage-text --log-junit report.xml
+        - vendor/bin/ecs check src tests
+    artifacts:
+        when: always
+        reports:
+            junit: report.xml
+
+php:8.0:
+    # This docker image comes with composer and ant.
+    image: jorge07/alpine-php:8.0-dev
+    script:
+        - vendor/bin/phpunit --configuration phpunit.xml --coverage-text --log-junit report.xml
+        - vendor/bin/ecs check src tests
+    artifacts:
+        when: always
+        reports:
+            junit: report.xml

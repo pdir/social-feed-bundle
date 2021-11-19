@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.10.0](https://github.com/pdir/social-feed-bundle/tree/2.10.0) – 2021-xx-xx
+## [2.10.0](https://github.com/pdir/social-feed-bundle/tree/2.10.0) – 2021-11-19
 
 - [feature] linkedin import
 
