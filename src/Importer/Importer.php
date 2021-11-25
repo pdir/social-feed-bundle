@@ -27,7 +27,7 @@ class Importer
      * @return void | array
      * @throws \RuntimeException
      */
-    public function getInstagramPosts($accessToken, $socialFeedId, $numberPosts)
+    public function getInstagramPosts($accessToken, $socialFeedId, $numberPosts = 30)
     {
         if ('' === $accessToken)
             return 'no access token given';
