@@ -4,6 +4,7 @@ namespace Pdir\SocialFeedBundle\Importer;
 
 use Contao\Date;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\Message;
 use Contao\System;
 use Pdir\SocialFeedBundle\Importer\InstagramClient;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
@@ -98,14 +99,13 @@ class Importer
 
         switch ($objSocialFeed->socialFeedType) {
             case "Facebook":
-                return 'Facebook is currently not supported.';
-                break;
+                Message::addError('Facebook is currently not supported. Try Instagram!');
+                return [];
             case "Instagram":
                 return $this->getInstagramPosts($objSocialFeed->psf_instagramAccessToken, $objSocialFeed->id, $numberPosts);
-                break;
             case "Twitter":
-                return 'Twitter is currently not supported.';
-                break;
+                Message::addError('Twitter is currently not supported. Try Instagram.');
+                return [];
         }
 
     }

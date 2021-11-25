@@ -113,12 +113,18 @@ class ModerateController
             $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], count($importItems));
         }
 
+        if (null === $items) {
+            Message::addInfo('No items where found to moderate.');
+        }
+
         // get items for moderation list
-        $moderationItems = $objImporter->moderation($items);
-        if(count($moderationItems) > 0) {
-            $template = new BackendTemplate('be_sf_moderation_list');
-            $template->arr = $moderationItems;
-            $html = $template->parse();
+        if(null !== $items) {
+            $moderationItems = $objImporter->moderation($items);
+            if(0 < count($moderationItems)) {
+                $template = new BackendTemplate('be_sf_moderation_list');
+                $template->arr = $moderationItems;
+                $html = $template->parse();
+            }
         }
 
         $this->template->activeAccount = $request->request->get('account');
