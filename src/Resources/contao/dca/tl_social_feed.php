@@ -559,7 +559,7 @@ class tl_social_feed extends Backend
      *
      * @return mixed
      */
-    public function setSingleSrcFlags($varValue, DataContainer $dc)
+    public function setSingleSrcFlags($varValue, Contao\DataContainer $dc)
     {
         if ($dc->activeRecord) {
             switch ($dc->activeRecord->type) {
