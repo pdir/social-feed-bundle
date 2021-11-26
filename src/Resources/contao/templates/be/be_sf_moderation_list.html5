@@ -2,7 +2,7 @@
 <div class="be_sf_morderation_list">
     <div class="selectAll">
         <label class="checkbox">
-            <input type="checkbox" name="selectAll" class="checkbox" value="selectAll"> Alles auswählen
+            <input type="checkbox" name="selectAll" class="checkbox" value="selectAll"> <?= $GLOBALS['TL_LANG']['tl_news_moderate']['selectAll'] ?>
         </label>
     </div>
 
@@ -16,7 +16,7 @@
           </p>
           <div class="title" onclick="document.getElementById('opt_items_<?= $key ?>').click();"><b><?= $item['title'] ?></b></div>
           <div class="actions">
-            <p><a href="<?= $item['link'] ?>" class="btn tl_submit" target="_blank">Öffnen</a></p>
+            <p><a href="<?= $item['link'] ?>" class="btn tl_submit" target="_blank"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['open'] ?></a></p>
             <label for="opt_items_<?= $key ?>" class="checkbox-container">
               <input type="checkbox" name="importItems[]" id="opt_items_<?= $key ?>" class="tl_checkbox" value="<?= $item['id'] ?>">
               <span class="checkmark"></span>
@@ -28,7 +28,7 @@
     </ul>
     <div class="tl_formbody_submit">
       <div id="sfSubmitContainer" class="tl_submit_container">
-        <button type="submit" class="btn tl_submit">Einträge importieren</button>
+        <button type="submit" class="btn tl_submit"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['importEntry'] ?></button>
       </div>
     </div>
 </div>

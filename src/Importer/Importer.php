@@ -99,12 +99,12 @@ class Importer
 
         switch ($objSocialFeed->socialFeedType) {
             case "Facebook":
-                Message::addError('Facebook is currently not supported. Try Instagram!');
+                Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported']);
                 return [];
             case "Instagram":
                 return $this->getInstagramPosts($objSocialFeed->psf_instagramAccessToken, $objSocialFeed->id, $numberPosts);
             case "Twitter":
-                Message::addError('Twitter is currently not supported. Try Instagram.');
+                Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['twitterNotSupported']);
                 return [];
         }
 

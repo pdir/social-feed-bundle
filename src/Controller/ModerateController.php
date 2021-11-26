@@ -114,7 +114,7 @@ class ModerateController
         }
 
         if (null === $items) {
-            Message::addInfo('No items where found to moderate.');
+            Message::addInfo($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['noItems']);
         }
 
         // get items for moderation list
@@ -162,7 +162,7 @@ class ModerateController
         $this->template->formId = $formId;
         $this->template->message = $message->generate();
         $this->template->options = $this->generateOptions();
-        $this->template->headline = 'Nachrichten › Social Feed  › Moderate  ›  Achiv ' . Input::get('id');
+        $this->template->headline = $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['headline'] . Input::get('id');
 
         return $this->template;
     }

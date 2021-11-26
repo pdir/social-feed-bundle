@@ -42,4 +42,5 @@ $GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_key'] = array("API Key","Gebe
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_secret_key'] = array("API Secret Key","Geben Sie hier den API Secret Key ein.");
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token'] = array("Access Token","Geben Sie hier den Access Token ein.");
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token_secret'] = array("Access Token Secret","Geben Sie hier den Access Token Secret ein.");
-
+$GLOBALS['TL_LANG']['tl_social_feed']['noAccount'] = "Kein Account/Suchbegriff angegeben";
+$GLOBALS['TL_LANG']['tl_social_feed']['noType'] = "Kein Typ angegeben";
