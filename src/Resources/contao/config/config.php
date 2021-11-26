@@ -55,7 +55,7 @@ $GLOBALS['TL_CRON']['minutely'][] = ['Pdir\SocialFeedBundle\EventListener\CronLi
 $GLOBALS['TL_CRON']['minutely'][] = ['Pdir\SocialFeedBundle\EventListener\CronListener', 'getInstagramPosts'];
 $GLOBALS['TL_CRON']['minutely'][] = ['Pdir\SocialFeedBundle\EventListener\CronListener', 'getTwitterPosts'];
 $GLOBALS['TL_CRON']['minutely'][] = ['Pdir\SocialFeedBundle\EventListener\CronListener', 'getLinkedinPosts'];
-$GLOBALS['TL_CRON']['minutely'][] = ['Pdir\SocialFeedBundle\EventListener\CronListener', 'refreshLinkedInAccessToken'];
+$GLOBALS['TL_CRON']['weekly'][] = ['Pdir\SocialFeedBundle\EventListener\CronListener', 'refreshLinkedInAccessToken'];
 
 /*
  * CSS for Frontend
