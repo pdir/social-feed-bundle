@@ -42,15 +42,15 @@ class tl_social_feed
      */
     public function onGenerateLabel(array $row): string
     {
-        if ('' !== $row['pdir_sf_fb_account']) {
+        if ('' != $row['pdir_sf_fb_account']) {
             $account = $row['pdir_sf_fb_account'];
-        } elseif ('' !== $row['instagram_account']) {
+        } elseif ('' != $row['instagram_account']) {
             $account = $row['instagram_account'];
-        } elseif ('' !== $row['twitter_account']) {
+        } elseif ('' != $row['twitter_account']) {
             $account = $row['twitter_account'];
-        } elseif ('' !== $row['linkedin_company_id']) {
+        } elseif ('' != $row['linkedin_company_id']) {
             $account = $row['linkedin_company_id'];
-        } elseif ('' !== $row['search']) {
+        } elseif ('' != $row['search']) {
             $account = $row['search'];
         } else {
             $account = 'Kein Account/Suchbegriff angegeben';
