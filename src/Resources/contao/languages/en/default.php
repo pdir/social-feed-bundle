@@ -19,3 +19,5 @@ declare(strict_types=1);
  */
 
 $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'] = '%s entries were imported.';
+$GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInSubject'] = 'LinkedIn Access Token Erinnerung';
+$GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInHtml'] = 'Hello Admin, <br><br>The LinkedIn Access Token on the website %s for the account %s needs to be regenerated. To do this, log in to the Contao backend, open the settings of the social feed account, select the checkbox "Generate Access Token" and save. Afterwards, you only have to allow the app access and the Access Token will be generated again. This process must be repeated every year.';

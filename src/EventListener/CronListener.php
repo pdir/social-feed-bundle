@@ -491,8 +491,8 @@ class CronListener extends System
             if ('LinkedIn' === $obj->socialFeedType && '' !== $obj->linkedin_access_token && '' !== $obj->linkedin_refresh_token) {
                 if ($obj->linkedin_refresh_token_expires <= strtotime('+1 week', time())) {
                     $objMail = new Email();
-                    $objMail->subject = 'LinkedIn Access Token Erinnerung';
-                    $objMail->html = 'Hallo Admin, <br><br>Der LinkedIn Access Token auf der Webseite '.$this->Environment->httpHost.' für den Account '.$obj->linkedin_company_id.' muss neu generiert werden. Melde dich dafür im Contao Backend an, rufe die Einstellungen des Social Feed Accounts auf, wähle die Checkbox "Generiere Access Token" aus und speichere. Anschließend musst du nur noch der App den Zugriff erlauben und der Access Token wird neu generiert. Dieser Vorgang muss jedes Jahr wiederholt werden.';
+                    $objMail->subject = $GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInSubject'];
+                    $objMail->html = sprintf($GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInHtml'], $this->Environment->httpHost, $obj->linkedin_company_id);
                     $objMail->from = $GLOBALS['TL_CONFIG']['adminEmail'];
                     $objMail->fromName = $this->Environment->httpHost;
                     $objMail->sendTo($GLOBALS['TL_CONFIG']['adminEmail']);
