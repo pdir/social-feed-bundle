@@ -88,7 +88,7 @@ class InstagramClient
             return null;
         }
 
-        $json_data = json_decode($response->getBody(), true);
+        $json_data = json_decode((string)$response->getBody(), true);
 
         if (!\is_array($json_data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
@@ -217,7 +217,7 @@ class InstagramClient
             return null;
         }
 
-        $data = json_decode($response->getBody(), true);
+        $data = json_decode((string)$response->getBody(), true);
 
         if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
@@ -267,7 +267,7 @@ class InstagramClient
             return null;
         }
 
-        $data = json_decode($response->getBody(), true);
+        $data = json_decode((string)$response->getBody(), true);
 
         if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
@@ -303,7 +303,7 @@ class InstagramClient
             return null;
         }
 
-        $data = json_decode($response->getBody(), true);
+        $data = json_decode((string)$response->getBody(), true);
 
         if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {

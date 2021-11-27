@@ -25,3 +25,5 @@ $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['noItems'] = 'Es wurden kein
 $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['headline'] = 'Nachrichten › Social Feed  › Moderieren  ›  Archiv ';
 $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported'] = 'Facebook wird derzeit nicht unterstützt. Probiere Instagram aus.';
 $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['twitterNotSupported'] = 'Twitter wird derzeit nicht unterstützt. Probiere Instagram aus.';
+$GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['linkedInNotSupported'] = 'LinkedIn wird derzeit nicht unterstützt. Probiere Instagram aus.';
+$GLOBALS['TL_LANG']['BE_MOD']['psfNoAccessToken'] = 'Kein Zugriffstoken angegeben.';

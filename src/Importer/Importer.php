@@ -47,8 +47,9 @@ class Importer
      */
     public function getInstagramPosts($accessToken, $socialFeedId, $numberPosts = 30)
     {
-        if ('' === $accessToken) {
-            return 'no access token given';
+        if (null === $accessToken) {
+            Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported']);
+            return [];
         }
 
         $client = System::getContainer()->get(InstagramClient::class);
@@ -122,6 +123,10 @@ class Importer
 
             case "Twitter":
                 Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['twitterNotSupported']);
+                break;
+
+            case "LinkedIn":
+                Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['linkedInNotSupported']);
                 break;
         }
     }
