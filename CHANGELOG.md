@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.9.3](https://github.com/pdir/social-feed-bundle/tree/2.9.3) – 2021-11-27
+
+- [fix] warning in debug mode while moderation
+
 ## [2.9.2](https://github.com/pdir/social-feed-bundle/tree/2.9.2) – 2021-09-06
 
 - [fix] instagram import

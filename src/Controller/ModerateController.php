@@ -113,12 +113,18 @@ class ModerateController
             $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], count($importItems));
         }
 
+        if (null === $items) {
+            Message::addInfo($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['noItems']);
+        }
+
         // get items for moderation list
-        $moderationItems = $objImporter->moderation($items);
-        if(count($moderationItems) > 0) {
-            $template = new BackendTemplate('be_sf_moderation_list');
-            $template->arr = $moderationItems;
-            $html = $template->parse();
+        if(null !== $items) {
+            $moderationItems = $objImporter->moderation($items);
+            if(0 < count($moderationItems)) {
+                $template = new BackendTemplate('be_sf_moderation_list');
+                $template->arr = $moderationItems;
+                $html = $template->parse();
+            }
         }
 
         $this->template->activeAccount = $request->request->get('account');
@@ -156,7 +162,7 @@ class ModerateController
         $this->template->formId = $formId;
         $this->template->message = $message->generate();
         $this->template->options = $this->generateOptions();
-        $this->template->headline = 'Nachrichten › Social Feed  › Moderate  ›  Achiv ' . Input::get('id');
+        $this->template->headline = $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['headline'] . Input::get('id');
 
         return $this->template;
     }

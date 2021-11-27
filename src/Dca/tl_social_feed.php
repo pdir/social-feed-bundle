@@ -36,13 +36,13 @@ class tl_social_feed
         } else if($row['search'] != "") {
             $account = $row['search'];
         } else {
-            $account = "Kein Account/Suchbegriff angegeben";
+            $account = $GLOBALS['TL_LANG']['tl_social_feed']['noAccount'];
         }
 
         if($row['socialFeedType'] != "") {
             $type = $row['socialFeedType'];
         } else {
-            $type = "Kein Typ angegeben";
+            $type = $GLOBALS['TL_LANG']['tl_social_feed']['noType'];
         }
 
         return sprintf(

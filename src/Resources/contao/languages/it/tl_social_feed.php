@@ -12,6 +12,7 @@ $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_account'] = array("Account Fac
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_app_id'] = array("App ID","Inserisci qui l'ID app della tua app Facebook.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_app_secret'] = array("App Secret","Inserisci la chiave segreta della tua app di Facebook.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_access_token'] = array("Access Token","Inserisci il token di accesso. Le istruzioni per la generazione del token di accesso sono disponibili nella documentazione.");
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_facebookRequestToken'] = array("Generare il token di accesso","Quando si salva, il Token di accesso viene generato automaticamente.");
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_archive'] = ['Archivio News','Seleziona l\'archivio delle news dove devono essere importati i post.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_cronjob'] = ['Esecuzione del cron job','Inserisci la frequenza con cui deve essere richiamato il cron job per importare i post.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'] = array("Ultima importazione (data): verrà compilata automaticamente","Questo campo viene compilato automaticamente e non deve essere compilato.");
@@ -41,4 +42,5 @@ $GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_key'] = array("API Key","Inse
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_secret_key'] = array("API Secret Key","Inserisci qui la chiave segreta dell'API.");
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token'] = array("Access Token","Inserisci qui il token di accesso.");
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token_secret'] = array("Access Token Secret","Inserisci qui l\'Access Token Secret.");
-
+$GLOBALS['TL_LANG']['tl_social_feed']['noAccount'] = "Nessun account/termine di ricerca specificato";
+$GLOBALS['TL_LANG']['tl_social_feed']['noType'] = "Nessun tipo specificato";
