@@ -27,7 +27,6 @@
 
       <div class="widget w50">
         <h3><label for="account"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['account'][0] ?></label></h3>
-        <br>acc: <?= $this->activeAccount ?><br>
         <select name="account" id="account" class="tl_select">
         <?php foreach ($this->options as $value => $label): ?>
           <option value="<?= $value ?>" <?php if($this->activeAccount == $value): echo " selected"; endif; ?>><?= $label ?></option>
