@@ -1,7 +1,7 @@
 {
   "name":"pdir/social-feed-bundle",
   "description":"Social feed extension for Contao CMS",
-  "keywords":["contao","social","feed","facebook","instagram","twitter","google plus","pinterest","vk","rss","bundle"],
+  "keywords":["contao","social","feed","facebook","instagram","twitter","google plus","pinterest","vk","rss","bundle","linkedin"],
   "type":"contao-bundle",
   "homepage":"https://pdir.de",
   "license":"LGPL-3.0-or-later",
