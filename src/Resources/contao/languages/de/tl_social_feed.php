@@ -69,3 +69,6 @@ $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture'] = ['Profilbild
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture_size'] = ['Bildgröße', 'Hier können Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['access_token_expires'] = ['Access Token läuft ab am', 'Solange der Refresh Token gültig ist verlängert sich der Access Token automatisch um jeweils 2 Monate.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_refresh_token_expires'] = ['Refresh Token läuft ab am', 'Wenn der Refresh Token abgelaufen ist muss der Access Token manuell neu generiert werden.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psfLabelSearchTerm'] = '(Suchwort <span style="color:#999;">%s</span>)';
+$GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoAccount'] = 'Kein Account angegeben';
+$GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoType'] = 'Kein Typ angegeben';

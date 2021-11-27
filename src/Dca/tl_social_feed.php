@@ -22,6 +22,8 @@ namespace Pdir\SocialFeedBundle\Dca;
 
 use Contao\BackendTemplate;
 use Contao\DataContainer;
+use Safe\Exceptions\StringsException;
+use function Safe\sprintf;
 
 class tl_social_feed
 {
@@ -32,44 +34,55 @@ class tl_social_feed
 
     /**
      * Template.
-     *
-     * @var string
      */
-    protected $strTemplate = 'be_socialfeed_setup';
+    protected string $strTemplate = 'be_socialfeed_setup';
 
     /**
      * On generate the label.
+     *
+     * @throws StringsException
      */
     public function onGenerateLabel(array $row): string
     {
-        if ('' != $row['pdir_sf_fb_account']) {
-            $account = $row['pdir_sf_fb_account'];
-        } elseif ('' != $row['instagram_account']) {
-            $account = $row['instagram_account'];
-        } elseif ('' != $row['twitter_account']) {
-            $account = $row['twitter_account'];
-        } elseif ('' != $row['linkedin_company_id']) {
-            $account = $row['linkedin_company_id'];
-        } elseif ('' != $row['search']) {
-            $account = $row['search'];
-        } else {
-            $account = 'Kein Account/Suchbegriff angegeben';
+        $account = '';
+
+        // set account type
+        switch ($row['socialFeedType']) {
+            case 'Facebook':
+                $account = $row['pdir_sf_fb_account'];
+                break;
+
+            case 'Instagram':
+                $account = $row['instagram_account'];
+                break;
+
+            case 'Twitter':
+                $account = $row['twitter_account'];
+                break;
+
+            case 'LinkedIn':
+                $account = $row['linkedin_company_id'];
+                break;
         }
 
-        if ('' !== $row['socialFeedType']) {
-            $type = $row['socialFeedType'];
-        } else {
-            $type = 'Kein Typ angegeben';
+        // no account is selected
+        if (empty($account)) {
+            $account = $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoAccount'];
+        }
+
+        if (!empty($row['search'])) {
+            $row['search'] = sprintf($GLOBALS['TL_LANG']['tl_social_feed']['psfLabelSearchTerm'], $row['search']);
         }
 
         return sprintf(
-            '%s &rarr; %s',
-            $type,
-            $account
+            '%s &rarr; %s %s',
+            $row['socialFeedType'] ?: $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoType'],
+            $account,
+            $row['search']
         );
     }
 
-    public function renderFooter(DataContainer $dc)
+    public function renderFooter(DataContainer $dc): string
     {
         // add setupExplanation
         return $this->setupExplanation($dc);
@@ -77,12 +90,8 @@ class tl_social_feed
 
     /**
      * Gets the setup explanation.
-     *
-     * @param Contao\DataContainer $dc
-     *
-     * @return string
      */
-    public function setupExplanation(DataContainer $dc)
+    public function setupExplanation(DataContainer $dc): string
     {
         $template = new BackendTemplate($this->strTemplate);
         $template->version = self::VERSION;
