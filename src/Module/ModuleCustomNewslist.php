@@ -41,7 +41,7 @@ class ModuleCustomNewslist extends ModuleNewsList
 
         $layout = LayoutModel::findByPk($GLOBALS['objPage']->layout);
 
-        if (strpos($layout->scripts, 'lazyload')) {
+        if (null !== $layout->scripts && strpos($layout->scripts, 'lazyload')) {
             $this->Template->lazyload = true;
         } else {
             $this->Template->lazyload = false;
