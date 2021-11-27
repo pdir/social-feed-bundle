@@ -1,8 +1,13 @@
 # Changelog
 
-## [2.10.0](https://github.com/pdir/social-feed-bundle/tree/2.10.0) – 2021-11-19
+## [2.10.0](https://github.com/pdir/social-feed-bundle/tree/2.10.0) – 2021-11-27
 
 - [feature] linkedin import
+- [info] remove support for PHP 7.3
+
+## [2.9.3](https://github.com/pdir/social-feed-bundle/tree/2.9.3) – 2021-11-27
+
+- [fix] warning in debug mode while moderation
 
 ## [2.9.2](https://github.com/pdir/social-feed-bundle/tree/2.9.2) – 2021-09-06
 

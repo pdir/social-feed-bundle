@@ -21,3 +21,7 @@ declare(strict_types=1);
 $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'] = 'Gli elementi %s sono stati importati.';
 $GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInSubject'] = 'LinkedIn Access Token Erinnerung';
 $GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInHtml'] = 'Ciao Admin, <br><br>Il token di accesso LinkedIn sul sito %s per l\'account %s deve essere rigenerato. Per farlo, accedi al backend di Contao, apri le impostazioni dell\'account del social feed, seleziona la casella di controllo "Generate Access Token" e salva. In seguito, dovrai solo permettere l\'accesso all\'app e il Token di accesso sarà generato di nuovo. Questo processo deve essere ripetuto ogni anno.';
+$GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['noItems'] = 'Non sono state trovate voci.';
+$GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['headline'] = 'Notizie  › Alimentazione sociale  › Moderato  ›  Archivio ';
+$GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported'] = 'Facebook non è attualmente supportato. Prova Instagram.';
+$GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['twitterNotSupported'] = 'Twitter non è attualmente supportato. Prova Instagram.';

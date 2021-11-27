@@ -21,7 +21,10 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\Importer;
 
 use Contao\Date;
+use Contao\CoreBundle\Exception\ResponseException;
+use Contao\Message;
 use Contao\System;
+use Pdir\SocialFeedBundle\Importer\InstagramClient;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 
 class Importer
@@ -39,11 +42,10 @@ class Importer
     /**
      * Collect data from the instagram api and return array.
      *
-     * @throws \RuntimeException
-     *
      * @return void|array
+     * @throws \RuntimeException
      */
-    public function getInstagramPosts($accessToken, $socialFeedId, $numberPosts)
+    public function getInstagramPosts($accessToken, $socialFeedId, $numberPosts = 30)
     {
         if ('' === $accessToken) {
             return 'no access token given';
@@ -110,16 +112,16 @@ class Importer
         }
 
         switch ($objSocialFeed->socialFeedType) {
-            case 'Facebook':
-                return 'Facebook is currently not supported.';
+            case "Facebook":
+                Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported']);
                 break;
 
-            case 'Instagram':
+            case "Instagram":
                 return $this->getInstagramPosts($objSocialFeed->psf_instagramAccessToken, $objSocialFeed->id, $numberPosts);
                 break;
 
-            case 'Twitter':
-                return 'Twitter is currently not supported.';
+            case "Twitter":
+                Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['twitterNotSupported']);
                 break;
         }
     }

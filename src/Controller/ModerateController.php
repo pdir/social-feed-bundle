@@ -121,13 +121,18 @@ class ModerateController
             $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($importItems));
         }
 
-        // get items for moderation list
-        $moderationItems = $objImporter->moderation($items);
+        if (null === $items) {
+            Message::addInfo($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['noItems']);
+        }
 
-        if (\count($moderationItems) > 0) {
-            $template = new BackendTemplate('be_sf_moderation_list');
-            $template->arr = $moderationItems;
-            $html = $template->parse();
+        // get items for moderation list
+        if(null !== $items) {
+            $moderationItems = $objImporter->moderation($items);
+            if(0 < count($moderationItems)) {
+                $template = new BackendTemplate('be_sf_moderation_list');
+                $template->arr = $moderationItems;
+                $html = $template->parse();
+            }
         }
 
         $this->template->activeAccount = $request->request->get('account');
@@ -148,8 +153,8 @@ class ModerateController
     {
         /**
          * @var Environment
-         * @var Message     $message
-         * @var System      $system
+         * @var Message $message
+         * @var System $system
          */
         $environment = $this->framework->getAdapter(Environment::class);
         $message = $this->framework->getAdapter(Message::class);
@@ -164,7 +169,7 @@ class ModerateController
         $this->template->formId = $formId;
         $this->template->message = $message->generate();
         $this->template->options = $this->generateOptions();
-        $this->template->headline = 'Nachrichten › Social Feed  › Moderate  ›  Achiv '.Input::get('id');
+        $this->template->headline = $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['headline'] . Input::get('id');
 
         return $this->template;
     }
@@ -193,6 +198,10 @@ class ModerateController
 
             if ('Twitter' === $feed->socialFeedType) {
                 $options[$feed->id] = $feed->socialFeedType.' '.$feed->twitter_account;
+            }
+
+            if ('LinkedIn' === $feed->socialFeedType) {
+                $options[$feed->id] = $feed->socialFeedType.' '.$feed->linkedin_account;
             }
         }
 
