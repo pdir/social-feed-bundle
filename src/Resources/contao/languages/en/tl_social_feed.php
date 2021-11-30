@@ -34,7 +34,6 @@ $GLOBALS['TL_LANG']['tl_social_feed']['psf_facebookRequestToken'] = ['Access Tok
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_archive'] = ['News archive', 'Please enter the news archive to which the facebook posts should be imported.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_cronjob'] = ['Execution of the cronjob', 'Please choose the time how often the cronjob should be called to import facebook posts.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'] = ['Last import (date) - will be filled out automatically', 'This field will be filled out automatically and you should not fill it out.'];
-$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_time'] = ['Last import (time) - will be filled out automatically', 'This field will be filled out automatically and you should not fill it out.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_posts'] = ['Import only own posts', 'If this option is activated, only the posts of the page will be imported and not the posts that users have written to your feed.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['instagram_account'] = ['Account name', 'Here you can enter a account name which will displayed on the website.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['instagram_account_picture'] = ['Account picture', 'Here you can choose a account picture which will displayed on the website.'];

@@ -622,7 +622,7 @@ class CronListener extends System
     private function setLastImportDate($id): void
     {
         $this->import('Database');
-        $this->Database->prepare('UPDATE tl_social_feed SET pdir_sf_fb_news_last_import_date = '.time().', pdir_sf_fb_news_last_import_time = '.time().' WHERE id=?')->execute($id);
+        $this->Database->prepare('UPDATE tl_social_feed SET pdir_sf_fb_news_last_import_date = '.time().' WHERE id=?')->execute($id);
     }
 
     /**

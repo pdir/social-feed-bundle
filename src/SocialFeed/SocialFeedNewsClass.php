@@ -48,7 +48,7 @@ class SocialFeedNewsClass
             $objTemplate->teaser = $teaser;
             $objTemplate->socialFeedType = $arrRow['social_feed_type'];
 
-            if ('' !== $arrRow['social_feed_account_picture']) {
+            if (null !== $arrRow['social_feed_account_picture']) {
                 $imagePath = FilesModel::findByUuid($arrRow['social_feed_account_picture'])->path;
 
                 if (null === $imagePath) {
@@ -58,25 +58,25 @@ class SocialFeedNewsClass
                 if (null !== $imagePath) {
                     $pictureObj = Picture::create($imagePath);
 
-                    if (null !== $pictureObj && $pictureObj->size > 0) {
+                    if (null !== $pictureObj) {
                         $objTemplate->accountPicture = $pictureObj->getTemplateData();
                     }
                 }
             } else {
                 $socialFeedAccount = SocialFeedModel::findBy('id', $arrRow['social_feed_config']);
 
-                if ('' !== $socialFeedAccount->instagram_account_picture) {
+                if (null !== $socialFeedAccount->instagram_account_picture) {
                     $imagePath = FilesModel::findByUuid($socialFeedAccount->instagram_account_picture)->path;
                     $size = deserialize($socialFeedAccount->instagram_account_picture_size);
                     $objTemplate->accountPicture = Picture::create($imagePath, $size)->getTemplateData();
-                } elseif ('' !== $socialFeedAccount->linkedin_account_picture) {
+                } elseif (null !== $socialFeedAccount->linkedin_account_picture) {
                     $imagePath = FilesModel::findByUuid($socialFeedAccount->linkedin_account_picture)->path;
                     $size = deserialize($socialFeedAccount->linkedin_account_picture_size);
                     $objTemplate->accountPicture = Picture::create($imagePath, $size)->getTemplateData();
                 }
             }
 
-            if ('' !== $arrRow['social_feed_account']) {
+            if (null !== $arrRow['social_feed_account']) {
                 $objTemplate->sfFbAccount = $arrRow['social_feed_account'];
             } else {
                 $socialFeedAccount = SocialFeedModel::findBy('id', $arrRow['social_feed_config']);

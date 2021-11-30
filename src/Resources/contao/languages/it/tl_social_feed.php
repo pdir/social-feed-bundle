@@ -34,7 +34,6 @@ $GLOBALS['TL_LANG']['tl_social_feed']['psf_facebookRequestToken'] = ['Genera tok
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_archive'] = ['Archivio News', 'Seleziona l\'archivio delle news dove devono essere importati i post.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_cronjob'] = ['Esecuzione del cron job', 'Inserisci la frequenza con cui deve essere richiamato il cron job per importare i post.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'] = ['Ultima importazione (data): verrà compilata automaticamente', 'Questo campo viene compilato automaticamente e non deve essere compilato.'];
-$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_time'] = ['Ultima importazione (ora): verrà compilata automaticamente', 'Questo campo viene compilato automaticamente e non deve essere compilato.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_posts'] = ['Importa solo i post dalla pagina', 'Se questa opzione è attivata, verranno importati solo i post sulla pagina e non i post che gli utenti hanno pubblicato sulla tua bacheca.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['instagram_account'] = ['Nome Profilo', "Immettere il nome dell'account che dovrebbe essere visualizzato sul sito Web. Il nome dell'account non è richiesto per l'importazione"];
 $GLOBALS['TL_LANG']['tl_social_feed']['instagram_account_picture'] = ['Foto del profilo', "Seleziona qui un'immagine del profilo, che verrà visualizzata sul sito web."];

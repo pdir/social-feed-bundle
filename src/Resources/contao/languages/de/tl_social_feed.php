@@ -34,7 +34,6 @@ $GLOBALS['TL_LANG']['tl_social_feed']['psf_facebookRequestToken'] = ['Access Tok
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_archive'] = ['News-Archiv', 'Geben Sie hier das News-Archiv an, in welches die Posts importiert werden sollen.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_cronjob'] = ['Ausführung des Cronjobes', 'Geben Sie hier an, wie oft der Cronjob aufgerufen werden soll, um Posts zu importieren.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'] = ['Letzter Import (Datum) - wird automatisch ausgefüllt', 'Dieses Feld wird automatisch ausgefüllt und sollten Sie nicht ausfüllen.'];
-$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_time'] = ['Letzter Import (Zeit) - wird automatisch ausgefüllt', 'Dieses Feld wird automatisch ausgefüllt und sollten Sie nicht ausfüllen.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_posts'] = ['Nur Posts der Seite importieren', 'Wenn diese Option aktiviert ist, werden nur die Posts der Seite importiert und keine Posts, die Nutzer an Ihre Pinnwand geschrieben haben.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['instagram_account'] = ['Profilname', 'Geben Sie hier den Namen des Accounts ein, der auf der Webseite angezeigt werden soll. Der Accountname wird für den Import nicht zwingend benötigt.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['instagram_account_picture'] = ['Profilbild', 'Wählen Sie hier ein Profilbild aus, welches auf der Webseite angezeigt wird.'];
