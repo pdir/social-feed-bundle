@@ -302,19 +302,21 @@ class CronListener extends System
                             continue;
                         }
 
-                        $imgPath = $this->createImageFolder($obj->linkedin_company_id);
-                        $picturePath = $imgPath.$element['id'].'.jpg';
+                        $objFile = "";
+                        if($element['content']['contentEntities'][0]['thumbnails'][0]['resolvedUrl'] !== null) {
+                            $imgPath = $this->createImageFolder($obj->linkedin_company_id);
+                            $picturePath = $imgPath.$element['id'].'.jpg';
 
-                        if (!file_exists($picturePath)) {
-                            $file = new File($picturePath);
-                            $file->write(file_get_contents($element['content']['contentEntities'][0]['thumbnails'][0]['resolvedUrl']));
-                            $file->close();
+                            if (!file_exists($picturePath)) {
+                                $file = new File($picturePath);
+                                $file->write(file_get_contents($element['content']['contentEntities'][0]['thumbnails'][0]['resolvedUrl']));
+                                $file->close();
+                            }
+
+                            $objFile = Dbafs::addResource($imgPath.$element['id'].'.jpg');
                         }
 
                         $message = $this->getPostMessage($element['text']['text']);
-
-                        // add/fetch file from DBAFS
-                        $objFile = Dbafs::addResource($imgPath.$element['id'].'.jpg');
                         $this->saveLinkedInNews($objNews, $obj, $objFile, $message, $element, $organization);
                     }
 
