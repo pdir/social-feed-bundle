@@ -3,6 +3,8 @@
 ## [2.10.0](https://github.com/pdir/social-feed-bundle/tree/2.10.0) – 2021-11-29
 
 - [feature] linkedin import
+- [fix] show account pictures
+- [fix] twitter import
 - [info] remove support for PHP 7.3
 
 ## [2.9.3](https://github.com/pdir/social-feed-bundle/tree/2.9.3) – 2021-11-27

@@ -365,6 +365,8 @@ class CronListener extends System
 
                     $posts = [];
 
+                    echo "Twitter Import<br>";
+
                     if ('' !== $accountName && '' === $search) {
                         $posts = $connection->get('statuses/user_timeline', ['screen_name' => $accountName, 'tweet_mode' => 'extended', 'count' => $obj->number_posts]);
                     } elseif ('' !== $search && '' !== $accountName) {
@@ -372,6 +374,8 @@ class CronListener extends System
                     } elseif ('' !== $search) {
                         $posts = $connection->get('search/tweets', ['q' => $search, 'tweet_mode' => 'extended', 'count' => $obj->number_posts])->statuses;
                     }
+
+                    echo "<pre>"; print_r($posts); echo "</pre>";
 
                     foreach ($posts as $post) {
                         if (!$post) {
@@ -386,9 +390,7 @@ class CronListener extends System
                             continue;
                         }
 
-                        echo $post->in_reply_to_status_id.'<br>';
-
-                        if ('' !== $post->in_reply_to_status_id && 1 !== $obj->show_reply) {
+                        if (null !== $post->in_reply_to_status_id && 1 !== $obj->show_reply) {
                             continue;
                         }
 
