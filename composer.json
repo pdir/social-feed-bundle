@@ -36,7 +36,7 @@
     "guzzlehttp/guzzle": "~6.0",
     "kevinrob/guzzle-cache-middleware": "^3.2",
     "doctrine/cache": "^1.9",
-    "zoonman/linkedin-api-php-client": "dev-master as 1.0.0"
+    "samoritano/linkedin-api-php-client-v2": "^0.0.20"
   },
   "require-dev": {
     "contao/manager-plugin": "^2.0",
