@@ -1,7 +1,7 @@
 {
   "name":"pdir/social-feed-bundle",
   "description":"Social feed extension for Contao CMS",
-  "keywords":["contao","social","feed","facebook","instagram","twitter","google plus","pinterest","vk","rss","bundle"],
+  "keywords":["contao","social","feed","facebook","instagram","twitter","google plus","pinterest","vk","rss","bundle","linkedin"],
   "type":"contao-bundle",
   "homepage":"https://pdir.de",
   "license":"LGPL-3.0-or-later",
@@ -29,16 +29,20 @@
     "donate": "https://contao-themes.net/sponsoring.html"
   },
   "require": {
-    "php": "^7.3 || ^8.0",
+    "php": "^7.4 || ^8.0",
     "contao/core-bundle": "^4.4",
     "nickdnk/graph-sdk": "^6.0",
     "abraham/twitteroauth": "~1.1 || ~2.0",
     "guzzlehttp/guzzle": "~6.0",
     "kevinrob/guzzle-cache-middleware": "^3.2",
-    "doctrine/cache": "^1.9"
+    "doctrine/cache": "^1.9",
+    "samoritano/linkedin-api-php-client-v2": "^0.0.20"
   },
   "require-dev": {
-    "contao/manager-plugin": "^2.0"
+    "contao/manager-plugin": "^2.0",
+    "contao/easy-coding-standard": "^3.0",
+    "phpunit/phpunit": "^8.4 || ^9.5",
+    "symfony/phpunit-bridge": "^4.4 || ^5.1"
   },
   "conflict": {
     "contao/manager-plugin": "<2.0 || >=3.0"

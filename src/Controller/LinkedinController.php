@@ -5,6 +5,13 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
+ * Copyright (C) 2011-2019 Codefog
+ *
+ * The code of this class is based on the Instagram Bundle from Codefog
+ * @author     Codefog <https://codefog.pl>
+ * @author     Kamil Kuzminski <https://github.com/qzminski>
+ * @license    MIT
+ *
  * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
@@ -30,9 +37,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * @Route("/_facebook", defaults={"_scope" = "backend", "_token_check" = false})
+ * @Route("/auth", defaults={"_scope" = "backend", "_token_check" = false})
  */
-class FacebookController
+class LinkedinController
 {
     /**
      * @var Connection
@@ -50,7 +57,7 @@ class FacebookController
     private $session;
 
     /**
-     * FacebookController constructor.
+     * LinkedinController constructor.
      */
     public function __construct(Connection $db, RouterInterface $router, SessionInterface $session)
     {
@@ -60,30 +67,34 @@ class FacebookController
     }
 
     /**
-     * @Route("/auth", name="facebook_auth", methods={"GET"})
+     * @Route("/linkedin", name="auth_linkedin", methods={"GET"})
      */
     public function authAction(Request $request): Response
     {
         $sessionData = $this->session->get(SocialFeedListener::SESSION_KEY);
 
+        // Missing code query parameter
+        if (!$request->query->get('code')) {
+            return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
+        }
+        //get refresh token
         $data = [
+            'grant_type' => 'authorization_code',
+            'code' => $request->query->get('code'),
             'client_id' => $sessionData['clientId'],
             'client_secret' => $sessionData['clientSecret'],
-            'redirect_uri' => $this->router->generate('facebook_auth', [], RouterInterface::ABSOLUTE_URL),
-            'code' => $request->query->get('code'),
+            'redirect_uri' => $this->router->generate('auth_linkedin', [], RouterInterface::ABSOLUTE_URL),
         ];
 
-        $json = file_get_contents('https://graph.facebook.com/v11.0/oauth/access_token?'.http_build_query($data));
-        $obj = json_decode($json);
-        $userAccessToken = $obj->access_token;
+        try {
+            $token = json_decode(file_get_contents('https://www.linkedin.com/oauth/v2/accessToken?'.http_build_query($data)));
 
-        $json = file_get_contents('https://graph.facebook.com/'.$sessionData['page'].'?fields=access_token&access_token='.$userAccessToken);
-        $obj = json_decode($json);
-        $pageAccessToken = $obj->access_token;
-
-        // Store the access token and remove temporary session key
-        $this->db->update('tl_social_feed', ['pdir_sf_fb_access_token' => $pageAccessToken], ['id' => $sessionData['socialFeedId']]);
-        $this->session->remove(SocialFeedListener::SESSION_KEY);
+            // Store the access token and remove temporary session key
+            $this->db->update('tl_social_feed', ['linkedin_access_token' => $token->access_token, 'access_token_expires' => time() + $token->expires_in, 'linkedin_refresh_token' => $token->refresh_token, 'linkedin_refresh_token_expires' => time() + $token->refresh_token_expires_in], ['id' => $sessionData['socialFeedId']]);
+            $this->session->remove(SocialFeedListener::SESSION_KEY);
+        } catch (Exception $e) {
+            System::log($e->getMessage(), __METHOD__, TL_GENERAL);
+        }
 
         return new RedirectResponse($sessionData['backUrl']);
     }

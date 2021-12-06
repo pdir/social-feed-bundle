@@ -18,12 +18,17 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-/*
- * Module translation
- */
+namespace Pdir\SocialFeedBundle\Tests;
 
-$GLOBALS['TL_LANG']['MOD']['pdir'][0] = 'pdir Apps';
-$GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][0] = 'Social Feed Info';
-$GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][1] = 'Verwalten Sie hier das Social Feed Bundle';
-$GLOBALS['TL_LANG']['MOD']['socialFeed'][0] = 'Social Feed Accounts';
-$GLOBALS['TL_LANG']['MOD']['socialFeed'][1] = 'Konfigurieren Sie hier das Social Feed Bundle.';
+use Pdir\SocialFeedBundle\PdirSocialFeedBundle;
+use PHPUnit\Framework\TestCase;
+
+class PdirSocialFeedBundleTest extends TestCase
+{
+    public function testCanBeInstantiated(): void
+    {
+        $bundle = new PdirSocialFeedBundle();
+
+        $this->assertInstanceOf('Pdir\SocialFeedBundle\PdirSocialFeedBundle', $bundle);
+    }
+}

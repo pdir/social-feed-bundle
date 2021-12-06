@@ -1,24 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * Instagram Bundle for Contao Open Source CMS.
+ * social feed bundle for Contao Open Source CMS
  *
- * Copyright (C) 2011-2019 Codefog
+ * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
  *
- * @author  Codefog <https://codefog.pl>
- * @author  Kamil Kuzminski <https://github.com/qzminski>
- * @license MIT
+ * @package    social-feed-bundle
+ * @link       https://github.com/pdir/social-feed-bundle
+ * @license    http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @author     Mathias Arzberger <develop@pdir.de>
+ * @author     Philipp Seibt <develop@pdir.de>
+ * @author     pdir GmbH <https://pdir.de>
  *
- * https://github.com/codefog/contao-instagram
- *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Pdir\SocialFeedBundle\Controller;
 
-use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
-use Pdir\SocialFeedBundle\Importer\InstagramClient;
 use Contao\BackendUser;
 use Doctrine\DBAL\Connection;
+use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
+use Pdir\SocialFeedBundle\Importer\InstagramClient;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -80,7 +85,7 @@ class InstagramController
         }
 
         // User not logged in
-        if (null === ($user = $this->getBackendUser())) {
+        if (null === $this->getBackendUser()) {
             return new Response(Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
         }
 
@@ -109,7 +114,7 @@ class InstagramController
 
         // Get the user and media data
         $this->client->getUserData($accessToken, (int) $module['id'], false);
-        $mediaData = $this->client->getMediaData($accessToken, (int) $module['id'], false);
+        // $mediaData = $this->client->getMediaData($accessToken, (int) $module['id'], false);
 
         // Store the access token and remove temporary session key
         $this->db->update('tl_social_feed', ['psf_instagramAccessToken' => $accessToken], ['id' => $sessionData['socialFeedId']]);

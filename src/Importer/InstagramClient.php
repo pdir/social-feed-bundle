@@ -1,13 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * Instagram Bundle for Contao Open Source CMS.
+ * social feed bundle for Contao Open Source CMS
  *
  * Copyright (C) 2011-2019 Codefog
  *
- * @author  Codefog <https://codefog.pl>
- * @author  Kamil Kuzminski <https://github.com/qzminski>
- * @license MIT
+ * The code of this class is based on the Instagram Bundle from Codefog
+ * @author     Codefog <https://codefog.pl>
+ * @author     Kamil Kuzminski <https://github.com/qzminski>
+ * @license    MIT
+ *
+ * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ *
+ * @package    social-feed-bundle
+ * @link       https://github.com/pdir/social-feed-bundle
+ * @license    http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @author     Mathias Arzberger <develop@pdir.de>
+ * @author     Philipp Seibt <develop@pdir.de>
+ * @author     pdir GmbH <https://pdir.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Pdir\SocialFeedBundle\Importer;
@@ -73,7 +88,7 @@ class InstagramClient
             return null;
         }
 
-        $json_data = json_decode($response->getBody(), true);
+        $json_data = json_decode((string)$response->getBody(), true);
 
         if (!\is_array($json_data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
@@ -85,12 +100,12 @@ class InstagramClient
 
         $data = $json_data['data'];
 
-        if($query['limit'] > 100 && isset($json_data['paging']['next'])) {
-            $query['limit'] = $query['limit'] - 100;
+        if ($query['limit'] > 100 && isset($json_data['paging']['next'])) {
+            $query['limit'] -= 100;
             $json_data['paging']['next'] = str_replace('limit=100', 'limit='.$query['limit'], $json_data['paging']['next']);
-            parse_str(parse_url($json_data['paging']['next'], PHP_URL_QUERY),$query);
+            parse_str(parse_url($json_data['paging']['next'], PHP_URL_QUERY), $query);
             $next_page = $this->getData($url, $query, $socialFeedId, $cache);
-            $data = array_merge($data,$next_page['data']);
+            $data = array_merge($data, $next_page['data']);
         }
 
         return ['data' => $data];
@@ -104,7 +119,7 @@ class InstagramClient
         return $this->getData('https://graph.instagram.com/me/media', [
             'access_token' => $accessToken,
             'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp',
-            'limit' => $numberPosts
+            'limit' => $numberPosts,
         ], $socialFeedId, $cache);
     }
 
@@ -115,7 +130,7 @@ class InstagramClient
     {
         return $this->getData('https://graph.instagram.com/me', [
             'access_token' => $accessToken,
-            'fields' => 'id,username'
+            'fields' => 'id,username',
         ], $socialFeedId, $cache);
     }
 
@@ -124,7 +139,7 @@ class InstagramClient
      */
     public function getUserImage(string $accessToken, int $socialFeedId = null, bool $cache = true): ?array
     {
-        # not supported by instagram
+        // not supported by instagram
         return $this->getData('https://graph.instagram.com/me/picture', [
             'access_token' => $accessToken,
         ], $socialFeedId, $cache);
@@ -202,7 +217,7 @@ class InstagramClient
             return null;
         }
 
-        $data = json_decode($response->getBody(), true);
+        $data = json_decode((string)$response->getBody(), true);
 
         if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
@@ -228,7 +243,7 @@ class InstagramClient
     }
 
     /**
-     * Get the short lived access token
+     * Get the short lived access token.
      *
      * @return string
      */
@@ -252,7 +267,7 @@ class InstagramClient
             return null;
         }
 
-        $data = json_decode($response->getBody(), true);
+        $data = json_decode((string)$response->getBody(), true);
 
         if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
@@ -266,7 +281,7 @@ class InstagramClient
     }
 
     /**
-     * Get the long lived access token
+     * Get the long lived access token.
      *
      * @return string
      */
@@ -288,7 +303,7 @@ class InstagramClient
             return null;
         }
 
-        $data = json_decode($response->getBody(), true);
+        $data = json_decode((string)$response->getBody(), true);
 
         if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {

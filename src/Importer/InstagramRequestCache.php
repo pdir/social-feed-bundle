@@ -1,13 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * Instagram Bundle for Contao Open Source CMS.
+ * social feed bundle for Contao Open Source CMS
  *
  * Copyright (C) 2011-2019 Codefog
  *
- * @author  Codefog <https://codefog.pl>
- * @author  Kamil Kuzminski <https://github.com/qzminski>
- * @license MIT
+ * The code of this class is based on the Instagram Bundle from Codefog
+ * @author     Codefog <https://codefog.pl>
+ * @author     Kamil Kuzminski <https://github.com/qzminski>
+ * @license    MIT
+ *
+ * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ *
+ * @package    social-feed-bundle
+ * @link       https://github.com/pdir/social-feed-bundle
+ * @license    http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @author     Mathias Arzberger <develop@pdir.de>
+ * @author     Philipp Seibt <develop@pdir.de>
+ * @author     pdir GmbH <https://pdir.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Pdir\SocialFeedBundle\Importer;
@@ -33,9 +48,6 @@ class InstagramRequestCache
 
     /**
      * InstagramRequestCache constructor.
-     * @param Filesystem $fs
-     * @param int $cacheTtl
-     * @param string $projectDir
      */
     public function __construct(Filesystem $fs, int $cacheTtl, string $projectDir)
     {

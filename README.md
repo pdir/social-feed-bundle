@@ -9,7 +9,7 @@ About
 -----
 
 The Social Feed Extension shows a user feed from the most popular social
-networks (Facebook, Instagram and Twitter). The posts are written directly
+networks (Facebook, Instagram, Twitter and Linkedin). The posts are written directly
 into the database, created as news and can then displayed on the website
 using the module type news list. Since version 2.5.0 modaration of posts
 in news archive for instagram is available.
@@ -17,7 +17,7 @@ in news archive for instagram is available.
 **Deutsch**
 
 Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen
-Netzwerken an. Zur Zeit wird Facebook, Instagram und Twitter unterstützt,
+Netzwerken an. Zur Zeit wird Facebook, Instagram, Twitter und LinkedIn unterstützt,
 weitere Kanäle folgen in Zukunft. Die Posts werden direkt in die Datenbank
 geschrieben, als News angelegt und können anschließend mit dem Modultyp
 Nachrichtenliste auf der Webseite angezeigt werden. Seit Version 2.5.0
@@ -50,9 +50,10 @@ Demo
 Dependencies
 ------------
 
-- [facebook/graph-sdk](https://github.com/facebook/php-graph-sdk)
-- [raiym/instagram-php-scraper](https://github.com/postaddictme/instagram-php-scraper)
+- [nickdnk/graph-sdk](https://github.com/nickdnk/php-graph-sdk)
 - [abraham/twitteroauth](https://github.com/abraham/twitteroauth)
+- [guzzlehttp/guzzle](https://github.com/guzzle/guzzle)
+- [zoonman/linkedin-api-php-client](https://github.com/zoonman/linkedin-api-php-client)
 
 License
 -------

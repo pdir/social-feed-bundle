@@ -1,6 +1,28 @@
 <?php
+
+declare(strict_types=1);
+
+/*
+ * social feed bundle for Contao Open Source CMS
+ *
+ * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ *
+ * @package    social-feed-bundle
+ * @link       https://github.com/pdir/social-feed-bundle
+ * @license    http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @author     Mathias Arzberger <develop@pdir.de>
+ * @author     Philipp Seibt <develop@pdir.de>
+ * @author     pdir GmbH <https://pdir.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+use Contao\Backend;
+use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-/**
+
+/*
  * add global operation
  */
 array_insert($GLOBALS['TL_DCA']['tl_news']['list']['global_operations'], 0, [
@@ -9,105 +31,97 @@ array_insert($GLOBALS['TL_DCA']['tl_news']['list']['global_operations'], 0, [
         'href' => 'key=moderate',
         'class' => 'header_new header_sf_moderate',
         'attributes' => 'onclick="Backend.getScrollOffset()"',
-        #'button_callback' => ''
     ],
 ]);
 
-/**
+/*
  * Add palette to tl_module
  */
 
-$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_id'] = array
-(
+$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_id'] = [
     'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_id'],
     'exclude' => true,
     'inputType' => 'text',
-    'eval' => array(
-        'mandatory'=>false,
+    'eval' => [
+        'mandatory' => false,
         'tl_class' => 'w50',
         'decodeEntities' => true,
-    ),
+    ],
     'sql' => "varchar(128) NOT NULL default ''",
-);
+];
 
-$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_type'] = array
-(
+$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_type'] = [
     'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_type'],
-    'exclude'                 => true,
-    'filter'                  => true,
-    'sorting'                 => true,
-    'inputType'               => 'select',
-    'options'                 => array('Facebook','Instagram','Twitter'),
-    'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-    'sql'                     => "varchar(255) NOT NULL default ''"
-);
+    'exclude' => true,
+    'filter' => true,
+    'sorting' => true,
+    'inputType' => 'select',
+    'options' => ['Facebook', 'Instagram', 'Twitter'],
+    'eval' => ['includeBlankOption' => true, 'tl_class' => 'w50'],
+    'sql' => "varchar(255) NOT NULL default ''",
+];
 
-$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_account'] = array
-(
+$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_account'] = [
     'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_account'],
     'exclude' => true,
     'inputType' => 'text',
-    'eval' => array(
-        'mandatory'=>false,
+    'eval' => [
+        'mandatory' => false,
         'tl_class' => 'w50',
         'decodeEntities' => true,
-    ),
+    ],
     'sql' => "varchar(128) NOT NULL default ''",
-);
+];
 
-$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_account_picture'] = array
-(
+$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_account_picture'] = [
     'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_account_picture'],
     'exclude' => true,
     'inputType' => 'fileTree',
-    'eval' => array( 'filesOnly'=>true, 'fieldType'=>'radio', 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50 autoheight' ),
-    'load_callback' => array
-    (
-        array('tl_news_socialfeed', 'setSingleSrcFlags')
-    ),
-    'sql' => "binary(16) NULL"
-);
+    'eval' => ['filesOnly' => true, 'fieldType' => 'radio', 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => 'w50 autoheight'],
+    'load_callback' => [
+        ['tl_news_socialfeed', 'setSingleSrcFlags'],
+    ],
+    'sql' => 'binary(16) NULL',
+];
 
-$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_config'] = array
-(
+$GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_config'] = [
     'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_config'],
     'exclude' => true,
     'inputType' => 'text',
-    'eval' => array(
-        'mandatory'=>false,
+    'eval' => [
+        'mandatory' => false,
         'tl_class' => 'w50',
-        'readonly'=>'readonly'
-    ),
-    'sql' => "int(10) unsigned NULL",
-);
+        'readonly' => 'readonly',
+    ],
+    'sql' => 'int(10) unsigned NULL',
+];
 
 class tl_news_socialfeed extends Backend
 {
     /**
-     * Dynamically add flags to the "singleSRC" field
+     * Dynamically add flags to the "singleSRC" field.
      *
-     * @param mixed         $varValue
-     * @param DataContainer $dc
+     * @param mixed $varValue
      *
      * @return mixed
      */
     public function setSingleSrcFlags($varValue, DataContainer $dc)
     {
-        if ($dc->activeRecord)
-        {
-            switch ($dc->activeRecord->type)
-            {
+        if ($dc->activeRecord) {
+            switch ($dc->activeRecord->type) {
                 case 'text':
                 case 'hyperlink':
                 case 'image':
                 case 'accordionSingle':
                     $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
                     break;
+
                 case 'download':
                     $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('allowedDownload');
                     break;
             }
         }
+
         return $varValue;
     }
 }

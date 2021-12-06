@@ -1,8 +1,32 @@
 <?php
 
-\Contao\System::loadLanguageFile('tl_social_feed');
+declare(strict_types=1);
 
-/**
+/*
+ * social feed bundle for Contao Open Source CMS
+ *
+ * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ *
+ * @package    social-feed-bundle
+ * @link       https://github.com/pdir/social-feed-bundle
+ * @license    http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @author     Mathias Arzberger <develop@pdir.de>
+ * @author     Philipp Seibt <develop@pdir.de>
+ * @author     pdir GmbH <https://pdir.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+use Contao\Backend;
+use Contao\Config;
+use Contao\DataContainer;
+use Contao\System;
+use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
+
+System::loadLanguageFile('tl_social_feed');
+
+/*
  * add Dca
  */
 $GLOBALS['TL_DCA']['tl_social_feed'] = [
@@ -31,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'label' => [
-            'fields' => ['socialFeedType, pdir_sf_fb_account', 'instagram_account', 'twitter_account', 'search'],
+            'fields' => ['socialFeedType, pdir_sf_fb_account', 'instagram_account', 'twitter_account', 'search', 'linkedin_company_id'],
             'label_callback' => ['Pdir\\SocialFeedBundle\\Dca\\tl_social_feed', 'onGenerateLabel'],
         ],
 
@@ -68,16 +92,16 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     ],
 
     'palettes' => [
-        '__selector__'  => array('socialFeedType'),
+        '__selector__' => ['socialFeedType'],
         'default' => '{pdir_sf_type_legend},socialFeedType,psf_setup;',
     ],
 
-    'subpalettes' => array
-    (
-        'socialFeedType_Facebook' => 'pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,psf_facebookRequestToken,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time',
-        'socialFeedType_Instagram' => 'psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,psf_instagramRequestToken,instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time;{pdir_sf_account_image_legend},instagram_account_picture,instagram_account_picture_size',
-        'socialFeedType_Twitter' => 'twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account,search,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,show_retweets,hashtags_link,show_reply,pdir_sf_fb_news_last_import_date,pdir_sf_fb_news_last_import_time'
-    ),
+    'subpalettes' => [
+        'socialFeedType_Facebook' => 'pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,psf_facebookRequestToken,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date',
+        'socialFeedType_Instagram' => 'psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,psf_instagramRequestToken,instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date;{pdir_sf_account_image_legend},instagram_account_picture,instagram_account_picture_size',
+        'socialFeedType_Twitter' => 'twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account,search,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,show_retweets,hashtags_link,show_reply,pdir_sf_fb_news_last_import_date',
+        'socialFeedType_LinkedIn' => 'linkedin_client_id,linkedin_client_secret,linkedin_company_id,linkedin_request_token,linkedin_access_token,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,access_token_expires,linkedin_refresh_token_expires,pdir_sf_fb_news_last_import_date,linkedin_account_picture,linkedin_account_picture_size',
+    ],
 
     'fields' => [
         'id' => [
@@ -90,13 +114,13 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 
         'socialFeedType' => [
             'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['socialFeedType'],
-            'exclude'                 => true,
-            'filter'                  => true,
-            'sorting'                 => true,
-            'inputType'               => 'select',
-            'options'                 => array('Facebook','Instagram','Twitter'),
-            'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50', 'submitOnChange'     => true),
-            'sql'                     => "varchar(255) NOT NULL default ''"
+            'exclude' => true,
+            'filter' => true,
+            'sorting' => true,
+            'inputType' => 'select',
+            'options' => ['Facebook', 'Instagram', 'Twitter', 'LinkedIn'],
+            'eval' => ['includeBlankOption' => true, 'tl_class' => 'w50', 'submitOnChange' => true],
+            'sql' => "varchar(255) NOT NULL default ''",
         ],
 
         'pdir_sf_fb_account' => [
@@ -117,7 +141,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -129,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -140,7 +164,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'text',
             'eval' => [
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -150,7 +174,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'select',
             'eval' => [
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
             'foreignKey' => 'tl_news_archive.title',
             'sql' => "varchar(64) NOT NULL default ''",
@@ -162,7 +186,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => [
-                'tl_class' => 'clr'
+                'tl_class' => 'clr',
             ],
             'sql' => "char(1) NOT NULL default ''",
         ],
@@ -172,14 +196,14 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'select',
             'eval' => [
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
-            'options' => array('no_cronjob' => $GLOBALS['TL_LANG']['tl_social_feed']['no_cronjob'],
-                               '60'   => $GLOBALS['TL_LANG']['tl_social_feed']['minutely'],
-                               '3600'     => $GLOBALS['TL_LANG']['tl_social_feed']['hourly'],
-                               '86400'      => $GLOBALS['TL_LANG']['tl_social_feed']['daily'],
-                               '604800'     => $GLOBALS['TL_LANG']['tl_social_feed']['weekly'],
-                               '2629800'    => $GLOBALS['TL_LANG']['tl_social_feed']['monthly']),
+            'options' => ['no_cronjob' => $GLOBALS['TL_LANG']['tl_social_feed']['no_cronjob'],
+                '60' => $GLOBALS['TL_LANG']['tl_social_feed']['minutely'],
+                '3600' => $GLOBALS['TL_LANG']['tl_social_feed']['hourly'],
+                '86400' => $GLOBALS['TL_LANG']['tl_social_feed']['daily'],
+                '604800' => $GLOBALS['TL_LANG']['tl_social_feed']['weekly'],
+                '2629800' => $GLOBALS['TL_LANG']['tl_social_feed']['monthly'], ],
             'sql' => "varchar(64) NOT NULL default ''",
         ],
 
@@ -188,15 +212,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'text',
             'sql' => "varchar(255) NOT NULL default ''",
-            'eval' => array('rgxp' => 'date', 'tl_class' => 'w50')
-        ],
-
-        'pdir_sf_fb_news_last_import_time' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_time'],
-            'exclude' => true,
-            'inputType' => 'text',
-            'sql' => "varchar(255) NOT NULL default ''",
-            'eval' => array('rgxp' => 'time', 'tl_class' => 'w50')
+            'eval' => ['rgxp' => 'datim', 'tl_class' => 'w50'],
         ],
 
         'instagram_account' => [
@@ -205,34 +221,30 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'text',
             'eval' => [
                 'maxlength' => 255,
-                'tl_class' => 'w50 clr'
+                'tl_class' => 'w50 clr',
             ],
-            'sql' => "text NULL",
+            'sql' => 'text NULL',
         ],
 
         'instagram_account_picture' => [
             'label' => &$GLOBALS['TL_LANG']['tl_news']['instagram_account_picture'],
             'exclude' => true,
             'inputType' => 'fileTree',
-            'eval' => array( 'filesOnly'=>true, 'fieldType'=>'radio', 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50 autoheight' ),
-            'load_callback' => array
-            (
-                array('tl_social_feed', 'setSingleSrcFlags')
-            ),
-            'sql' => "binary(16) NULL"
+            'eval' => ['filesOnly' => true, 'fieldType' => 'radio', 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => 'w50 autoheight'],
+            'load_callback' => [
+                ['tl_social_feed', 'setSingleSrcFlags'],
+            ],
+            'sql' => 'binary(16) NULL',
         ],
 
         'instagram_account_picture_size' => [
             'label' => &$GLOBALS['TL_LANG']['tl_news']['instagram_account_picture_size'],
             'exclude' => true,
-            'inputType'  => 'imageSize',
-            'options_callback' => static function ()
-            {
-                return \Contao\System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
-            },
+            'inputType' => 'imageSize',
+            'options_callback' => static fn () => System::getContainer()->get('contao.image.image_sizes')->getAllOptions(),
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
-            'eval' => ['rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'],
-            'sql' => "varchar(64) NOT NULL default ''"
+            'eval' => ['rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50'],
+            'sql' => "varchar(64) NOT NULL default ''",
         ],
 
         'psf_instagramAppId' => [
@@ -242,9 +254,9 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
-            'sql' => "text NULL",
+            'sql' => 'text NULL',
         ],
 
         'psf_instagramAppSecret' => [
@@ -254,9 +266,9 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
-            'sql' => "text NULL",
+            'sql' => 'text NULL',
         ],
 
         'psf_instagramAccessToken' => [
@@ -265,9 +277,9 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'text',
             'eval' => [
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
-            'sql' => "text NULL",
+            'sql' => 'text NULL',
         ],
 
         'psf_instagramRequestToken' => [
@@ -276,10 +288,10 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'checkbox',
             'eval' => [
                 'doNotSaveEmpty' => true,
-                'tl_class' => 'w50 m12'
+                'tl_class' => 'w50 m12',
             ],
             'save_callback' => [
-                [\Pdir\SocialFeedBundle\EventListener\SocialFeedListener::class, 'onRequestTokenSave'],
+                [SocialFeedListener::class, 'onRequestTokenSave'],
             ],
         ],
 
@@ -289,10 +301,10 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'checkbox',
             'eval' => [
                 'doNotSaveEmpty' => true,
-                'tl_class' => 'w50 m12'
+                'tl_class' => 'w50 m12',
             ],
             'save_callback' => [
-                [\Pdir\SocialFeedBundle\EventListener\SocialFeedListener::class, 'onRequestTokenSave'],
+                [SocialFeedListener::class, 'onRequestTokenSave'],
             ],
         ],
 
@@ -303,7 +315,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
             'sql' => "int(10) unsigned NOT NULL default '20'",
         ],
@@ -314,7 +326,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'text',
             'eval' => [
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -325,7 +337,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'text',
             'eval' => [
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -335,7 +347,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => [
-                'tl_class' => 'clr'
+                'tl_class' => 'clr',
             ],
             'sql' => "char(1) NOT NULL default ''",
         ],
@@ -345,7 +357,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => [
-                'tl_class' => 'clr'
+                'tl_class' => 'clr',
             ],
             'sql' => "char(1) NOT NULL default ''",
         ],
@@ -355,7 +367,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => [
-                'tl_class' => 'clr'
+                'tl_class' => 'clr',
             ],
             'sql' => "char(1) NOT NULL default ''",
         ],
@@ -367,7 +379,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -379,7 +391,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -391,7 +403,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -403,14 +415,129 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'w50'
+                'tl_class' => 'w50',
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
 
         'psf_setup' => [
             'exclude' => true,
-            'input_field_callback' => ['Pdir\\SocialFeedBundle\\Dca\\tl_social_feed', 'setupExplanation']
+            'input_field_callback' => ['Pdir\\SocialFeedBundle\\Dca\\tl_social_feed', 'setupExplanation'],
+        ],
+
+        // LinkedIn
+        'linkedin_client_id' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_client_id'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50',
+            ],
+            'sql' => 'text NULL',
+        ],
+
+        'linkedin_client_secret' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_client_secret'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50',
+            ],
+            'sql' => 'text NULL',
+        ],
+
+        'linkedin_company_id' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_company_id'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 255,
+                'tl_class' => 'w50',
+            ],
+            'sql' => 'text NULL',
+        ],
+
+        'linkedin_access_token' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_access_token'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'tl_class' => 'clr w50',
+            ],
+            'sql' => 'text NULL',
+        ],
+
+        'linkedin_request_token' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_request_token'],
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => [
+                'doNotSaveEmpty' => true,
+                'tl_class' => 'clr',
+            ],
+            'save_callback' => [
+                [SocialFeedListener::class, 'onRequestTokenSave'],
+            ],
+        ],
+
+        'linkedin_account_picture' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_news']['linkedin_account_picture'],
+            'exclude' => true,
+            'inputType' => 'fileTree',
+            'eval' => ['filesOnly' => true, 'fieldType' => 'radio', 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => 'clr w50 autoheight'],
+            'load_callback' => [
+                ['tl_social_feed', 'setSingleSrcFlags'],
+            ],
+            'sql' => 'binary(16) NULL',
+        ],
+
+        'linkedin_account_picture_size' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_news']['linkedin_account_picture_size'],
+            'exclude' => true,
+            'inputType' => 'imageSize',
+            'options_callback' => static fn () => System::getContainer()->get('contao.image.image_sizes')->getAllOptions(),
+            'reference' => &$GLOBALS['TL_LANG']['MSC'],
+            'eval' => ['rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50'],
+            'sql' => "varchar(64) NOT NULL default ''",
+        ],
+
+        'access_token_expires' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_access_token_date'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'sql' => "varchar(255) NOT NULL default ''",
+            'eval' => [
+                'rgxp' => 'datim',
+                'tl_class' => 'w50',
+                'readonly' => 'readonly',
+            ],
+        ],
+
+        'linkedin_refresh_token' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_refresh_token'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'tl_class' => 'clr w50',
+            ],
+            'sql' => 'text NULL',
+        ],
+
+        'linkedin_refresh_token_expires' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_refresh_token_expires'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'sql' => "varchar(255) NOT NULL default ''",
+            'eval' => [
+                'rgxp' => 'datim',
+                'tl_class' => 'w50',
+                'readonly' => 'readonly',
+            ],
         ],
     ],
 ];
@@ -418,30 +545,29 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 class tl_social_feed extends Backend
 {
     /**
-     * Dynamically add flags to the "singleSRC" field
+     * Dynamically add flags to the "singleSRC" field.
      *
-     * @param mixed         $varValue
-     * @param DataContainer $dc
+     * @param mixed $varValue
      *
      * @return mixed
      */
     public function setSingleSrcFlags($varValue, DataContainer $dc)
     {
-        if ($dc->activeRecord)
-        {
-            switch ($dc->activeRecord->type)
-            {
+        if ($dc->activeRecord) {
+            switch ($dc->activeRecord->type) {
                 case 'text':
                 case 'hyperlink':
                 case 'image':
                 case 'accordionSingle':
                     $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
                     break;
+
                 case 'download':
                     $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('allowedDownload');
                     break;
             }
         }
+
         return $varValue;
     }
 }
