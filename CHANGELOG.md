@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.10.1](https://github.com/pdir/social-feed-bundle/tree/2.10.1) – 2022-01-04
+
+- [fix] fix extended twitter template
+
 ## [2.10.0](https://github.com/pdir/social-feed-bundle/tree/2.10.0) – 2021-12-06
 
 - [feature] linkedin import
