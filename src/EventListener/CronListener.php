@@ -365,8 +365,6 @@ class CronListener extends System
 
                     $posts = [];
 
-                    echo "Twitter Import<br>";
-
                     if ('' !== $accountName && '' === $search) {
                         $posts = $connection->get('statuses/user_timeline', ['screen_name' => $accountName, 'tweet_mode' => 'extended', 'count' => $obj->number_posts]);
                     } elseif ('' !== $search && '' !== $accountName) {
@@ -374,8 +372,6 @@ class CronListener extends System
                     } elseif ('' !== $search) {
                         $posts = $connection->get('search/tweets', ['q' => $search, 'tweet_mode' => 'extended', 'count' => $obj->number_posts])->statuses;
                     }
-
-                    echo "<pre>"; print_r($posts); echo "</pre>";
 
                     foreach ($posts as $post) {
                         if (!$post) {
@@ -386,15 +382,15 @@ class CronListener extends System
                             continue;
                         }
 
-                        if ($post->retweeted_status && 1 !== $obj->show_retweets) {
+                        if ($post->retweeted_status && '1' !== $obj->show_retweets) {
                             continue;
                         }
 
-                        if (null !== $post->in_reply_to_status_id && 1 !== $obj->show_reply) {
+                        if (null !== $post->in_reply_to_status_id && '1' !== $obj->show_reply) {
                             continue;
                         }
 
-                        if ($post->retweeted_status && 1 === $obj->show_retweets) {
+                        if ($post->retweeted_status && '1' === $obj->show_retweets) {
                             $post->full_text = 'RT @'.$post->entities->user_mentions[0]->screen_name.': '.$post->retweeted_status->full_text;
                         }
 
@@ -442,8 +438,8 @@ class CronListener extends System
                         }
                         $objNews->headline = mb_substr($post->full_text, 0, 50).$more;
 
-                        if (1 === $obj->hashtags_link) {
-                            if ($post->retweeted_status && 1 === $obj->show_retweets) {
+                        if ('1' === $obj->hashtags_link) {
+                            if ($post->retweeted_status && '1' === $obj->show_retweets) {
                                 $post->entities->hashtags = $post->retweeted_status->entities->hashtags;
                                 $post->entities->user_mentions = $post->retweeted_status->entities->user_mentions;
                             }
