@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.10.1](https://github.com/pdir/social-feed-bundle/tree/2.10.1) – 2022-01-04
+## [2.10.1](https://github.com/pdir/social-feed-bundle/tree/2.10.1) – 2022-02-17
 
 - [fix] fix twitter import
 
