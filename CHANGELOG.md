@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.10.2](https://github.com/pdir/social-feed-bundle/tree/2.10.2) – 2022-05-20
+
+- [fix] fix facebook import (if teaser or image is null)
+
 ## [2.10.1](https://github.com/pdir/social-feed-bundle/tree/2.10.1) – 2022-02-17
 
 - [fix] fix twitter import

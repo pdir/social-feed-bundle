@@ -187,10 +187,10 @@ class CronListener extends System
                             $imageSrc = $image['src'];
                             $imageTitle = $image['title'];
                             // set variables
-                            if (strpos($post['message'], "\n")) {
-                                $title = mb_substr($post['message'], 0, strpos($post['message'], "\n"));
-                            } elseif ('' === $post['message']) {
+                            if (null === $post['message']) {
                                 $title = 'Kein Titel';
+                            } elseif (strpos($post['message'], "\n")) {
+                                $title = mb_substr($post['message'], 0, strpos($post['message'], "\n"));
                             } else {
                                 $title = mb_substr($post['message'], 0);
                             }
@@ -203,6 +203,7 @@ class CronListener extends System
                             if ('' !== $imageSrc) {
                                 $img = $imgPath.$post['id'].'.jpg';
                             }
+
                             $accountImg = $imgPath.$accountId.'.jpg';
                             // add/fetch file from DBAFS
                             if (null !== $img) {
@@ -571,10 +572,14 @@ class CronListener extends System
                 $file->close();
             }
 
-            return [
-                'src' => $arrMedia['media']['image']['src'],
-                'title' => $arrMedia['title'],
-            ];
+            if(null !== $arrMedia['media']['image']['src']) {
+                return [
+                    'src' => $arrMedia['media']['image']['src'],
+                    'title' => $arrMedia['title'],
+                ];
+            } else {
+                return '';
+            }
         } catch (FacebookResponseException $e) {
             echo 'Graph returned an error: '.$e->getMessage();
             exit;
