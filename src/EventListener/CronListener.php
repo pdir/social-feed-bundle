@@ -391,6 +391,8 @@ class CronListener extends System
                             continue;
                         }
 
+                        $post->full_text = mb_substr($post->full_text, $post->display_text_range[0], $post->display_text_range[1]);
+
                         if ($post->retweeted_status && '1' === $obj->show_retweets) {
                             $post->full_text = 'RT @'.$post->entities->user_mentions[0]->screen_name.': '.$post->retweeted_status->full_text;
                         }
@@ -439,20 +441,25 @@ class CronListener extends System
                         }
                         $objNews->headline = mb_substr($post->full_text, 0, 50).$more;
 
+                        //echo "<pre>"; print_r($post); echo "</pre>";
+
                         if ('1' === $obj->hashtags_link) {
                             if ($post->retweeted_status && '1' === $obj->show_retweets) {
                                 $post->entities->hashtags = $post->retweeted_status->entities->hashtags;
                                 $post->entities->user_mentions = $post->retweeted_status->entities->user_mentions;
                             }
 
-                            // remove all t.co links
-                            $post->full_text = $this->removeTwitterLinks($post->full_text);
+                            // replace t.co links
+                            $post->full_text = $this->replaceLinks($post->full_text);
 
                             // replace all hash tags
                             $post->full_text = $this->replaceHashTags($post->full_text);
 
                             // replace mentions
                             $post->full_text = $this->replaceMentions($post->full_text);
+                        } else {
+                            // remove all t.co links
+                            $post->full_text = $this->removeTwitterLinks($post->full_text);
                         }
 
                         $objNews->teaser = str_replace("\n", '<br>', $post->full_text);
@@ -741,8 +748,8 @@ class CronListener extends System
     private function replaceLinks($str)
     {
         return preg_replace(
-            '/(^|[\n ])([\w]*?)((ht|f)tp(s)?:\/\/[\w]+[^ \,\"\n\r\t&lt;]*)/is',
-            '<a href="$3" target="_blank" rel="noreferrer noopener">$3</a>',
+            '|(https?://([\d\w\.-]+\.[\w\.]{2,6})[^\s\]\[\<\>]*/?)|i',
+            '<a href="$1" target="_blank" rel="noreferrer noopener">$1</a>',
             $str
         );
     }
