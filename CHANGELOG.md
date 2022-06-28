@@ -1,8 +1,8 @@
 # Changelog
 
-## [2.10.1](https://github.com/pdir/social-feed-bundle/tree/2.10.1) – 2022-02-17
+## [2.10.2](https://github.com/pdir/social-feed-bundle/tree/2.10.2) – 2022-06-28
 
-- [fix] fix twitter import
+- [fix] Fix critical errors in facebook import and return error message instead
 
 ## [2.10.0](https://github.com/pdir/social-feed-bundle/tree/2.10.0) – 2021-12-06
 
