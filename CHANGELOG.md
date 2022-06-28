@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.11.0](https://github.com/pdir/social-feed-bundle/tree/2.11.0) – 2022-06-28
+
+- [feature] add author for new news
+
 ## [2.10.1](https://github.com/pdir/social-feed-bundle/tree/2.10.1) – 2022-02-17
 
 - [fix] fix twitter import

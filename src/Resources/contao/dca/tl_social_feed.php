@@ -97,10 +97,10 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     ],
 
     'subpalettes' => [
-        'socialFeedType_Facebook' => 'pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,psf_facebookRequestToken,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date',
-        'socialFeedType_Instagram' => 'psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,psf_instagramRequestToken,instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date;{pdir_sf_account_image_legend},instagram_account_picture,instagram_account_picture_size',
-        'socialFeedType_Twitter' => 'twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account,search,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,show_retweets,hashtags_link,show_reply,pdir_sf_fb_news_last_import_date',
-        'socialFeedType_LinkedIn' => 'linkedin_client_id,linkedin_client_secret,linkedin_company_id,linkedin_request_token,linkedin_access_token,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,access_token_expires,linkedin_refresh_token_expires,pdir_sf_fb_news_last_import_date,linkedin_account_picture,linkedin_account_picture_size',
+        'socialFeedType_Facebook' => 'pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,psf_facebookRequestToken,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,user,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date',
+        'socialFeedType_Instagram' => 'psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,psf_instagramRequestToken,instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,user,pdir_sf_fb_news_last_import_date;{pdir_sf_account_image_legend},instagram_account_picture,instagram_account_picture_size',
+        'socialFeedType_Twitter' => 'twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account,search,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,user,show_retweets,hashtags_link,show_reply,pdir_sf_fb_news_last_import_date',
+        'socialFeedType_LinkedIn' => 'linkedin_client_id,linkedin_client_secret,linkedin_company_id,linkedin_request_token,linkedin_access_token,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,user,access_token_expires,linkedin_refresh_token_expires,pdir_sf_fb_news_last_import_date,linkedin_account_picture,linkedin_account_picture_size',
     ],
 
     'fields' => [
@@ -537,6 +537,24 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
                 'rgxp' => 'datim',
                 'tl_class' => 'w50',
                 'readonly' => 'readonly',
+            ],
+        ],
+
+        'user' => [
+            'inputType' => 'select',
+            'exclude' => false,
+            'search' => false,
+            'filter' => false,
+            'sorting' => false,
+            'foreignKey' => "tl_user.CONCAT(name, ' (',id,')')",
+            'relation' => ['type' => 'hasOne', 'load' => 'lazy'],
+            'eval' => ['tl_class' => 'w50'],
+            'sql' => [
+                'type' => 'integer',
+                'unsigned' => true,
+                'notnull' => false,
+                'length' => 11,
+                'fixed' => true,
             ],
         ],
     ],

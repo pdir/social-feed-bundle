@@ -213,6 +213,7 @@ class CronListener extends System
                             $objNews = new \NewsModel();
                             // set data
                             $objNews->pid = $obj->pdir_sf_fb_news_archive;
+                            $objNews->author = $obj->user;
 
                             if ('' !== $imageSrc) {
                                 $objNews->singleSRC = $objFile->uuid;
@@ -429,6 +430,7 @@ class CronListener extends System
 
                         // write in database
                         $objNews->pid = $obj->pdir_sf_fb_news_archive;
+                        $objNews->author = $obj->user;
                         $objNews->tstamp = time();
 
                         if (\strlen($post->full_text) > 50) {
@@ -641,6 +643,7 @@ class CronListener extends System
     private function saveInstagramNews($objNews, $obj, $objFile, $message, $media, $account = '', $accountPicture = ''): void
     {
         $objNews->pid = $obj->pdir_sf_fb_news_archive;
+        $objNews->author = $obj->user;
         $objNews->singleSRC = $objFile->uuid;
         $objNews->addImage = 1;
         $objNews->tstamp = time();
@@ -675,6 +678,7 @@ class CronListener extends System
     private function saveLinkedInNews($objNews, $obj, $objFile, $message, $element, $organization): void
     {
         $objNews->pid = $obj->pdir_sf_fb_news_archive;
+        $objNews->author = $obj->user;
         $objNews->singleSRC = $objFile->uuid;
         $objNews->addImage = 1;
         $objNews->tstamp = time();
