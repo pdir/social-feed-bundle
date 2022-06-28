@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.10.2](https://github.com/pdir/social-feed-bundle/tree/2.10.2) – 2022-06-28
+
+- [fix] Fix compatibility with newest DBAL version
+
 ## [2.10.1](https://github.com/pdir/social-feed-bundle/tree/2.10.1) – 2022-02-17
 
 - [fix] fix twitter import
