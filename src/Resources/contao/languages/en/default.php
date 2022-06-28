@@ -27,3 +27,4 @@ $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported'] = 'F
 $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['twitterNotSupported'] = 'Twitter is currently not supported. Try Instagram.';
 $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['linkedInNotSupported'] = 'LinkedIn is currently not supported. Try Instagram.';
 $GLOBALS['TL_LANG']['BE_MOD']['psfNoAccessToken'] = 'No access token given.';
+$GLOBALS['TL_LANG']['MSC']['pdirSocialFeedNoTitel'] = 'No title';

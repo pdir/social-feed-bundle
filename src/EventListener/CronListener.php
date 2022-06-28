@@ -170,10 +170,14 @@ class CronListener extends System
                     $responsePage = $this->getFbAccountPicture($fb, $accessToken, $account);
                     $accountId = $responsePage->getDecodedBody()['id'];
                     $imageSrc = $responsePage->getDecodedBody()['picture']['data']['url'];
-                    $strImage = file_get_contents($imageSrc);
-                    $file = new File($imgPath.$accountId.'.jpg');
-                    $file->write($strImage);
-                    $file->close();
+
+                    if (null !== $imageSrc) {
+                        $strImage = file_get_contents($imageSrc);
+                        $file = new File($imgPath.$accountId.'.jpg');
+                        $file->write($strImage);
+                        $file->close();
+                    }
+
                     // Write in Database
                     foreach ($response->getDecodedBody()['data'] as $post) {
                         $objNews = new \NewsModel();
@@ -187,10 +191,10 @@ class CronListener extends System
                             $imageSrc = $image['src'];
                             $imageTitle = $image['title'];
                             // set variables
-                            if (strpos($post['message'], "\n")) {
+                            if (null !== $post['message'] && strpos($post['message'], "\n")) {
                                 $title = mb_substr($post['message'], 0, strpos($post['message'], "\n"));
-                            } elseif ('' === $post['message']) {
-                                $title = 'Kein Titel';
+                            } elseif (empty($post['message'])) {
+                                $title = $GLOBALS['TL_LANG']['MSC']['pdirSocialFeedNoTitel'];
                             } else {
                                 $title = mb_substr($post['message'], 0);
                             }
