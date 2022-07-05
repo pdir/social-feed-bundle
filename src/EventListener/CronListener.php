@@ -391,7 +391,7 @@ class CronListener extends System
                             continue;
                         }
 
-                        $post->full_text = mb_substr($post->full_text, $post->display_text_range[0], $post->display_text_range[1]);
+                        if(null !== $post->full_text) $post->full_text = mb_substr($post->full_text, $post->display_text_range[0], $post->display_text_range[1]);
 
                         if ($post->retweeted_status && '1' === $obj->show_retweets) {
                             $post->full_text = 'RT @'.$post->entities->user_mentions[0]->screen_name.': '.$post->retweeted_status->full_text;
