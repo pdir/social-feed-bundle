@@ -32,7 +32,7 @@ class SocialFeedNewsClass
         if ('' !== $arrRow['social_feed_id']) {
             $teaser = $arrRow['teaser'];
 
-            if ($objModule->pdir_sf_text_length > 0) {
+            if ($objModule->pdir_sf_text_length > 0 && $teaser !== null) {
                 $more = '';
 
                 if (\strlen($teaser) > $objModule->pdir_sf_text_length) {
