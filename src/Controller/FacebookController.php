@@ -78,8 +78,16 @@ class FacebookController
         $userAccessToken = $obj->access_token;
 
         $json = file_get_contents('https://graph.facebook.com/'.$sessionData['page'].'?fields=access_token&access_token='.$userAccessToken);
-        $obj = json_decode($json);
-        $pageAccessToken = $obj->access_token;
+
+        // set error message
+        if (is_bool($json) === true) {
+            $pageAccessToken = 'FACEBOOK GRAPH ERROR: empty return! Please check your credentials or account name.';
+        }
+
+        if (is_bool($json) === false) {
+            $obj = json_decode($json);
+            $pageAccessToken = $obj->access_token;
+        }
 
         // Store the access token and remove temporary session key
         $this->db->update('tl_social_feed', ['pdir_sf_fb_access_token' => $pageAccessToken], ['id' => $sessionData['socialFeedId']]);

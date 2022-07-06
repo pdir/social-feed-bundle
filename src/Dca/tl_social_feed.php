@@ -30,7 +30,7 @@ class tl_social_feed
     /**
      * social-feed-bundle version.
      */
-    public const VERSION = '2.10.1';
+    public const VERSION = '2.10.2';
 
     /**
      * Template.

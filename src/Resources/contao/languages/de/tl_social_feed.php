@@ -71,3 +71,4 @@ $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_refresh_token_expires'] = ['Refr
 $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelSearchTerm'] = '(Suchwort <span style="color:#999;">%s</span>)';
 $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoAccount'] = 'Kein Account angegeben';
 $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoType'] = 'Kein Typ angegeben';
+$GLOBALS['TL_LANG']['tl_social_feed']['user'] = ['Benutzer', 'Geben Sie hier bitte an, welcher Benutzer für neu importierte Nachrichten gesetzt werden soll.'];
