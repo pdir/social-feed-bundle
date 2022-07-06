@@ -88,6 +88,12 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
                 'icon' => 'show.gif',
                 'attributes' => 'style="margin-right: 3px"',
             ],
+
+            'copy' => [
+                'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['copy'],
+                'href' => 'act=copy',
+                'icon' => 'copy.gif',
+            ],
         ],
     ],
 
