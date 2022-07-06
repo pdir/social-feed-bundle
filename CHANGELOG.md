@@ -1,7 +1,11 @@
 # Changelog
 
-## [2.10.2](https://github.com/pdir/social-feed-bundle/tree/2.10.2) – 2022-06-28
+## [2.11.0](https://github.com/pdir/social-feed-bundle/tree/2.11.0) – 2022-07-06
 
+- [feature] add author for new news
+- [fix] fix facebook import (if teaser or image is null)
+- [fix] fix twitter import ([#83](https://github.com/pdir/social-feed-bundle/issues/83))
+- [fix] Fix critical errors in facebook import and return error message instead
 - [fix] Fix compatibility with newest DBAL version
 
 ## [2.10.1](https://github.com/pdir/social-feed-bundle/tree/2.10.1) – 2022-02-17

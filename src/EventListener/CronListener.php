@@ -170,10 +170,14 @@ class CronListener extends System
                     $responsePage = $this->getFbAccountPicture($fb, $accessToken, $account);
                     $accountId = $responsePage->getDecodedBody()['id'];
                     $imageSrc = $responsePage->getDecodedBody()['picture']['data']['url'];
-                    $strImage = file_get_contents($imageSrc);
-                    $file = new File($imgPath.$accountId.'.jpg');
-                    $file->write($strImage);
-                    $file->close();
+
+                    if (null !== $imageSrc) {
+                        $strImage = file_get_contents($imageSrc);
+                        $file = new File($imgPath.$accountId.'.jpg');
+                        $file->write($strImage);
+                        $file->close();
+                    }
+
                     // Write in Database
                     foreach ($response->getDecodedBody()['data'] as $post) {
                         $objNews = new \NewsModel();
@@ -187,15 +191,15 @@ class CronListener extends System
                             $imageSrc = $image['src'];
                             $imageTitle = $image['title'];
                             // set variables
-                            if (strpos($post['message'], "\n")) {
+                            if (null !== $post['message'] && strpos($post['message'], "\n")) {
                                 $title = mb_substr($post['message'], 0, strpos($post['message'], "\n"));
-                            } elseif ('' === $post['message']) {
-                                $title = 'Kein Titel';
+                            } elseif (empty($post['message'])) {
+                                $title = $GLOBALS['TL_LANG']['MSC']['pdirSocialFeedNoTitel'];
                             } else {
                                 $title = mb_substr($post['message'], 0);
                             }
 
-                            $message = $this->getPostMessage($messageText = $post['message']);
+                            $message = $this->getPostMessage($post['message']);
 
                             $message = str_replace("\n", '<br>', $message);
                             $timestamp = strtotime($post['created_time']);
@@ -203,6 +207,7 @@ class CronListener extends System
                             if ('' !== $imageSrc) {
                                 $img = $imgPath.$post['id'].'.jpg';
                             }
+
                             $accountImg = $imgPath.$accountId.'.jpg';
                             // add/fetch file from DBAFS
                             if (null !== $img) {
@@ -213,6 +218,7 @@ class CronListener extends System
                             $objNews = new \NewsModel();
                             // set data
                             $objNews->pid = $obj->pdir_sf_fb_news_archive;
+                            $objNews->author = $obj->user;
 
                             if ('' !== $imageSrc) {
                                 $objNews->singleSRC = $objFile->uuid;
@@ -390,6 +396,8 @@ class CronListener extends System
                             continue;
                         }
 
+                        if(null !== $post->full_text) $post->full_text = mb_substr($post->full_text, $post->display_text_range[0], $post->display_text_range[1]);
+
                         if ($post->retweeted_status && '1' === $obj->show_retweets) {
                             $post->full_text = 'RT @'.$post->entities->user_mentions[0]->screen_name.': '.$post->retweeted_status->full_text;
                         }
@@ -429,6 +437,7 @@ class CronListener extends System
 
                         // write in database
                         $objNews->pid = $obj->pdir_sf_fb_news_archive;
+                        $objNews->author = $obj->user;
                         $objNews->tstamp = time();
 
                         if (\strlen($post->full_text) > 50) {
@@ -438,20 +447,25 @@ class CronListener extends System
                         }
                         $objNews->headline = mb_substr($post->full_text, 0, 50).$more;
 
+                        //echo "<pre>"; print_r($post); echo "</pre>";
+
                         if ('1' === $obj->hashtags_link) {
                             if ($post->retweeted_status && '1' === $obj->show_retweets) {
                                 $post->entities->hashtags = $post->retweeted_status->entities->hashtags;
                                 $post->entities->user_mentions = $post->retweeted_status->entities->user_mentions;
                             }
 
-                            // remove all t.co links
-                            $post->full_text = $this->removeTwitterLinks($post->full_text);
+                            // replace t.co links
+                            $post->full_text = $this->replaceLinks($post->full_text);
 
                             // replace all hash tags
                             $post->full_text = $this->replaceHashTags($post->full_text);
 
                             // replace mentions
                             $post->full_text = $this->replaceMentions($post->full_text);
+                        } else {
+                            // remove all t.co links
+                            $post->full_text = $this->removeTwitterLinks($post->full_text);
                         }
 
                         $objNews->teaser = str_replace("\n", '<br>', $post->full_text);
@@ -571,10 +585,14 @@ class CronListener extends System
                 $file->close();
             }
 
-            return [
-                'src' => $arrMedia['media']['image']['src'],
-                'title' => $arrMedia['title'],
-            ];
+            if(null !== $arrMedia['media']['image']['src']) {
+                return [
+                    'src' => $arrMedia['media']['image']['src'],
+                    'title' => $arrMedia['title'],
+                ];
+            } else {
+                return '';
+            }
         } catch (FacebookResponseException $e) {
             echo 'Graph returned an error: '.$e->getMessage();
             exit;
@@ -641,6 +659,7 @@ class CronListener extends System
     private function saveInstagramNews($objNews, $obj, $objFile, $message, $media, $account = '', $accountPicture = ''): void
     {
         $objNews->pid = $obj->pdir_sf_fb_news_archive;
+        $objNews->author = $obj->user;
         $objNews->singleSRC = $objFile->uuid;
         $objNews->addImage = 1;
         $objNews->tstamp = time();
@@ -675,6 +694,7 @@ class CronListener extends System
     private function saveLinkedInNews($objNews, $obj, $objFile, $message, $element, $organization): void
     {
         $objNews->pid = $obj->pdir_sf_fb_news_archive;
+        $objNews->author = $obj->user;
         $objNews->singleSRC = $objFile->uuid;
         $objNews->addImage = 1;
         $objNews->tstamp = time();
@@ -736,8 +756,8 @@ class CronListener extends System
     private function replaceLinks($str)
     {
         return preg_replace(
-            '/(^|[\n ])([\w]*?)((ht|f)tp(s)?:\/\/[\w]+[^ \,\"\n\r\t&lt;]*)/is',
-            '<a href="$3" target="_blank" rel="noreferrer noopener">$3</a>',
+            '|(https?://([\d\w\.-]+\.[\w\.]{2,6})[^\s\]\[\<\>]*/?)|i',
+            '<a href="$1" target="_blank" rel="noreferrer noopener">$1</a>',
             $str
         );
     }
