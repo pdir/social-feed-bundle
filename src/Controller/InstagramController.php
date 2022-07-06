@@ -97,7 +97,12 @@ class InstagramController
         }
 
         // Social feed account not found
-        if (false === ($module = $this->db->fetchAssociative('SELECT * FROM tl_social_feed WHERE id=?', [$sessionData['socialFeedId']]))) {
+        if(method_exists($this->db, 'fetchAssociative') )
+            $module = $this->db->fetchAssociative('SELECT * FROM tl_social_feed WHERE id=?', [$sessionData['socialFeedId']]);
+        else
+            $module = $this->db->fetchAssoc('SELECT * FROM tl_social_feed WHERE id=?', [$sessionData['socialFeedId']]);
+
+        if (false === $module) {
             return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
         }
 
