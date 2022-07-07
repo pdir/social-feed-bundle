@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.11.0](https://github.com/pdir/social-feed-bundle/tree/2.11.0) – 2022-07-06
+## [2.11.0](https://github.com/pdir/social-feed-bundle/tree/2.11.0) – 2022-07-07
 
 - [feature] add author for new news
 - [fix] fix facebook import (if teaser or image is null)
