@@ -5,7 +5,7 @@
 <?php if (empty($this->articles)): ?>
 <p class="empty"><?= $this->empty ?></p>
 <?php else: ?>
-<div class="social_feed_container<?php if($this->sfMasonry): ?> masonry<?php endif; ?><?= $this->sfColumns ?>">
+<div class="social_feed_container<?php if($this->pdir_sf_enableMasonry): ?> masonry<?php endif; ?> <?= $this->pdir_sf_columns ?>">
     <?= implode('', $this->articles) ?>
 </div>
 <?= $this->pagination ?>
@@ -23,7 +23,7 @@ itemSelector:'.social_feed_element'
 ";
 } ?>
 
-<?php if($this->sfMasonry): ?>
+<?php if($this->pdir_sf_enableMasonry): ?>
 <?php $GLOBALS['TL_BODY'][] = "<script src='bundles/pdirsocialfeed/js/masonry.pkgd.min.js'></script>"; ?>
 <?php $GLOBALS['TL_BODY'][] = "<script src='bundles/pdirsocialfeed/js/imagesloaded.pkgd.min.js'></script>"; ?>
 <?php $GLOBALS['TL_BODY'][] = "
