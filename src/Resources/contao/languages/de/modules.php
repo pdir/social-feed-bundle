@@ -22,7 +22,7 @@ declare(strict_types=1);
  * Module translation
  */
 
-$GLOBALS['TL_LANG']['MOD']['pdir'][0] = 'pdir Apps';
+$GLOBALS['TL_LANG']['MOD']['pdir'] = 'pdir Apps';
 $GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][0] = 'Social Feed Info';
 $GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][1] = 'Verwalten Sie hier das Social Feed Bundle';
 $GLOBALS['TL_LANG']['MOD']['socialFeed'][0] = 'Social Feed Accounts';
