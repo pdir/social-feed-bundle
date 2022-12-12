@@ -164,6 +164,7 @@ class CronListener extends System
                     } else {
                         $response = $this->getFbFeed($fb, $accessToken, $account);
                     }
+                    echo "<pre>"; print_r($response); echo "</pre>";
 
                     $imgPath = $this->createImageFolder($account);
 
@@ -447,6 +448,8 @@ class CronListener extends System
                             $more = '';
                         }
                         $objNews->headline = mb_substr($post->full_text, 0, 50).$more;
+
+                        //echo "<pre>"; print_r($post); echo "</pre>";
 
                         if ('1' === $obj->hashtags_link) {
                             if ($post->retweeted_status && '1' === $obj->show_retweets) {
