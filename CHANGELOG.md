@@ -10,6 +10,10 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [2.11.2](https://github.com/pdir/contao-webtools/tree/2.11.2) - 2022-12-18
+
+- [Fixed] fix warning in language files
+
 ## [2.11.1](https://github.com/pdir/contao-webtools/tree/2.11.1) - 2022-07-18
 
 - [Fixed] fix warning in debug mode
