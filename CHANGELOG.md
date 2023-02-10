@@ -14,6 +14,8 @@ Types of changes
 ## [2.12.0](https://github.com/pdir/contao-webtools/tree/2.12.0) - 2023-10-02
 
 - [Added] refresh instagram access token automatically
+- [Changed] Unlock nickdnk/graph-sdk v7 🤗 [rabauss](https://github.com/rabauss)
+- [Fixed] Fix type error in cron if message is null 🤗 [rabauss](https://github.com/rabauss)
 
 ## [2.11.2](https://github.com/pdir/contao-webtools/tree/2.11.2) - 2022-12-18
 
