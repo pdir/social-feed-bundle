@@ -41,11 +41,11 @@ System requirements
 
 Installation & Configuration
 ----------------------------
-* [Dokumentation](https://docs.pdir.de/#/social-feed/index)
+* [Dokumentation](https://pdir.de/docs/de/contao/extensions/socialfeed/)
 
 Demo
 ----------------------------
-* [Social Feed Demo](https://demo.pdir.de/social-feed)
+* [Social Feed Demo](https://demo.pdir.de/social-feed.html)
 
 Dependencies
 ------------
