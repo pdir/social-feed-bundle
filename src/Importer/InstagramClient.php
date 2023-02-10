@@ -118,7 +118,7 @@ class InstagramClient
     {
         return $this->getData('https://graph.instagram.com/me/media', [
             'access_token' => $accessToken,
-            'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp',
+            'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,children{media_url}',
             'limit' => $numberPosts,
         ], $socialFeedId, $cache);
     }
@@ -198,42 +198,9 @@ class InstagramClient
     }
 
     /**
-     * Refresh the access token.
-     */
-    public function refreshAccessToken(string $token): ?string
-    {
-        try {
-            $response = $this->getClient()->get('https://graph.instagram.com/refresh_access_token', [
-                'query' => [
-                    'grant_type' => 'ig_refresh_token',
-                    'access_token' => $token,
-                ],
-            ]);
-        } catch (ClientException | ServerException $e) {
-            if (null !== $this->logger) {
-                $this->logger->error(sprintf('Unable to refresh the Instagram access token: %s', $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]);
-            }
-
-            return null;
-        }
-
-        $data = json_decode((string)$response->getBody(), true);
-
-        if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
-            if (null !== $this->logger) {
-                $this->logger->error(sprintf('Unable to refresh the Instagram access token: %s', json_last_error_msg()), ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]);
-            }
-
-            return null;
-        }
-
-        return $data['access_token'];
-    }
-
-    /**
      * Get the access token.
      */
-    public function getAccessToken(string $appId, string $appSecret, string $code, string $redirectUri): ?string
+    public function getAccessToken(string $appId, string $appSecret, string $code, string $redirectUri): array
     {
         if (($token = $this->getShortLivedAccessToken($appId, $appSecret, $code, $redirectUri)) === null) {
             return null;
@@ -283,9 +250,9 @@ class InstagramClient
     /**
      * Get the long lived access token.
      *
-     * @return string
+     * @return array
      */
-    private function getLongLivedAccessToken(string $token, string $appSecret): ?string
+    private function getLongLivedAccessToken(string $token, string $appSecret): array
     {
         try {
             $response = $this->getClient()->get('https://graph.instagram.com/access_token', [
@@ -313,7 +280,7 @@ class InstagramClient
             return null;
         }
 
-        return $data['access_token'];
+        return $data;
     }
 
     /**

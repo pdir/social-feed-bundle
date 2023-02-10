@@ -101,23 +101,23 @@ class InstagramController
             return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
         }
 
-        $accessToken = $this->client->getAccessToken(
+        $longLivedAccessToken = $this->client->getAccessToken(
             $module['psf_instagramAppId'],
             $module['psf_instagramAppSecret'],
             $code,
             $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL)
         );
 
-        if (null === $accessToken) {
+        if (null === $longLivedAccessToken['access_token']) {
             return new Response(Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         // Get the user and media data
-        $this->client->getUserData($accessToken, (int) $module['id'], false);
+        $this->client->getUserData($longLivedAccessToken['access_token'], (int) $module['id'], false);
         // $mediaData = $this->client->getMediaData($accessToken, (int) $module['id'], false);
 
         // Store the access token and remove temporary session key
-        $this->db->update('tl_social_feed', ['psf_instagramAccessToken' => $accessToken], ['id' => $sessionData['socialFeedId']]);
+        $this->db->update('tl_social_feed', ['psf_instagramAccessToken' => $longLivedAccessToken['access_token'], 'access_token_expires' => time() + $longLivedAccessToken['expires_in']], ['id' => $sessionData['socialFeedId']]);
         $this->session->remove(SocialFeedListener::SESSION_KEY);
 
         return new RedirectResponse($sessionData['backUrl']);
