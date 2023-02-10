@@ -200,7 +200,7 @@ class CronListener extends System
                                 $title = mb_substr($post['message'], 0);
                             }
 
-                            $message = $this->getPostMessage($post['message']);
+                            $message = $this->getPostMessage((string) $post['message']);
 
                             $message = str_replace("\n", '<br>', $message);
                             $timestamp = strtotime($post['created_time']);
