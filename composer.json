@@ -30,14 +30,19 @@
   },
   "require": {
     "php": "^7.4 || ^8.0",
-    "contao/core-bundle": "^4.4",
+    "contao/core-bundle": "^5",
     "nickdnk/graph-sdk": "^6.0 || ^7.0",
     "abraham/twitteroauth": "~1.1 || ~2.0",
-    "guzzlehttp/guzzle": "~6.0",
+    "guzzlehttp/guzzle": "^7.0",
     "kevinrob/guzzle-cache-middleware": "^3.2",
     "doctrine/cache": "^1.9",
     "doctrine/dbal": "^2.0 || ^3.0",
-    "samoritano/linkedin-api-php-client-v2": "^0.0.20"
+    "samoritano/linkedin-api-php-client-v2": "dev-master",
+    "ext-json": "*"
+  },
+  "conflict": {
+    "contao/core": "*",
+    "contao/manager-plugin": "<2.0 || >=3.0"
   },
   "require-dev": {
     "contao/manager-plugin": "^2.0",
@@ -45,22 +50,13 @@
     "phpunit/phpunit": "^8.4 || ^9.5",
     "symfony/phpunit-bridge": "^4.4 || ^5.1"
   },
-  "conflict": {
-    "contao/manager-plugin": "<2.0 || >=3.0"
+  "extra": {
+    "contao-manager-plugin": "Pdir\\SocialFeedBundle\\ContaoManager\\Plugin"
   },
   "autoload": {
     "psr-4": {
       "Pdir\\SocialFeedBundle\\": "src/"
-    },
-    "classmap": [
-      "src/Resources/contao/"
-    ],
-    "exclude-from-classmap": [
-      "src/Resources/contao/config/",
-      "src/Resources/contao/dca/",
-      "src/Resources/contao/languages/",
-      "src/Resources/contao/templates/"
-    ]
+    }
   },
   "funding": [
     {
@@ -72,13 +68,18 @@
       "url": "https://contao-themes.net/sponsoring.html"
     }
   ],
+  "config": {
+    "allow-plugins": {
+      "contao-components/installer": true,
+      "php-http/discovery": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "contao/manager-plugin": true
+    }
+  },
   "suggest": {
     "contao-themes-net/mate-theme-bundle": "MATE Theme includes all styles for social feed bundle. / MATE Theme enthält Stylesheets für das Social Feed Bundle.",
     "contao-themes-net/odd-theme-bundle": "ODD Theme includes all styles for social feed bundle. / ODD Theme enthält Stylesheets für das Social Feed Bundle.",
     "contao-themes-net/nature-theme-bundle": "NATURE Theme includes all styles for social feed bundle. / NATURE Theme enthält Stylesheets für das Social Feed Bundle.",
     "contao-themes-net/zero-one-theme-bundle": "Show a social feed in the 0.1 Theme. / Zeige einen Social Feed im 0.1 Theme an."
-  },
-  "extra": {
-    "contao-manager-plugin": "Pdir\\SocialFeedBundle\\ContaoManager\\Plugin"
   }
 }

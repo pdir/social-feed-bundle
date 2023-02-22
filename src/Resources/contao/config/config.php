@@ -18,13 +18,16 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
+use Contao\System;
 use Pdir\SocialFeedBundle\Module\ModuleCustomNewslist;
+use Symfony\Component\HttpFoundation\Request;
 
 /*
  * Backend modules
  */
 if (!isset($GLOBALS['BE_MOD']['pdir']) || !is_array($GLOBALS['BE_MOD']['pdir'])) {
-    array_insert($GLOBALS['BE_MOD'], 1, ['pdir' => []]);
+    #array_insert($GLOBALS['BE_MOD'], 1, ['pdir' => []]);
+    array_splice($GLOBALS['BE_MOD'], 1,0, ['pdir' => []]);
 }
 
 $GLOBALS['TL_HOOKS']['parseArticles'][] = ['Pdir\SocialFeedBundle\SocialFeed\SocialFeedNewsClass', 'parseNews'];
@@ -59,13 +62,18 @@ $GLOBALS['TL_CRON']['daily'][] = ['Pdir\SocialFeedBundle\EventListener\CronListe
 $GLOBALS['TL_CRON']['daily'][] = ['Pdir\SocialFeedBundle\EventListener\CronListener', 'refreshLinkedInAccessToken'];
 
 /*
- * CSS for Frontend
+ * CSS
  */
-if (TL_MODE === 'FE') {
+$currentRequest = System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('');
+$scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
+
+#if (TL_MODE === 'FE') {
+if($scopeMatcher->isFrontendRequest($currentRequest)) {
     $GLOBALS['TL_CSS']['social_feed'] = $assetsDir.'/css/social_feed.scss|static';
 }
 
-if (TL_MODE === 'BE') {
+#if (TL_MODE === 'BE') {
+if($scopeMatcher->isBackendRequest($currentRequest)) {
     $GLOBALS['TL_CSS'][] = $assetsDir.'/css/sf_moderation.scss|static';
     $GLOBALS['TL_CSS'][] = $assetsDir.'/css/backend.css|static';
 }

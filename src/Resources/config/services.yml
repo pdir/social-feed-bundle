@@ -21,7 +21,7 @@ services:
             - "@Pdir\\SocialFeedBundle\\Importer\\InstagramClient"
             - "@database_connection"
             - "@router"
-            - "@session"
+            #- "@session"
             - "@security.token_storage"
 
     Pdir\SocialFeedBundle\Controller\LinkedinController:
@@ -29,21 +29,21 @@ services:
         arguments:
             - "@database_connection"
             - "@router"
-            - "@session"
+            #- "@session"
 
     Pdir\SocialFeedBundle\Controller\FacebookController:
         public: true
         arguments:
             - "@database_connection"
             - "@router"
-            - "@session"
+            #- "@session"
             - "@security.token_storage"
 
     Pdir\SocialFeedBundle\EventListener\SocialFeedListener:
         public: true
         arguments:
             - "@router"
-            - "@session"
+            #- "@session"
 
     pdir_social_feed_moderate.controller:
         class: Pdir\SocialFeedBundle\Controller\ModerateController

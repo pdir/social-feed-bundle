@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\Controller;
 
 use Contao\BackendUser;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
 use Pdir\SocialFeedBundle\Importer\InstagramClient;
@@ -65,12 +66,13 @@ class InstagramController
     /**
      * InstagramController constructor.
      */
-    public function __construct(InstagramClient $client, Connection $db, RouterInterface $router, SessionInterface $session, TokenStorageInterface $tokenStorage)
+    #public function __construct(InstagramClient $client, Connection $db, RouterInterface $router, SessionInterface $session, TokenStorageInterface $tokenStorage)
+    public function __construct(InstagramClient $client, Connection $db, RouterInterface $router,TokenStorageInterface $tokenStorage)
     {
         $this->client = $client;
         $this->db = $db;
         $this->router = $router;
-        $this->session = $session;
+        $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
         $this->tokenStorage = $tokenStorage;
     }
 

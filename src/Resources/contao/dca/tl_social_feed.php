@@ -21,6 +21,7 @@ declare(strict_types=1);
 use Contao\Backend;
 use Contao\Config;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\System;
 use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
 
@@ -31,7 +32,7 @@ System::loadLanguageFile('tl_social_feed');
  */
 $GLOBALS['TL_DCA']['tl_social_feed'] = [
     'config' => [
-        'dataContainer' => 'Table',
+        'dataContainer' => DC_Table::class,
         'enableVersioning' => true,
         'onsubmit_callback' => [
             ['Pdir\SocialFeedBundle\EventListener\SocialFeedListener', 'onSubmitCallback'],

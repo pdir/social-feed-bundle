@@ -24,6 +24,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\DataContainer;
 use Contao\Environment;
 use Contao\Input;
+use Contao\System;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -44,10 +45,12 @@ class SocialFeedListener
     /**
      * ModuleListener constructor.
      */
-    public function __construct(RouterInterface $router, SessionInterface $session)
+    #public function __construct(RouterInterface $router, SessionInterface $session)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
-        $this->session = $session;
+        #$this->session = $session;
+        $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
     }
 
     /**

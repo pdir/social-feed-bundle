@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Controller;
 
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -52,11 +53,13 @@ class FacebookController
     /**
      * FacebookController constructor.
      */
-    public function __construct(Connection $db, RouterInterface $router, SessionInterface $session)
+    #public function __construct(Connection $db, RouterInterface $router, SessionInterface $session)
+    public function __construct(Connection $db, RouterInterface $router)
     {
         $this->db = $db;
         $this->router = $router;
-        $this->session = $session;
+        #$this->session = $session;
+        $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
     }
 
     /**

@@ -21,11 +21,13 @@ declare(strict_types=1);
 use Contao\Backend;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\DataContainer;
 
 /*
  * add global operation
  */
-array_insert($GLOBALS['TL_DCA']['tl_news']['list']['global_operations'], 0, [
+#array_insert($GLOBALS['TL_DCA']['tl_news']['list']['global_operations'], 0, [
+$GLOBALS['TL_DCA']['tl_news']['list']['global_operations'] = array_splice($GLOBALS['TL_DCA']['tl_news']['list']['global_operations'], 0, 0, [
     'sf_moderate' => [
         'label' => &$GLOBALS['TL_LANG']['tl_news']['sf_moderate'],
         'href' => 'key=moderate',
