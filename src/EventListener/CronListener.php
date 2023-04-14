@@ -135,7 +135,7 @@ class CronListener extends System
         }
 
         foreach ($objSocialFeed as $obj) {
-            if ('' === $obj->socialFeedType || 'Facebook' === $obj->socialFeedType) {
+            if (('' === $obj->socialFeedType || 'Facebook' === $obj->socialFeedType) && '' !== $obj->pdir_sf_fb_access_token) {
                 // Get Facebook Feed
                 $cron = $obj->pdir_sf_fb_news_cronjob;
                 $lastImport = $obj->pdir_sf_fb_news_last_import_date;

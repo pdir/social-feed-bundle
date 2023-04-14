@@ -10,8 +10,11 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [2.12.1](https://github.com/pdir/contao-webtools/tree/2.12.1) - 2023-04-14
 
-## [2.12.0](https://github.com/pdir/contao-webtools/tree/2.12.0) - 2023-10-02
+- [Fixed] Fix error if type and access token is empty
+
+## [2.12.0](https://github.com/pdir/contao-webtools/tree/2.12.0) - 2023-02-10
 
 - [Added] refresh instagram access token automatically
 - [Changed] Unlock nickdnk/graph-sdk v7 🤗 [rabauss](https://github.com/rabauss)
