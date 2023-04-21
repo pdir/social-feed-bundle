@@ -13,6 +13,7 @@ Types of changes
 ## [2.12.1](https://github.com/pdir/contao-webtools/tree/2.12.1) - 2023-04-14
 
 - [Fixed] Fix error if type and access token is empty
+- [Fixed] Fix error if twitter access token is invalid or expired
 
 ## [2.12.0](https://github.com/pdir/contao-webtools/tree/2.12.0) - 2023-02-10
 

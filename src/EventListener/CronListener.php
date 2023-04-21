@@ -380,113 +380,119 @@ class CronListener extends System
                         $posts = $connection->get('search/tweets', ['q' => $search, 'tweet_mode' => 'extended', 'count' => $obj->number_posts])->statuses;
                     }
 
-                    foreach ($posts as $post) {
-                        if (!$post) {
-                            continue;
-                        }
+                    if($posts->errors) {
+                        System::log($posts->errors[0]->message.' (Social Feed, Twitter, '.$accountName.')', __METHOD__, TL_ERROR);
+                    }
 
-                        if ('' !== $search && '' !== $accountName && false === strpos($post->full_text, $search)) { // remove unwanted tweets
-                            continue;
-                        }
+                    if(!$posts->errors) {
+                        foreach ($posts as $post) {
+                            if (!$post) {
+                                continue;
+                            }
 
-                        if ($post->retweeted_status && '1' !== $obj->show_retweets) {
-                            continue;
-                        }
+                            if ('' !== $search && '' !== $accountName && false === strpos($post->full_text, $search)) { // remove unwanted tweets
+                                continue;
+                            }
 
-                        if (null !== $post->in_reply_to_status_id && '1' !== $obj->show_reply) {
-                            continue;
-                        }
+                            if ($post->retweeted_status && '1' !== $obj->show_retweets) {
+                                continue;
+                            }
 
-                        if(null !== $post->full_text) $post->full_text = mb_substr($post->full_text, $post->display_text_range[0], $post->display_text_range[1]);
+                            if (null !== $post->in_reply_to_status_id && '1' !== $obj->show_reply) {
+                                continue;
+                            }
 
-                        if ($post->retweeted_status && '1' === $obj->show_retweets) {
-                            $post->full_text = 'RT @'.$post->entities->user_mentions[0]->screen_name.': '.$post->retweeted_status->full_text;
-                        }
+                            if(null !== $post->full_text) $post->full_text = mb_substr($post->full_text, $post->display_text_range[0], $post->display_text_range[1]);
 
-                        $objNews = new NewsModel();
+                            if ($post->retweeted_status && '1' === $obj->show_retweets) {
+                                $post->full_text = 'RT @'.$post->entities->user_mentions[0]->screen_name.': '.$post->retweeted_status->full_text;
+                            }
 
-                        if (null !== $objNews->findBy('social_feed_id', $post->id)) {
-                            continue;
-                        }
+                            $objNews = new NewsModel();
 
-                        $imgPath = $this->createImageFolder($accountName);
+                            if (null !== $objNews->findBy('social_feed_id', $post->id)) {
+                                continue;
+                            }
 
-                        // save account picture
-                        $accountPicture = $imgPath.$post->user->id.'.jpg';
+                            $imgPath = $this->createImageFolder($accountName);
 
-                        if (!file_exists($accountPicture)) {
-                            $strImage = file_get_contents($post->user->profile_image_url_https);
-                            $file = new File($accountPicture);
-                            $file->write($strImage);
-                            $file->close();
-                        }
+                            // save account picture
+                            $accountPicture = $imgPath.$post->user->id.'.jpg';
 
-                        // save post picture
-                        if ($post->entities->media[0]->media_url_https) {
-                            $picturePath = $imgPath.$post->id.'.jpg';
-
-                            if (!file_exists($picturePath)) {
-                                $strImage = file_get_contents($post->entities->media[0]->media_url_https);
-                                $file = new File($picturePath);
+                            if (!file_exists($accountPicture)) {
+                                $strImage = file_get_contents($post->user->profile_image_url_https);
+                                $file = new File($accountPicture);
                                 $file->write($strImage);
                                 $file->close();
                             }
-                            $objFile = Dbafs::addResource($imgPath.$post->id.'.jpg');
-                            $objNews->singleSRC = $objFile->uuid;
-                            $objNews->addImage = 1;
-                        }
 
-                        // write in database
-                        $objNews->pid = $obj->pdir_sf_fb_news_archive;
-                        $objNews->author = $obj->user;
-                        $objNews->tstamp = time();
+                            // save post picture
+                            if ($post->entities->media[0]->media_url_https) {
+                                $picturePath = $imgPath.$post->id.'.jpg';
 
-                        if (\strlen($post->full_text) > 50) {
-                            $more = ' ...';
-                        } else {
-                            $more = '';
-                        }
-                        $objNews->headline = mb_substr($post->full_text, 0, 50).$more;
-
-                        if ('1' === $obj->hashtags_link) {
-                            if ($post->retweeted_status && '1' === $obj->show_retweets) {
-                                $post->entities->hashtags = $post->retweeted_status->entities->hashtags;
-                                $post->entities->user_mentions = $post->retweeted_status->entities->user_mentions;
+                                if (!file_exists($picturePath)) {
+                                    $strImage = file_get_contents($post->entities->media[0]->media_url_https);
+                                    $file = new File($picturePath);
+                                    $file->write($strImage);
+                                    $file->close();
+                                }
+                                $objFile = Dbafs::addResource($imgPath.$post->id.'.jpg');
+                                $objNews->singleSRC = $objFile->uuid;
+                                $objNews->addImage = 1;
                             }
 
-                            // replace t.co links
-                            $post->full_text = $this->replaceLinks($post->full_text);
+                            // write in database
+                            $objNews->pid = $obj->pdir_sf_fb_news_archive;
+                            $objNews->author = $obj->user;
+                            $objNews->tstamp = time();
 
-                            // replace all hash tags
-                            $post->full_text = $this->replaceHashTags($post->full_text);
+                            if (\strlen($post->full_text) > 50) {
+                                $more = ' ...';
+                            } else {
+                                $more = '';
+                            }
+                            $objNews->headline = mb_substr($post->full_text, 0, 50).$more;
 
-                            // replace mentions
-                            $post->full_text = $this->replaceMentions($post->full_text);
-                        } else {
-                            // remove all t.co links
-                            $post->full_text = $this->removeTwitterLinks($post->full_text);
+                            if ('1' === $obj->hashtags_link) {
+                                if ($post->retweeted_status && '1' === $obj->show_retweets) {
+                                    $post->entities->hashtags = $post->retweeted_status->entities->hashtags;
+                                    $post->entities->user_mentions = $post->retweeted_status->entities->user_mentions;
+                                }
+
+                                // replace t.co links
+                                $post->full_text = $this->replaceLinks($post->full_text);
+
+                                // replace all hash tags
+                                $post->full_text = $this->replaceHashTags($post->full_text);
+
+                                // replace mentions
+                                $post->full_text = $this->replaceMentions($post->full_text);
+                            } else {
+                                // remove all t.co links
+                                $post->full_text = $this->removeTwitterLinks($post->full_text);
+                            }
+
+                            $objNews->teaser = str_replace("\n", '<br>', $post->full_text);
+                            $objNews->date = strtotime($post->created_at);
+                            $objNews->time = strtotime($post->created_at);
+                            $objNews->published = 1;
+                            $objNews->social_feed_type = $obj->socialFeedType;
+                            $objNews->social_feed_id = $post->id;
+                            $objNews->social_feed_account = $post->user->name;
+                            $objNews->social_feed_account_picture = Dbafs::addResource($accountPicture)->uuid;
+                            $objNews->source = 'external';
+
+                            $url = 'https://twitter.com/'.$post->user->screen_name.'/status/'.$post->id;
+
+                            $objNews->url = $url;
+                            $objNews->target = 1;
+                            $objNews->save();
                         }
 
-                        $objNews->teaser = str_replace("\n", '<br>', $post->full_text);
-                        $objNews->date = strtotime($post->created_at);
-                        $objNews->time = strtotime($post->created_at);
-                        $objNews->published = 1;
-                        $objNews->social_feed_type = $obj->socialFeedType;
-                        $objNews->social_feed_id = $post->id;
-                        $objNews->social_feed_account = $post->user->name;
-                        $objNews->social_feed_account_picture = Dbafs::addResource($accountPicture)->uuid;
-                        $objNews->source = 'external';
-
-                        $url = 'https://twitter.com/'.$post->user->screen_name.'/status/'.$post->id;
-
-                        $objNews->url = $url;
-                        $objNews->target = 1;
-                        $objNews->save();
+                        System::log('Social Feed: Twitter Import Account '.$accountName, __METHOD__, TL_GENERAL);
+                        $this->import('Automator');
+                        $this->Automator->generateSymlinks();
                     }
-
-                    System::log('Social Feed: Twitter Import Account '.$accountName, __METHOD__, TL_GENERAL);
-                    $this->import('Automator');
-                    $this->Automator->generateSymlinks();
                 }
             }
         }
