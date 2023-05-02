@@ -92,11 +92,21 @@ class Importer
         $listItems = [];
 
         foreach ($items as $item) {
+            $image = '';
+
+            if(isset($item['media_url'])) {
+                $image = false !== strpos($item['media_url'], 'jpg') ? $item['media_url'] : $item['thumbnail_url'];
+            }
+
+            if(!isset($item['media_url']) && isset($item['children']['data'][0]['media_url'])) {
+                $image = $item['children']['data'][0]['media_url'];
+            }
+
             $listItems[] = [
                 'id' => $item['id'],
                 'title' => $item['caption'],
                 'time' => Date::parse($GLOBALS['TL_CONFIG']['datimFormat'], strtotime($item['timestamp'])),
-                'image' => false !== strpos($item['media_url'], 'jpg') ? $item['media_url'] : $item['thumbnail_url'],
+                'image' => $image,
                 'link' => $item['permalink'],
             ];
         }
