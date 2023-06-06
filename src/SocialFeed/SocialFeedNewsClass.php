@@ -76,7 +76,7 @@ class SocialFeedNewsClass
                 }
             }
 
-            if (null !== $arrRow['social_feed_account']) {
+            if (null !== $arrRow['social_feed_account'] && '' !== $arrRow['social_feed_account']) {
                 $objTemplate->sfFbAccount = $arrRow['social_feed_account'];
             } else {
                 $socialFeedAccount = SocialFeedModel::findBy('id', $arrRow['social_feed_config']);
