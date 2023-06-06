@@ -15,6 +15,7 @@ Types of changes
 - [Fixed] Fix error if type and access token is empty
 - [Fixed] Fix error if twitter access token is invalid or expired
 - [Fixed] Fix instagram import if media_url is null ([#109](https://github.com/pdir/social-feed-bundle/issues/109))
+- [Fixed] Fix facebook import if post has no attachments
 
 ## [2.12.0](https://github.com/pdir/contao-webtools/tree/2.12.0) - 2023-02-10
 

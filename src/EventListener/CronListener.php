@@ -183,14 +183,18 @@ class CronListener extends System
                     foreach ($response->getDecodedBody()['data'] as $post) {
                         $objNews = new \NewsModel();
 
+                        dump($post);
+
                         if (null !== $objNews->findBy('social_feed_id', $post['id'])) {
                             continue;
                         }
 
                         if ('' !== $post['from']['name']) {
                             $image = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
-                            $imageSrc = $image['src'];
-                            $imageTitle = $image['title'];
+                            if('' !== $image) {
+                                $imageSrc = $image['src'];
+                                $imageTitle = $image['title'];
+                            }
                             // set variables
                             if (null !== $post['message'] && strpos($post['message'], "\n")) {
                                 $title = mb_substr($post['message'], 0, strpos($post['message'], "\n"));
@@ -205,7 +209,7 @@ class CronListener extends System
                             $message = str_replace("\n", '<br>', $message);
                             $timestamp = strtotime($post['created_time']);
 
-                            if ('' !== $imageSrc) {
+                            if ('' !== $imageSrc && '' !== $image) {
                                 $img = $imgPath.$post['id'].'.jpg';
                             }
 
@@ -221,7 +225,7 @@ class CronListener extends System
                             $objNews->pid = $obj->pdir_sf_fb_news_archive;
                             $objNews->author = $obj->user;
 
-                            if ('' !== $imageSrc) {
+                            if ('' !== $imageSrc && '' !== $image) {
                                 $objNews->singleSRC = $objFile->uuid;
                                 $objNews->addImage = 1;
                             }
@@ -608,8 +612,8 @@ class CronListener extends System
     {
         try {
             $resMedia = $fb->get('/'.$id.'/attachments', $accessToken);
-            $imageSrc = '';
 
+            dump($resMedia->getDecodedBody());
             if ($resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0']['media']) {
                 $arrMedia = $resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0'];
             } elseif ($resMedia->getDecodedBody()['data']['0']['media']) {
