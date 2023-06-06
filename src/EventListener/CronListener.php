@@ -183,8 +183,6 @@ class CronListener extends System
                     foreach ($response->getDecodedBody()['data'] as $post) {
                         $objNews = new \NewsModel();
 
-                        dump($post);
-
                         if (null !== $objNews->findBy('social_feed_id', $post['id'])) {
                             continue;
                         }
@@ -613,7 +611,6 @@ class CronListener extends System
         try {
             $resMedia = $fb->get('/'.$id.'/attachments', $accessToken);
 
-            dump($resMedia->getDecodedBody());
             if ($resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0']['media']) {
                 $arrMedia = $resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0'];
             } elseif ($resMedia->getDecodedBody()['data']['0']['media']) {
