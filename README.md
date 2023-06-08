@@ -64,6 +64,6 @@ Developing & Pull Request
 
 Run the PHP-CS-Fixer and the unit tests before you make a pull request to the bundle:
 
-    vendor/bin/ecs
+    vendor/bin/ecs check src tests --ansi
     vendor/bin/phpunit
     vendor/bin/phpstan analyse src tests --no-progress --ansi
