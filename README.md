@@ -58,3 +58,12 @@ Dependencies
 License
 -------
 GNU Lesser General Public License v3.0
+
+Developing & Pull Request
+-------
+
+Run the PHP-CS-Fixer and the unit tests before you make a pull request to the bundle:
+
+    vendor/bin/ecs
+    vendor/bin/phpunit
+    vendor/bin/phpstan analyse src tests --no-progress --ansi

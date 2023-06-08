@@ -40,10 +40,16 @@
     "samoritano/linkedin-api-php-client-v2": "^0.0.20"
   },
   "require-dev": {
+    "bamarni/composer-bin-plugin": "^1.4",
     "contao/manager-plugin": "^2.0",
     "contao/easy-coding-standard": "^3.0",
     "phpunit/phpunit": "^8.4 || ^9.5",
-    "symfony/phpunit-bridge": "^4.4 || ^5.1"
+    "symfony/phpunit-bridge": "^4.4 || ^5.1",
+    "phpstan/phpstan": "^0.12 || ^1.0",
+    "phpstan/phpstan-phpunit": "^0.12 || ^1.0",
+    "phpstan/phpstan-symfony": "^0.12 || ^1.0",
+    "slam/phpstan-extensions": "^4.0 || ^5.1 || ^6.0",
+    "thecodingmachine/phpstan-strict-rules": "^0.12 || ^1.0"
   },
   "conflict": {
     "contao/manager-plugin": "<2.0 || >=3.0"
@@ -80,5 +86,12 @@
   },
   "extra": {
     "contao-manager-plugin": "Pdir\\SocialFeedBundle\\ContaoManager\\Plugin"
+  },
+  "config": {
+    "allow-plugins": {
+      "contao-components/installer": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "contao/manager-plugin": true
+    }
   }
 }
