@@ -180,7 +180,7 @@ class CronListener extends System
 
                     // Write in Database
                     foreach ($response->getDecodedBody()['data'] as $post) {
-                        $objNews = new \NewsModel();
+                        $objNews = new NewsModel();
 
                         if (null !== $objNews->findBy('social_feed_id', $post['id'])) {
                             continue;
@@ -218,7 +218,7 @@ class CronListener extends System
                                 $objFileAccount = Dbafs::addResource($accountImg);
                             }
                             // create new news
-                            $objNews = new \NewsModel();
+                            $objNews = new NewsModel();
                             // set data
                             $objNews->pid = $obj->pdir_sf_fb_news_archive;
                             $objNews->author = $obj->user;
@@ -529,7 +529,7 @@ class CronListener extends System
                         $db = Database::getInstance();
                         $set = ['psf_instagramAccessToken' => $data['access_token'], 'access_token_expires' => time() + $data['expires_in']];
                         $db->prepare('UPDATE tl_social_feed %s WHERE id = ?')->set($set)->execute($obj->id);
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                         System::log($e->getMessage(), __METHOD__, TL_GENERAL);
                     }
                 }
@@ -571,7 +571,7 @@ class CronListener extends System
                         $db = Database::getInstance();
                         $set = ['linkedin_access_token' => $token->access_token, 'access_token_expires' => time() + $token->expires_in, 'linkedin_refresh_token' => $token->refresh_token, 'linkedin_refresh_token_expires' => time() + $token->refresh_token_expires_in];
                         $db->prepare('UPDATE tl_social_feed %s WHERE id = ?')->set($set)->execute($obj->id);
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                         System::log($e->getMessage(), __METHOD__, TL_GENERAL);
                     }
                 }
