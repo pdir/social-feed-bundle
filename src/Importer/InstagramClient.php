@@ -193,7 +193,7 @@ class InstagramClient
     /**
      * Get the access token.
      */
-    public function getAccessToken(string $appId, string $appSecret, string $code, string $redirectUri): array
+    public function getAccessToken(string $appId, string $appSecret, string $code, string $redirectUri): ?array
     {
         if (($token = $this->getShortLivedAccessToken($appId, $appSecret, $code, $redirectUri)) === null) {
             return null;
@@ -241,9 +241,9 @@ class InstagramClient
     }
 
     /**
-     * Get the long lived access token.
+     * Get the long-lived access token.
      */
-    private function getLongLivedAccessToken(string $token, string $appSecret): array
+    private function getLongLivedAccessToken(string $token, string $appSecret): ?array
     {
         try {
             $response = $this->getClient()->get('https://graph.instagram.com/access_token', [
