@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Controller;
 
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -85,7 +86,7 @@ class LinkedinController
             // Store the access token and remove temporary session key
             $this->db->update('tl_social_feed', ['linkedin_access_token' => $token->access_token, 'access_token_expires' => time() + $token->expires_in, 'linkedin_refresh_token' => $token->refresh_token, 'linkedin_refresh_token_expires' => time() + $token->refresh_token_expires_in], ['id' => $sessionData['socialFeedId']]);
             $this->session->remove(SocialFeedListener::SESSION_KEY);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             System::log($e->getMessage(), __METHOD__, TL_GENERAL);
         }
 
