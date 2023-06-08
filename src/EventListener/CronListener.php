@@ -189,7 +189,7 @@ class CronListener extends System
 
                         if ('' !== $post['from']['name']) {
                             $image = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
-                            if('' !== $image) {
+                            if(!empty($image)) {
                                 $imageSrc = $image['src'];
                                 $imageTitle = $image['title'];
                             }
@@ -207,7 +207,7 @@ class CronListener extends System
                             $message = str_replace("\n", '<br>', $message);
                             $timestamp = strtotime($post['created_time']);
 
-                            if ('' !== $imageSrc && '' !== $image) {
+                            if (!empty($imageSrc) && !empty($image)) {
                                 $img = $imgPath.$post['id'].'.jpg';
                             }
 
@@ -223,14 +223,14 @@ class CronListener extends System
                             $objNews->pid = $obj->pdir_sf_fb_news_archive;
                             $objNews->author = $obj->user;
 
-                            if ('' !== $imageSrc && '' !== $image) {
+                            if (!empty($imageSrc) && !empty($image)) {
                                 $objNews->singleSRC = $objFile->uuid;
                                 $objNews->addImage = 1;
                             }
                             $objNews->tstamp = time();
                             $objNews->headline = mb_substr($title, 0, 255);
 
-                            if ('' === $message && '' !== $imageTitle) {
+                            if ('' === $message && !empty($imageTitle)) {
                                 $objNews->teaser = $imageTitle;
                             } else {
                                 $objNews->teaser = $message;
