@@ -5,14 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (C) 2011-2019 Codefog
- *
- * The code of this class is based on the Instagram Bundle from Codefog
- * @author     Codefog <https://codefog.pl>
- * @author     Kamil Kuzminski <https://github.com/qzminski>
- * @license    MIT
- *
- * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle

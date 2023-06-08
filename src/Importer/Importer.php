@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -21,10 +21,8 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\Importer;
 
 use Contao\Date;
-use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Message;
 use Contao\System;
-use Pdir\SocialFeedBundle\Importer\InstagramClient;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 
 class Importer
@@ -42,13 +40,15 @@ class Importer
     /**
      * Collect data from the instagram api and return array.
      *
-     * @return void|array
      * @throws \RuntimeException
+     *
+     * @return void|array
      */
     public function getInstagramPosts($accessToken, $socialFeedId, $numberPosts = 30)
     {
         if (null === $accessToken) {
             Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported']);
+
             return [];
         }
 
@@ -94,11 +94,11 @@ class Importer
         foreach ($items as $item) {
             $image = '';
 
-            if(isset($item['media_url'])) {
+            if (isset($item['media_url'])) {
                 $image = false !== strpos($item['media_url'], 'jpg') ? $item['media_url'] : $item['thumbnail_url'];
             }
 
-            if(!isset($item['media_url']) && isset($item['children']['data'][0]['media_url'])) {
+            if (!isset($item['media_url']) && isset($item['children']['data'][0]['media_url'])) {
                 $image = $item['children']['data'][0]['media_url'];
             }
 
@@ -123,19 +123,19 @@ class Importer
         }
 
         switch ($objSocialFeed->socialFeedType) {
-            case "Facebook":
+            case 'Facebook':
                 Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported']);
                 break;
 
-            case "Instagram":
+            case 'Instagram':
                 return $this->getInstagramPosts($objSocialFeed->psf_instagramAccessToken, $objSocialFeed->id, $numberPosts);
                 break;
 
-            case "Twitter":
+            case 'Twitter':
                 Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['twitterNotSupported']);
                 break;
 
-            case "LinkedIn":
+            case 'LinkedIn':
                 Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['linkedInNotSupported']);
                 break;
         }

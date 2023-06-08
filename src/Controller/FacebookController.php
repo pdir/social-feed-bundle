@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -80,11 +80,11 @@ class FacebookController
         $json = file_get_contents('https://graph.facebook.com/'.$sessionData['page'].'?fields=access_token&access_token='.$userAccessToken);
 
         // set error message
-        if (is_bool($json) === true) {
+        if (true === \is_bool($json)) {
             $pageAccessToken = 'FACEBOOK GRAPH ERROR: empty return! Please check your credentials or account name.';
         }
 
-        if (is_bool($json) === false) {
+        if (false === \is_bool($json)) {
             $obj = json_decode($json);
             $pageAccessToken = $obj->access_token;
         }

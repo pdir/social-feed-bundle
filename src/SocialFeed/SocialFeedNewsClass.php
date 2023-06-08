@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -32,7 +32,7 @@ class SocialFeedNewsClass
         if ('' !== $arrRow['social_feed_id']) {
             $teaser = $arrRow['teaser'];
 
-            if ($objModule->pdir_sf_text_length > 0 && $teaser !== null) {
+            if ($objModule->pdir_sf_text_length > 0 && null !== $teaser) {
                 $more = '';
 
                 if (\strlen($teaser) > $objModule->pdir_sf_text_length) {

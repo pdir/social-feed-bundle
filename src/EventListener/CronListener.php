@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -33,7 +33,6 @@ use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook;
 use LinkedIn\Client;
 use Pdir\SocialFeedBundle\Importer\Importer;
-use Pdir\SocialFeedBundle\Importer\InstagramClient;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 
 class CronListener extends System
@@ -189,7 +188,8 @@ class CronListener extends System
 
                         if ('' !== $post['from']['name']) {
                             $image = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
-                            if(!empty($image)) {
+
+                            if (!empty($image)) {
                                 $imageSrc = $image['src'];
                                 $imageTitle = $image['title'];
                             }
@@ -311,8 +311,9 @@ class CronListener extends System
                             continue;
                         }
 
-                        $objFile = "";
-                        if($element['content']['contentEntities'][0]['thumbnails'][0]['resolvedUrl'] !== null) {
+                        $objFile = '';
+
+                        if (null !== $element['content']['contentEntities'][0]['thumbnails'][0]['resolvedUrl']) {
                             $imgPath = $this->createImageFolder($obj->linkedin_company_id);
                             $picturePath = $imgPath.$element['id'].'.jpg';
 
@@ -382,11 +383,11 @@ class CronListener extends System
                         $posts = $connection->get('search/tweets', ['q' => $search, 'tweet_mode' => 'extended', 'count' => $obj->number_posts])->statuses;
                     }
 
-                    if($posts->errors) {
+                    if ($posts->errors) {
                         System::log($posts->errors[0]->message.' (Social Feed, Twitter, '.$accountName.')', __METHOD__, TL_ERROR);
                     }
 
-                    if(!$posts->errors) {
+                    if (!$posts->errors) {
                         foreach ($posts as $post) {
                             if (!$post) {
                                 continue;
@@ -404,7 +405,9 @@ class CronListener extends System
                                 continue;
                             }
 
-                            if(null !== $post->full_text) $post->full_text = mb_substr($post->full_text, $post->display_text_range[0], $post->display_text_range[1]);
+                            if (null !== $post->full_text) {
+                                $post->full_text = mb_substr($post->full_text, $post->display_text_range[0], $post->display_text_range[1]);
+                            }
 
                             if ($post->retweeted_status && '1' === $obj->show_retweets) {
                                 $post->full_text = 'RT @'.$post->entities->user_mentions[0]->screen_name.': '.$post->retweeted_status->full_text;
@@ -520,7 +523,7 @@ class CronListener extends System
                     ]);
 
                     try {
-                        $data = json_decode((string)$response->getBody(), true);
+                        $data = json_decode((string) $response->getBody(), true);
 
                         // Store the access token
                         $db = Database::getInstance();
@@ -625,14 +628,14 @@ class CronListener extends System
                 $file->close();
             }
 
-            if(null !== $arrMedia['media']['image']['src']) {
+            if (null !== $arrMedia['media']['image']['src']) {
                 return [
                     'src' => $arrMedia['media']['image']['src'],
                     'title' => $arrMedia['title'],
                 ];
-            } else {
-                return '';
             }
+
+            return '';
         } catch (FacebookResponseException $e) {
             echo 'Graph returned an error: '.$e->getMessage();
             exit;

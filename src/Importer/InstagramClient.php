@@ -5,14 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (C) 2011-2019 Codefog
- *
- * The code of this class is based on the Instagram Bundle from Codefog
- * @author     Codefog <https://codefog.pl>
- * @author     Kamil Kuzminski <https://github.com/qzminski>
- * @license    MIT
- *
- * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -88,7 +81,7 @@ class InstagramClient
             return null;
         }
 
-        $json_data = json_decode((string)$response->getBody(), true);
+        $json_data = json_decode((string) $response->getBody(), true);
 
         if (!\is_array($json_data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
@@ -210,7 +203,7 @@ class InstagramClient
     }
 
     /**
-     * Get the short lived access token.
+     * Get the short-lived access token.
      *
      * @return string
      */
@@ -234,7 +227,7 @@ class InstagramClient
             return null;
         }
 
-        $data = json_decode((string)$response->getBody(), true);
+        $data = json_decode((string) $response->getBody(), true);
 
         if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
@@ -249,8 +242,6 @@ class InstagramClient
 
     /**
      * Get the long lived access token.
-     *
-     * @return array
      */
     private function getLongLivedAccessToken(string $token, string $appSecret): array
     {
@@ -270,7 +261,7 @@ class InstagramClient
             return null;
         }
 
-        $data = json_decode((string)$response->getBody(), true);
+        $data = json_decode((string) $response->getBody(), true);
 
         if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {

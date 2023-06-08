@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -64,11 +64,11 @@ class NewsImporter
         if ('VIDEO' === $this->arrNews['media_type'] || 'IMAGE' === $this->arrNews['media_type'] || 'CAROUSEL_ALBUM' === $this->arrNews['media_type']) {
             $imgSrc = '';
 
-            if(isset($this->arrNews['media_url'])) {
+            if (isset($this->arrNews['media_url'])) {
                 $imgSrc = false !== strpos($this->arrNews['media_url'], 'jpg') ? $this->arrNews['media_url'] : $this->arrNews['thumbnail_url'];
             }
 
-            if(!isset($this->arrNews['media_url']) && isset($this->arrNews['children']['data'][0]['media_url'])) {
+            if (!isset($this->arrNews['media_url']) && isset($this->arrNews['children']['data'][0]['media_url'])) {
                 $imgSrc = $this->arrNews['children']['data'][0]['media_url'];
             }
 
