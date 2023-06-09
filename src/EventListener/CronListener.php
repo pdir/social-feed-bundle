@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -33,7 +33,6 @@ use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook;
 use LinkedIn\Client;
 use Pdir\SocialFeedBundle\Importer\Importer;
-use Pdir\SocialFeedBundle\Importer\InstagramClient;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 
 class CronListener extends System
@@ -135,7 +134,7 @@ class CronListener extends System
         }
 
         foreach ($objSocialFeed as $obj) {
-            if ('' === $obj->socialFeedType || 'Facebook' === $obj->socialFeedType) {
+            if (('' === $obj->socialFeedType || 'Facebook' === $obj->socialFeedType) && '' !== $obj->pdir_sf_fb_access_token) {
                 // Get Facebook Feed
                 $cron = $obj->pdir_sf_fb_news_cronjob;
                 $lastImport = $obj->pdir_sf_fb_news_last_import_date;
@@ -181,7 +180,7 @@ class CronListener extends System
 
                     // Write in Database
                     foreach ($response->getDecodedBody()['data'] as $post) {
-                        $objNews = new \NewsModel();
+                        $objNews = new NewsModel();
 
                         if (null !== $objNews->findBy('social_feed_id', $post['id'])) {
                             continue;
@@ -189,8 +188,11 @@ class CronListener extends System
 
                         if ('' !== $post['from']['name']) {
                             $image = $this->getFbAttachments($fb, $id = $post['id'], $accessToken, $imgPath);
-                            $imageSrc = $image['src'];
-                            $imageTitle = $image['title'];
+
+                            if (!empty($image)) {
+                                $imageSrc = $image['src'];
+                                $imageTitle = $image['title'];
+                            }
                             // set variables
                             if (null !== $post['message'] && strpos($post['message'], "\n")) {
                                 $title = mb_substr($post['message'], 0, strpos($post['message'], "\n"));
@@ -205,7 +207,7 @@ class CronListener extends System
                             $message = str_replace("\n", '<br>', $message);
                             $timestamp = strtotime($post['created_time']);
 
-                            if ('' !== $imageSrc) {
+                            if (!empty($imageSrc) && !empty($image)) {
                                 $img = $imgPath.$post['id'].'.jpg';
                             }
 
@@ -216,19 +218,19 @@ class CronListener extends System
                                 $objFileAccount = Dbafs::addResource($accountImg);
                             }
                             // create new news
-                            $objNews = new \NewsModel();
+                            $objNews = new NewsModel();
                             // set data
                             $objNews->pid = $obj->pdir_sf_fb_news_archive;
                             $objNews->author = $obj->user;
 
-                            if ('' !== $imageSrc) {
+                            if (!empty($imageSrc) && !empty($image)) {
                                 $objNews->singleSRC = $objFile->uuid;
                                 $objNews->addImage = 1;
                             }
                             $objNews->tstamp = time();
                             $objNews->headline = mb_substr($title, 0, 255);
 
-                            if ('' === $message && '' !== $imageTitle) {
+                            if ('' === $message && !empty($imageTitle)) {
                                 $objNews->teaser = $imageTitle;
                             } else {
                                 $objNews->teaser = $message;
@@ -309,8 +311,9 @@ class CronListener extends System
                             continue;
                         }
 
-                        $objFile = "";
-                        if($element['content']['contentEntities'][0]['thumbnails'][0]['resolvedUrl'] !== null) {
+                        $objFile = '';
+
+                        if (null !== $element['content']['contentEntities'][0]['thumbnails'][0]['resolvedUrl']) {
                             $imgPath = $this->createImageFolder($obj->linkedin_company_id);
                             $picturePath = $imgPath.$element['id'].'.jpg';
 
@@ -380,113 +383,121 @@ class CronListener extends System
                         $posts = $connection->get('search/tweets', ['q' => $search, 'tweet_mode' => 'extended', 'count' => $obj->number_posts])->statuses;
                     }
 
-                    foreach ($posts as $post) {
-                        if (!$post) {
-                            continue;
-                        }
+                    if ($posts->errors) {
+                        System::log($posts->errors[0]->message.' (Social Feed, Twitter, '.$accountName.')', __METHOD__, TL_ERROR);
+                    }
 
-                        if ('' !== $search && '' !== $accountName && false === strpos($post->full_text, $search)) { // remove unwanted tweets
-                            continue;
-                        }
+                    if (!$posts->errors) {
+                        foreach ($posts as $post) {
+                            if (!$post) {
+                                continue;
+                            }
 
-                        if ($post->retweeted_status && '1' !== $obj->show_retweets) {
-                            continue;
-                        }
+                            if ('' !== $search && '' !== $accountName && false === strpos($post->full_text, $search)) { // remove unwanted tweets
+                                continue;
+                            }
 
-                        if (null !== $post->in_reply_to_status_id && '1' !== $obj->show_reply) {
-                            continue;
-                        }
+                            if ($post->retweeted_status && '1' !== $obj->show_retweets) {
+                                continue;
+                            }
 
-                        if(null !== $post->full_text) $post->full_text = mb_substr($post->full_text, $post->display_text_range[0], $post->display_text_range[1]);
+                            if (null !== $post->in_reply_to_status_id && '1' !== $obj->show_reply) {
+                                continue;
+                            }
 
-                        if ($post->retweeted_status && '1' === $obj->show_retweets) {
-                            $post->full_text = 'RT @'.$post->entities->user_mentions[0]->screen_name.': '.$post->retweeted_status->full_text;
-                        }
+                            if (null !== $post->full_text) {
+                                $post->full_text = mb_substr($post->full_text, $post->display_text_range[0], $post->display_text_range[1]);
+                            }
 
-                        $objNews = new NewsModel();
+                            if ($post->retweeted_status && '1' === $obj->show_retweets) {
+                                $post->full_text = 'RT @'.$post->entities->user_mentions[0]->screen_name.': '.$post->retweeted_status->full_text;
+                            }
 
-                        if (null !== $objNews->findBy('social_feed_id', $post->id)) {
-                            continue;
-                        }
+                            $objNews = new NewsModel();
 
-                        $imgPath = $this->createImageFolder($accountName);
+                            if (null !== $objNews->findBy('social_feed_id', $post->id)) {
+                                continue;
+                            }
 
-                        // save account picture
-                        $accountPicture = $imgPath.$post->user->id.'.jpg';
+                            $imgPath = $this->createImageFolder($accountName);
 
-                        if (!file_exists($accountPicture)) {
-                            $strImage = file_get_contents($post->user->profile_image_url_https);
-                            $file = new File($accountPicture);
-                            $file->write($strImage);
-                            $file->close();
-                        }
+                            // save account picture
+                            $accountPicture = $imgPath.$post->user->id.'.jpg';
 
-                        // save post picture
-                        if ($post->entities->media[0]->media_url_https) {
-                            $picturePath = $imgPath.$post->id.'.jpg';
-
-                            if (!file_exists($picturePath)) {
-                                $strImage = file_get_contents($post->entities->media[0]->media_url_https);
-                                $file = new File($picturePath);
+                            if (!file_exists($accountPicture)) {
+                                $strImage = file_get_contents($post->user->profile_image_url_https);
+                                $file = new File($accountPicture);
                                 $file->write($strImage);
                                 $file->close();
                             }
-                            $objFile = Dbafs::addResource($imgPath.$post->id.'.jpg');
-                            $objNews->singleSRC = $objFile->uuid;
-                            $objNews->addImage = 1;
-                        }
 
-                        // write in database
-                        $objNews->pid = $obj->pdir_sf_fb_news_archive;
-                        $objNews->author = $obj->user;
-                        $objNews->tstamp = time();
+                            // save post picture
+                            if ($post->entities->media[0]->media_url_https) {
+                                $picturePath = $imgPath.$post->id.'.jpg';
 
-                        if (\strlen($post->full_text) > 50) {
-                            $more = ' ...';
-                        } else {
-                            $more = '';
-                        }
-                        $objNews->headline = mb_substr($post->full_text, 0, 50).$more;
-
-                        if ('1' === $obj->hashtags_link) {
-                            if ($post->retweeted_status && '1' === $obj->show_retweets) {
-                                $post->entities->hashtags = $post->retweeted_status->entities->hashtags;
-                                $post->entities->user_mentions = $post->retweeted_status->entities->user_mentions;
+                                if (!file_exists($picturePath)) {
+                                    $strImage = file_get_contents($post->entities->media[0]->media_url_https);
+                                    $file = new File($picturePath);
+                                    $file->write($strImage);
+                                    $file->close();
+                                }
+                                $objFile = Dbafs::addResource($imgPath.$post->id.'.jpg');
+                                $objNews->singleSRC = $objFile->uuid;
+                                $objNews->addImage = 1;
                             }
 
-                            // replace t.co links
-                            $post->full_text = $this->replaceLinks($post->full_text);
+                            // write in database
+                            $objNews->pid = $obj->pdir_sf_fb_news_archive;
+                            $objNews->author = $obj->user;
+                            $objNews->tstamp = time();
 
-                            // replace all hash tags
-                            $post->full_text = $this->replaceHashTags($post->full_text);
+                            if (\strlen($post->full_text) > 50) {
+                                $more = ' ...';
+                            } else {
+                                $more = '';
+                            }
+                            $objNews->headline = mb_substr($post->full_text, 0, 50).$more;
 
-                            // replace mentions
-                            $post->full_text = $this->replaceMentions($post->full_text);
-                        } else {
-                            // remove all t.co links
-                            $post->full_text = $this->removeTwitterLinks($post->full_text);
+                            if ('1' === $obj->hashtags_link) {
+                                if ($post->retweeted_status && '1' === $obj->show_retweets) {
+                                    $post->entities->hashtags = $post->retweeted_status->entities->hashtags;
+                                    $post->entities->user_mentions = $post->retweeted_status->entities->user_mentions;
+                                }
+
+                                // replace t.co links
+                                $post->full_text = $this->replaceLinks($post->full_text);
+
+                                // replace all hash tags
+                                $post->full_text = $this->replaceHashTags($post->full_text);
+
+                                // replace mentions
+                                $post->full_text = $this->replaceMentions($post->full_text);
+                            } else {
+                                // remove all t.co links
+                                $post->full_text = $this->removeTwitterLinks($post->full_text);
+                            }
+
+                            $objNews->teaser = str_replace("\n", '<br>', $post->full_text);
+                            $objNews->date = strtotime($post->created_at);
+                            $objNews->time = strtotime($post->created_at);
+                            $objNews->published = 1;
+                            $objNews->social_feed_type = $obj->socialFeedType;
+                            $objNews->social_feed_id = $post->id;
+                            $objNews->social_feed_account = $post->user->name;
+                            $objNews->social_feed_account_picture = Dbafs::addResource($accountPicture)->uuid;
+                            $objNews->source = 'external';
+
+                            $url = 'https://twitter.com/'.$post->user->screen_name.'/status/'.$post->id;
+
+                            $objNews->url = $url;
+                            $objNews->target = 1;
+                            $objNews->save();
                         }
 
-                        $objNews->teaser = str_replace("\n", '<br>', $post->full_text);
-                        $objNews->date = strtotime($post->created_at);
-                        $objNews->time = strtotime($post->created_at);
-                        $objNews->published = 1;
-                        $objNews->social_feed_type = $obj->socialFeedType;
-                        $objNews->social_feed_id = $post->id;
-                        $objNews->social_feed_account = $post->user->name;
-                        $objNews->social_feed_account_picture = Dbafs::addResource($accountPicture)->uuid;
-                        $objNews->source = 'external';
-
-                        $url = 'https://twitter.com/'.$post->user->screen_name.'/status/'.$post->id;
-
-                        $objNews->url = $url;
-                        $objNews->target = 1;
-                        $objNews->save();
+                        System::log('Social Feed: Twitter Import Account '.$accountName, __METHOD__, TL_GENERAL);
+                        $this->import('Automator');
+                        $this->Automator->generateSymlinks();
                     }
-
-                    System::log('Social Feed: Twitter Import Account '.$accountName, __METHOD__, TL_GENERAL);
-                    $this->import('Automator');
-                    $this->Automator->generateSymlinks();
                 }
             }
         }
@@ -512,13 +523,13 @@ class CronListener extends System
                     ]);
 
                     try {
-                        $data = json_decode((string)$response->getBody(), true);
+                        $data = json_decode((string) $response->getBody(), true);
 
                         // Store the access token
                         $db = Database::getInstance();
                         $set = ['psf_instagramAccessToken' => $data['access_token'], 'access_token_expires' => time() + $data['expires_in']];
                         $db->prepare('UPDATE tl_social_feed %s WHERE id = ?')->set($set)->execute($obj->id);
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                         System::log($e->getMessage(), __METHOD__, TL_GENERAL);
                     }
                 }
@@ -560,7 +571,7 @@ class CronListener extends System
                         $db = Database::getInstance();
                         $set = ['linkedin_access_token' => $token->access_token, 'access_token_expires' => time() + $token->expires_in, 'linkedin_refresh_token' => $token->refresh_token, 'linkedin_refresh_token_expires' => time() + $token->refresh_token_expires_in];
                         $db->prepare('UPDATE tl_social_feed %s WHERE id = ?')->set($set)->execute($obj->id);
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                         System::log($e->getMessage(), __METHOD__, TL_GENERAL);
                     }
                 }
@@ -602,7 +613,6 @@ class CronListener extends System
     {
         try {
             $resMedia = $fb->get('/'.$id.'/attachments', $accessToken);
-            $imageSrc = '';
 
             if ($resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0']['media']) {
                 $arrMedia = $resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0'];
@@ -618,14 +628,14 @@ class CronListener extends System
                 $file->close();
             }
 
-            if(null !== $arrMedia['media']['image']['src']) {
+            if (null !== $arrMedia['media']['image']['src']) {
                 return [
                     'src' => $arrMedia['media']['image']['src'],
                     'title' => $arrMedia['title'],
                 ];
-            } else {
-                return '';
             }
+
+            return '';
         } catch (FacebookResponseException $e) {
             echo 'Graph returned an error: '.$e->getMessage();
             exit;

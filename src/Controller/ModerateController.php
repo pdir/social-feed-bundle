@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -126,9 +126,10 @@ class ModerateController
         }
 
         // get items for moderation list
-        if(null !== $items) {
+        if (null !== $items) {
             $moderationItems = $objImporter->moderation($items);
-            if(0 < count($moderationItems)) {
+
+            if (0 < \count($moderationItems)) {
                 $template = new BackendTemplate('be_sf_moderation_list');
                 $template->arr = $moderationItems;
                 $html = $template->parse();
@@ -153,8 +154,8 @@ class ModerateController
     {
         /**
          * @var Environment
-         * @var Message $message
-         * @var System $system
+         * @var Message     $message
+         * @var System      $system
          */
         $environment = $this->framework->getAdapter(Environment::class);
         $message = $this->framework->getAdapter(Message::class);
@@ -169,7 +170,7 @@ class ModerateController
         $this->template->formId = $formId;
         $this->template->message = $message->generate();
         $this->template->options = $this->generateOptions();
-        $this->template->headline = $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['headline'] . Input::get('id');
+        $this->template->headline = $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['headline'].Input::get('id');
 
         return $this->template;
     }

@@ -5,14 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (C) 2011-2019 Codefog
- *
- * The code of this class is based on the Instagram Bundle from Codefog
- * @author     Codefog <https://codefog.pl>
- * @author     Kamil Kuzminski <https://github.com/qzminski>
- * @license    MIT
- *
- * Copyright (c) 2021 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -27,6 +20,7 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Controller;
 
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -92,7 +86,7 @@ class LinkedinController
             // Store the access token and remove temporary session key
             $this->db->update('tl_social_feed', ['linkedin_access_token' => $token->access_token, 'access_token_expires' => time() + $token->expires_in, 'linkedin_refresh_token' => $token->refresh_token, 'linkedin_refresh_token_expires' => time() + $token->refresh_token_expires_in], ['id' => $sessionData['socialFeedId']]);
             $this->session->remove(SocialFeedListener::SESSION_KEY);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             System::log($e->getMessage(), __METHOD__, TL_GENERAL);
         }
 

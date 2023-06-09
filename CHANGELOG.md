@@ -10,8 +10,15 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [2.12.1](https://github.com/pdir/contao-webtools/tree/2.12.1) - 2023-04-14
 
-## [2.12.0](https://github.com/pdir/contao-webtools/tree/2.12.0) - 2023-10-02
+- [Fixed] Fix error if type and access token is empty
+- [Fixed] Fix error if twitter access token is invalid or expired
+- [Fixed] Fix Instagram import if media_url is null ([#109](https://github.com/pdir/social-feed-bundle/issues/109))
+- [Fixed] Fix Facebook import if post has no attachments
+- [Fixed] Fix Instagram account name is not displayed ([#115](https://github.com/pdir/social-feed-bundle/issues/115))
+
+## [2.12.0](https://github.com/pdir/contao-webtools/tree/2.12.0) - 2023-02-10
 
 - [Added] refresh instagram access token automatically
 - [Changed] Unlock nickdnk/graph-sdk v7 🤗 [rabauss](https://github.com/rabauss)
