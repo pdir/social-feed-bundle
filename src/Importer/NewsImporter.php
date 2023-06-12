@@ -83,7 +83,7 @@ class NewsImporter
         $message = $this->getPostMessage($this->arrNews['caption']);
         $more = '';
 
-        if(!$message) {
+        if (!$message) {
             $message = '';
         }
 
