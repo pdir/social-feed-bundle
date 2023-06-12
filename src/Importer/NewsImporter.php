@@ -83,6 +83,10 @@ class NewsImporter
         $message = $this->getPostMessage($this->arrNews['caption']);
         $more = '';
 
+        if(!$message) {
+            $message = '';
+        }
+
         if (\strlen($message) > 50) {
             $more = ' ...';
         }
