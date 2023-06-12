@@ -10,7 +10,7 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
-## [2.12.1](https://github.com/pdir/contao-webtools/tree/2.12.1) - 2023-04-14
+## [2.12.1](https://github.com/pdir/contao-webtools/tree/2.12.1) - 2023-06-09
 
 - [Fixed] Fix error if type and access token is empty
 - [Fixed] Fix error if twitter access token is invalid or expired
