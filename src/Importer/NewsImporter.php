@@ -80,7 +80,7 @@ class NewsImporter
         }
 
         // message and teaser
-        $message = $this->getPostMessage($this->arrNews['caption']);
+        $message = $this->getPostMessage($this->arrNews['caption']) ?? '';
         $more = '';
 
         if (\strlen($message) > 50) {
