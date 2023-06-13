@@ -10,7 +10,7 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
-## [2.12.2](https://github.com/pdir/contao-webtools/tree/2.12.2) - 2023-06-12
+## [2.12.2](https://github.com/pdir/contao-webtools/tree/2.12.2) - 2023-06-13
 
 - [Fixed] Fix instagram import if post has no description ([#116](https://github.com/pdir/social-feed-bundle/issues/116))
 
