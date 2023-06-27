@@ -21,6 +21,7 @@ declare(strict_types=1);
 use Contao\Backend;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\DataContainer;
 
 /*
  * add global operation
