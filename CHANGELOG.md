@@ -13,6 +13,7 @@ Types of changes
 ## [2.12.3](https://github.com/pdir/contao-webtools/tree/2.12.3) - 2023-06-27
 
 - [Fixed] Fix dca to make compatible with ContaoNewsBundle ^4.4 ([#94](https://github.com/pdir/social-feed-bundle/issues/94))
+- [Fixed] Fix error in Contao 4.4: Attempted to call function "sprintf" from namespace "Safe"
 
 ## [2.12.2](https://github.com/pdir/contao-webtools/tree/2.12.2) - 2023-06-13
 
