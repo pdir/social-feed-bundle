@@ -128,7 +128,7 @@ class tl_news_socialfeed extends Backend
 }
 
 foreach ($GLOBALS['TL_DCA']['tl_news']['palettes'] as $name => $palette) {
-    if (!\is_string($palette)) {
+    if (!is_string($palette)) {
         continue;
     }
 
