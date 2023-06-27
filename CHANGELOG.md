@@ -10,6 +10,10 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [2.12.3](https://github.com/pdir/contao-webtools/tree/2.12.3) - 2023-06-27
+
+- [Fixed] Fix dca to make compatible with ContaoNewsBundle ^4.4 ([#94](https://github.com/pdir/social-feed-bundle/issues/94))
+
 ## [2.12.2](https://github.com/pdir/contao-webtools/tree/2.12.2) - 2023-06-13
 
 - [Fixed] Fix instagram import if post has no description ([#116](https://github.com/pdir/social-feed-bundle/issues/116))
