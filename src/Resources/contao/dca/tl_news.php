@@ -126,7 +126,7 @@ class tl_news_socialfeed extends Backend
     }
 }
 
-if(version_compare(VERSION, '4.9', '>=')) {
+if (version_compare(VERSION, '4.9', '>=')) {
     PaletteManipulator::create()
         ->addLegend('pdir_sf_settings_legend', 'publish_legend', PaletteManipulator::POSITION_AFTER)
         ->addField('social_feed_type', 'pdir_sf_settings_legend', PaletteManipulator::POSITION_APPEND)
@@ -140,7 +140,7 @@ if(version_compare(VERSION, '4.9', '>=')) {
     ;
 }
 
-if(version_compare(VERSION, '4.9', '<')) {
+if (version_compare(VERSION, '4.9', '<')) {
     PaletteManipulator::create()
         ->addLegend('pdir_sf_settings_legend', 'publish_legend', PaletteManipulator::POSITION_AFTER)
         ->addField('social_feed_type', 'pdir_sf_settings_legend', PaletteManipulator::POSITION_APPEND)
