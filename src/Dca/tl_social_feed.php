@@ -23,7 +23,6 @@ namespace Pdir\SocialFeedBundle\Dca;
 use Contao\BackendTemplate;
 use Contao\DataContainer;
 use Safe\Exceptions\StringsException;
-use function Safe\sprintf;
 
 class tl_social_feed
 {
