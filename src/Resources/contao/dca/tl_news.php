@@ -127,27 +127,17 @@ class tl_news_socialfeed extends Backend
     }
 }
 
-if (version_compare(VERSION, '4.9', '>=')) {
-    PaletteManipulator::create()
-        ->addLegend('pdir_sf_settings_legend', 'publish_legend', PaletteManipulator::POSITION_AFTER)
-        ->addField('social_feed_type', 'pdir_sf_settings_legend', PaletteManipulator::POSITION_APPEND)
-        ->addField('social_feed_id', 'social_feed_type', PaletteManipulator::POSITION_AFTER)
-        ->addField('social_feed_account', 'social_feed_id', PaletteManipulator::POSITION_AFTER)
-        ->addField('social_feed_account_picture', 'social_feed_account', PaletteManipulator::POSITION_AFTER)
-        ->applyToPalette('default', 'tl_news')
-        ->applyToPalette('article', 'tl_news')
-        ->applyToPalette('external', 'tl_news')
-        ->applyToPalette('internal', 'tl_news')
-    ;
-}
+foreach ($GLOBALS['TL_DCA']['tl_news']['palettes'] as $name => $palette) {
+    if (!\is_string($palette)) {
+        continue;
+    }
 
-if (version_compare(VERSION, '4.9', '<')) {
     PaletteManipulator::create()
         ->addLegend('pdir_sf_settings_legend', 'publish_legend', PaletteManipulator::POSITION_AFTER)
         ->addField('social_feed_type', 'pdir_sf_settings_legend', PaletteManipulator::POSITION_APPEND)
         ->addField('social_feed_id', 'social_feed_type', PaletteManipulator::POSITION_AFTER)
         ->addField('social_feed_account', 'social_feed_id', PaletteManipulator::POSITION_AFTER)
         ->addField('social_feed_account_picture', 'social_feed_account', PaletteManipulator::POSITION_AFTER)
-        ->applyToPalette('default', 'tl_news')
+        ->applyToPalette($name, 'tl_news')
     ;
 }
