@@ -21,6 +21,7 @@ declare(strict_types=1);
 use Contao\Backend;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\DataContainer;
 
 /*
  * add global operation
@@ -125,14 +126,18 @@ class tl_news_socialfeed extends Backend
         return $varValue;
     }
 }
-PaletteManipulator::create()
-    ->addLegend('pdir_sf_settings_legend', 'publish_legend', PaletteManipulator::POSITION_AFTER)
-    ->addField('social_feed_type', 'pdir_sf_settings_legend', PaletteManipulator::POSITION_APPEND)
-    ->addField('social_feed_id', 'social_feed_type', PaletteManipulator::POSITION_AFTER)
-    ->addField('social_feed_account', 'social_feed_id', PaletteManipulator::POSITION_AFTER)
-    ->addField('social_feed_account_picture', 'social_feed_account', PaletteManipulator::POSITION_AFTER)
-    ->applyToPalette('default', 'tl_news')
-    ->applyToPalette('article', 'tl_news')
-    ->applyToPalette('external', 'tl_news')
-    ->applyToPalette('internal', 'tl_news')
-;
+
+foreach ($GLOBALS['TL_DCA']['tl_news']['palettes'] as $name => $palette) {
+    if (!is_string($palette)) {
+        continue;
+    }
+
+    PaletteManipulator::create()
+        ->addLegend('pdir_sf_settings_legend', 'publish_legend', PaletteManipulator::POSITION_AFTER)
+        ->addField('social_feed_type', 'pdir_sf_settings_legend', PaletteManipulator::POSITION_APPEND)
+        ->addField('social_feed_id', 'social_feed_type', PaletteManipulator::POSITION_AFTER)
+        ->addField('social_feed_account', 'social_feed_id', PaletteManipulator::POSITION_AFTER)
+        ->addField('social_feed_account_picture', 'social_feed_account', PaletteManipulator::POSITION_AFTER)
+        ->applyToPalette($name, 'tl_news')
+    ;
+}
