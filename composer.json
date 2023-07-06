@@ -30,8 +30,8 @@
   },
   "require": {
     "php": "^7.4 || ^8.0",
-    "contao/core-bundle": "^4.4",
-    "contao/news-bundle": "^4.4",
+    "contao/core-bundle": "^4.13 | ^5.0",
+    "contao/news-bundle": "^4.13 | ^5.0",
     "nickdnk/graph-sdk": "^6.0 || ^7.0",
     "abraham/twitteroauth": "~1.1 || ~2.0",
     "guzzlehttp/guzzle": "~6.0",
@@ -60,13 +60,13 @@
       "Pdir\\SocialFeedBundle\\": "src/"
     },
     "classmap": [
-      "src/Resources/contao/"
+      "contao/contao/"
     ],
     "exclude-from-classmap": [
-      "src/Resources/contao/config/",
-      "src/Resources/contao/dca/",
-      "src/Resources/contao/languages/",
-      "src/Resources/contao/templates/"
+      "contao/contao/config/",
+      "contao/contao/dca/",
+      "contao/contao/languages/",
+      "contao/contao/templates/"
     ]
   },
   "funding": [
