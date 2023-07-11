@@ -35,7 +35,7 @@
     "abraham/twitteroauth": "~1.1 || ~2.0",
     "guzzlehttp/guzzle": "~6.0",
     "kevinrob/guzzle-cache-middleware": "^3.2",
-    "doctrine/cache": "^1.9",
+    "doctrine/cache": "^2.1",
     "doctrine/dbal": "^2.0 || ^3.0",
     "samoritano/linkedin-api-php-client-v2": "^0.0.20"
   },

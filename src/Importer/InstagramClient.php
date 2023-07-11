@@ -32,7 +32,6 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\File;
 use Contao\FilesModel;
 use Contao\StringUtil;
-use Doctrine\Common\Cache\FilesystemCache;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
@@ -41,6 +40,7 @@ use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
 use Kevinrob\GuzzleCache\Strategy\GreedyCacheStrategy;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class InstagramClient
 {
@@ -200,7 +200,7 @@ class InstagramClient
     /**
      * Get the access token.
      */
-    public function getAccessToken(string $appId, string $appSecret, string $code, string $redirectUri): array
+    public function getAccessToken(string $appId, string $appSecret, string $code, string $redirectUri): ?array
     {
         if (($token = $this->getShortLivedAccessToken($appId, $appSecret, $code, $redirectUri)) === null) {
             return null;
@@ -252,7 +252,7 @@ class InstagramClient
      *
      * @return array
      */
-    private function getLongLivedAccessToken(string $token, string $appSecret): array
+    private function getLongLivedAccessToken(string $token, string $appSecret): ?array
     {
         try {
             $response = $this->getClient()->get('https://graph.instagram.com/access_token', [
@@ -308,7 +308,7 @@ class InstagramClient
 
         if (!isset($clients[$key])) {
             $stack = HandlerStack::create();
-            $stack->push(new CacheMiddleware(new GreedyCacheStrategy(new DoctrineCacheStorage(new FilesystemCache($this->cache->getCacheDir($moduleId))), $this->cache->getCacheTtl())), 'cache');
+            $stack->push(new CacheMiddleware(new GreedyCacheStrategy(new DoctrineCacheStorage(new FilesystemAdapter($this->cache->getCacheDir($moduleId))), $this->cache->getCacheTtl())), 'cache');
 
             $clients[$key] = (new Client(['handler' => $stack]));
         }
