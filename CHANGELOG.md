@@ -10,6 +10,10 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [2.12.4](https://github.com/pdir/contao-webtools/tree/2.12.4) - 2023-07-18
+
+- [Fixed] Fix compatibility with Codefog News Categories bundle
+
 ## [2.12.3](https://github.com/pdir/contao-webtools/tree/2.12.3) - 2023-06-27
 
 - [Fixed] Fix dca to make compatible with ContaoNewsBundle ^4.4 ([#94](https://github.com/pdir/social-feed-bundle/issues/94))
