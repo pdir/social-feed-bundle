@@ -20,9 +20,8 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Module;
 
-use Contao\LayoutModel;
 use Codefog\NewsCategoriesBundle\FrontendModule\NewsListModule;
-use Pdir\SocialFeedBundle\Module\ModuleCustomNewslist;
+use Contao\LayoutModel;
 
 class NewsCategoriesModule extends NewsListModule
 {
