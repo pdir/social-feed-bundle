@@ -47,13 +47,11 @@ $GLOBALS['TL_MODELS']['tl_social_feed'] = 'Pdir\SocialFeedBundle\Model\SocialFee
 /*
  * Frontend modules
  */
-if(false === strpos($GLOBALS['FE_MOD']['news']['newslist'], 'Codefog\NewsCategoriesBundle'))
-{
+if (false === strpos($GLOBALS['FE_MOD']['news']['newslist'], 'Codefog\NewsCategoriesBundle')) {
     $GLOBALS['FE_MOD']['news']['newslist'] = ModuleCustomNewslist::class;
 }
 
-if(false !== strpos($GLOBALS['FE_MOD']['news']['newslist'], 'Codefog\NewsCategoriesBundle'))
-{
+if (false !== strpos($GLOBALS['FE_MOD']['news']['newslist'], 'Codefog\NewsCategoriesBundle')) {
     $GLOBALS['FE_MOD']['news']['newslist'] = NewsCategoriesModule::class;
 }
 
