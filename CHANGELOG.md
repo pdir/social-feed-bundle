@@ -10,9 +10,10 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
-## [2.12.4](https://github.com/pdir/contao-webtools/tree/2.12.4) - 2023-07-18
+## [2.12.4](https://github.com/pdir/contao-webtools/tree/2.12.4) - 2023-07-31
 
 - [Fixed] Fix compatibility with Codefog News Categories bundle
+- [Changed] Add system log entries for better and easier debugging
 
 ## [2.12.3](https://github.com/pdir/contao-webtools/tree/2.12.3) - 2023-06-27
 
