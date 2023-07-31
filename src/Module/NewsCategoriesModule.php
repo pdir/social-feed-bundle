@@ -43,7 +43,7 @@ class NewsCategoriesModule extends NewsListModule
         $this->Template->lazyload = false;
         $layout = LayoutModel::findByPk($GLOBALS['objPage']->layout);
 
-        if (!is_null($layout->scripts) && strpos($layout->scripts, 'lazyload')) {
+        if (null !== $layout->scripts && strpos($layout->scripts, 'lazyload')) {
             $this->Template->lazyload = true;
         }
     }
