@@ -39,12 +39,12 @@ class NewsCategoriesModule extends NewsListModule
         $this->Template->sfMasonry = $this->pdir_sf_enableMasonry;
         $this->Template->sfColumns = ' '.$this->pdir_sf_columns;
 
+        // only used if the contao speed bundle is installed and the js_lazyload template is activated (https://github.com/heimrichhannot/contao-speed-bundle)
+        $this->Template->lazyload = false;
         $layout = LayoutModel::findByPk($GLOBALS['objPage']->layout);
 
-        if (null !== $layout->scripts && strpos($layout->scripts, 'lazyload')) {
+        if (!is_null($layout->scripts) && strpos($layout->scripts, 'lazyload')) {
             $this->Template->lazyload = true;
-        } else {
-            $this->Template->lazyload = false;
         }
     }
 }
