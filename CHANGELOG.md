@@ -10,22 +10,27 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [2.12.4](https://github.com/pdir/contao-webtools/tree/2.12.4) - 2023-07-31
+
+- [Fixed] Fix compatibility with Codefog News Categories bundle
+- [Changed] Add system log entries for better and easier debugging [#127](https://github.com/pdir/social-feed-bundle/pull/127) 🤗 [w3scout](https://github.com/w3scout)
+
 ## [2.12.3](https://github.com/pdir/contao-webtools/tree/2.12.3) - 2023-06-27
 
-- [Fixed] Fix dca to make compatible with ContaoNewsBundle ^4.4 ([#94](https://github.com/pdir/social-feed-bundle/issues/94))
+- [Fixed] Fix dca to make compatible with ContaoNewsBundle ^4.4 [#94](https://github.com/pdir/social-feed-bundle/issues/94)
 - [Fixed] Fix error in Contao 4.4: Attempted to call function "sprintf" from namespace "Safe"
 
 ## [2.12.2](https://github.com/pdir/contao-webtools/tree/2.12.2) - 2023-06-13
 
-- [Fixed] Fix instagram import if post has no description ([#116](https://github.com/pdir/social-feed-bundle/issues/116))
+- [Fixed] Fix instagram import if post has no description [#116](https://github.com/pdir/social-feed-bundle/issues/116)
 
 ## [2.12.1](https://github.com/pdir/contao-webtools/tree/2.12.1) - 2023-06-09
 
 - [Fixed] Fix error if type and access token is empty
 - [Fixed] Fix error if twitter access token is invalid or expired
-- [Fixed] Fix Instagram import if media_url is null ([#109](https://github.com/pdir/social-feed-bundle/issues/109))
+- [Fixed] Fix Instagram import if media_url is null [#109](https://github.com/pdir/social-feed-bundle/issues/109)
 - [Fixed] Fix Facebook import if post has no attachments
-- [Fixed] Fix Instagram account name is not displayed ([#115](https://github.com/pdir/social-feed-bundle/issues/115))
+- [Fixed] Fix Instagram account name is not displayed [#115](https://github.com/pdir/social-feed-bundle/issues/115)
 
 ## [2.12.0](https://github.com/pdir/contao-webtools/tree/2.12.0) - 2023-02-10
 
@@ -45,7 +50,7 @@ Types of changes
 
 - [Added] add author for new news
 - [Fixed] fix facebook import (if teaser or image is null)
-- [Fixed] fix twitter import ([#83](https://github.com/pdir/social-feed-bundle/issues/83))
+- [Fixed] fix twitter import [#83](https://github.com/pdir/social-feed-bundle/issues/83)
 - [Fixed] Fix critical errors in facebook import and return error message instead
 - [Fixed] Fix compatibility with newest DBAL version
 

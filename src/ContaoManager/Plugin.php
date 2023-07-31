@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\ContaoManager;
 
+use Codefog\NewsCategoriesBundle\CodefogNewsCategoriesBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
@@ -38,7 +39,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
     {
         return [
             BundleConfig::create(PdirSocialFeedBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class])
+                ->setLoadAfter([ContaoCoreBundle::class, CodefogNewsCategoriesBundle::class])
                 ->setReplace(['socialfeedbundle']),
         ];
     }
