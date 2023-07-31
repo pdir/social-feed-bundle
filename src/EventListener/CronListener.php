@@ -586,10 +586,10 @@ class CronListener extends System
                 $account.'/posts?access_token='.$accessToken.'&fields=id,from,created_time,message,permalink_url'
             );
         } catch (FacebookResponseException $e) {
-            echo 'Graph returned an error: '.$e->getMessage();
+            System::log('Graph returned an error: '.$e->getMessage(), __METHOD__, TL_ERROR);
             exit;
         } catch (FacebookSDKException $e) {
-            echo 'Facebook SDK returned an error: '.$e->getMessage();
+            System::log('Facebook SDK returned an error: '.$e->getMessage(), __METHOD__, TL_ERROR);
             exit;
         }
     }
@@ -601,10 +601,10 @@ class CronListener extends System
                 $account.'/feed?access_token='.$accessToken.'&fields=id,from,created_time,message,permalink_url'
             );
         } catch (FacebookResponseException $e) {
-            echo 'Graph returned an error: '.$e->getMessage();
+            System::log('Graph returned an error: '.$e->getMessage(), __METHOD__, TL_ERROR);
             exit;
         } catch (FacebookSDKException $e) {
-            echo 'Facebook SDK returned an error: '.$e->getMessage();
+            System::log('Facebook SDK returned an error: '.$e->getMessage(), __METHOD__, TL_ERROR);
             exit;
         }
     }
