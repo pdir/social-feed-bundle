@@ -34,7 +34,7 @@
     "contao/news-bundle": "^4.4",
     "nickdnk/graph-sdk": "^6.0 || ^7.0",
     "abraham/twitteroauth": "~1.1 || ~2.0",
-    "guzzlehttp/guzzle": "~6.0",
+    "guzzlehttp/guzzle": "^6.3",
     "kevinrob/guzzle-cache-middleware": "^3.2",
     "doctrine/cache": "^2.1",
     "doctrine/dbal": "^2.0 || ^3.0",
