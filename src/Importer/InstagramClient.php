@@ -301,18 +301,18 @@ class InstagramClient
         if (!isset($clients[$key])) {
             $stack = HandlerStack::create();
 
-            $cachePool = new FilesystemAdapter('',0, $this->cache->getCacheDir($moduleId));
+            $cachePool = new FilesystemAdapter('', 0, $this->cache->getCacheDir($moduleId));
             $cache = DoctrineProvider::wrap($cachePool);
 
             $stack->push(
                 new CacheMiddleware(
                     new GreedyCacheStrategy(
-                        new DoctrineCacheStorage(
-                            $cache
-                        ),
+                        new DoctrineCacheStorage($cache),
                         $this->cache->getCacheTtl()
                     )
-                ), 'cache');
+                ),
+                'cache'
+            );
 
             $clients[$key] = (new Client(['handler' => $stack]));
         }
