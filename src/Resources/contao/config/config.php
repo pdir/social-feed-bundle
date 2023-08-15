@@ -19,7 +19,7 @@ declare(strict_types=1);
  */
 
 use Pdir\SocialFeedBundle\Module\ModuleCustomNewslist;
-use Pdir\SocialFeedBundle\Module\NewsCategoriesModule;
+use Pdir\SocialFeedBundle\Module\NewsCategoriesModule; // @phpstan-ignore-line
 
 /*
  * Backend modules
@@ -50,7 +50,7 @@ $GLOBALS['TL_MODELS']['tl_social_feed'] = 'Pdir\SocialFeedBundle\Model\SocialFee
 $GLOBALS['FE_MOD']['news']['newslist'] = ModuleCustomNewslist::class;
 
 if (false !== strpos($GLOBALS['FE_MOD']['news']['newslist'], 'Codefog\NewsCategoriesBundle')) {
-    $GLOBALS['FE_MOD']['news']['newslist'] = NewsCategoriesModule::class;
+    $GLOBALS['FE_MOD']['news']['newslist'] = NewsCategoriesModule::class; // @phpstan-ignore-line
 }
 
 /*
@@ -66,11 +66,11 @@ $GLOBALS['TL_CRON']['daily'][] = ['Pdir\SocialFeedBundle\EventListener\CronListe
 /*
  * CSS for Frontend
  */
-if (TL_MODE === 'FE') {
+if (TL_MODE === 'FE') { // @phpstan-ignore-line
     $GLOBALS['TL_CSS']['social_feed'] = $assetsDir.'/css/social_feed.scss|static';
 }
 
-if (TL_MODE === 'BE') {
+if (TL_MODE === 'BE') { // @phpstan-ignore-line
     $GLOBALS['TL_CSS'][] = $assetsDir.'/css/sf_moderation.scss|static';
     $GLOBALS['TL_CSS'][] = $assetsDir.'/css/backend.css|static';
 }
