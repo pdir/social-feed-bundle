@@ -10,6 +10,12 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [2.12.5](https://github.com/pdir/contao-webtools/tree/2.12.4) - 2023-08-15
+
+- [Changed] doctrine/cache from 1.9 to ^2.1
+- [Changed] guzzlehttp/guzzle from 6.3 to ^7.3
+- [Fixed] temporarily supplemented samoritano/linkedin-api-php-client-v2 to support guzzle 7.3
+
 ## [2.12.4](https://github.com/pdir/contao-webtools/tree/2.12.4) - 2023-07-31
 
 - [Fixed] Fix compatibility with Codefog News Categories bundle
