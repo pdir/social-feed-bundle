@@ -10,6 +10,10 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [2.12.5](https://github.com/pdir/contao-webtools/tree/2.12.5) - 2023-09-20
+
+- [Changed] Change translations and texts
+
 ## [2.12.4](https://github.com/pdir/contao-webtools/tree/2.12.4) - 2023-07-31
 
 - [Fixed] Fix compatibility with Codefog News Categories bundle
