@@ -34,11 +34,11 @@
     "contao/news-bundle": "^4.4",
     "nickdnk/graph-sdk": "^6.0 || ^7.0",
     "abraham/twitteroauth": "~1.1 || ~2.0",
-    "guzzlehttp/guzzle": "~6.0",
+    "guzzlehttp/guzzle": "^7.3",
     "kevinrob/guzzle-cache-middleware": "^3.2",
-    "doctrine/cache": "^1.9",
+    "doctrine/cache": "^2.1",
     "doctrine/dbal": "^2.0 || ^3.0",
-    "samoritano/linkedin-api-php-client-v2": "^0.0.20"
+    "samoritano/linkedin-api-php-client-v2": "dev-master as 0.0.20"
   },
   "require-dev": {
     "bamarni/composer-bin-plugin": "^1.4",

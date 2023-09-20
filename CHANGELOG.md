@@ -10,25 +10,28 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
-## [2.12.5](https://github.com/pdir/contao-webtools/tree/2.12.5) - 2023-09-20
+## [2.12.5](https://github.com/pdir/social-feed-bundle/tree/2.12.5) - 2023-09-20
 
+- [Changed] doctrine/cache from 1.9 to ^2.1
+- [Changed] guzzlehttp/guzzle from 6.3 to ^7.3
 - [Changed] Change translations and texts
+- [Fixed] temporarily supplemented samoritano/linkedin-api-php-client-v2 to support guzzle 7.3
 
-## [2.12.4](https://github.com/pdir/contao-webtools/tree/2.12.4) - 2023-07-31
+## [2.12.4](https://github.com/pdir/social-feed-bundle/tree/2.12.4) - 2023-07-31
 
 - [Fixed] Fix compatibility with Codefog News Categories bundle
 - [Changed] Add system log entries for better and easier debugging [#127](https://github.com/pdir/social-feed-bundle/pull/127) 🤗 [w3scout](https://github.com/w3scout)
 
-## [2.12.3](https://github.com/pdir/contao-webtools/tree/2.12.3) - 2023-06-27
+## [2.12.3](https://github.com/pdir/social-feed-bundle/tree/2.12.3) - 2023-06-27
 
 - [Fixed] Fix dca to make compatible with ContaoNewsBundle ^4.4 [#94](https://github.com/pdir/social-feed-bundle/issues/94)
 - [Fixed] Fix error in Contao 4.4: Attempted to call function "sprintf" from namespace "Safe"
 
-## [2.12.2](https://github.com/pdir/contao-webtools/tree/2.12.2) - 2023-06-13
+## [2.12.2](https://github.com/pdir/social-feed-bundle/tree/2.12.2) - 2023-06-13
 
 - [Fixed] Fix instagram import if post has no description [#116](https://github.com/pdir/social-feed-bundle/issues/116)
 
-## [2.12.1](https://github.com/pdir/contao-webtools/tree/2.12.1) - 2023-06-09
+## [2.12.1](https://github.com/pdir/social-feed-bundle/tree/2.12.1) - 2023-06-09
 
 - [Fixed] Fix error if type and access token is empty
 - [Fixed] Fix error if twitter access token is invalid or expired
@@ -36,17 +39,17 @@ Types of changes
 - [Fixed] Fix Facebook import if post has no attachments
 - [Fixed] Fix Instagram account name is not displayed [#115](https://github.com/pdir/social-feed-bundle/issues/115)
 
-## [2.12.0](https://github.com/pdir/contao-webtools/tree/2.12.0) - 2023-02-10
+## [2.12.0](https://github.com/pdir/social-feed-bundle/tree/2.12.0) - 2023-02-10
 
 - [Added] refresh instagram access token automatically
 - [Changed] Unlock nickdnk/graph-sdk v7 🤗 [rabauss](https://github.com/rabauss)
 - [Fixed] Fix type error in cron if message is null 🤗 [rabauss](https://github.com/rabauss)
 
-## [2.11.2](https://github.com/pdir/contao-webtools/tree/2.11.2) - 2022-12-18
+## [2.11.2](https://github.com/pdir/social-feed-bundle/tree/2.11.2) - 2022-12-18
 
 - [Fixed] fix warning in language files
 
-## [2.11.1](https://github.com/pdir/contao-webtools/tree/2.11.1) - 2022-07-18
+## [2.11.1](https://github.com/pdir/social-feed-bundle/tree/2.11.1) - 2022-07-18
 
 - [Fixed] fix warning in debug mode
 

@@ -25,7 +25,7 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\File;
 use Contao\FilesModel;
 use Contao\StringUtil;
-use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
@@ -34,6 +34,7 @@ use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
 use Kevinrob\GuzzleCache\Strategy\GreedyCacheStrategy;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class InstagramClient
 {
@@ -299,7 +300,19 @@ class InstagramClient
 
         if (!isset($clients[$key])) {
             $stack = HandlerStack::create();
-            $stack->push(new CacheMiddleware(new GreedyCacheStrategy(new DoctrineCacheStorage(new FilesystemCache($this->cache->getCacheDir($moduleId))), $this->cache->getCacheTtl())), 'cache');
+
+            $cachePool = new FilesystemAdapter('', 0, $this->cache->getCacheDir($moduleId));
+            $cache = DoctrineProvider::wrap($cachePool);
+
+            $stack->push(
+                new CacheMiddleware(
+                    new GreedyCacheStrategy(
+                        new DoctrineCacheStorage($cache),
+                        $this->cache->getCacheTtl()
+                    )
+                ),
+                'cache'
+            );
 
             $clients[$key] = (new Client(['handler' => $stack]));
         }
