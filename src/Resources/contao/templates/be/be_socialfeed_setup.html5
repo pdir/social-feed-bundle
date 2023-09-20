@@ -15,8 +15,8 @@
         </div>
         <div class="left">
           <h2>Willkommen beim SocialFeedBundle für Contao</h2>
-          <p>Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an.
-          Zur Zeit wird Facebook, Twitter und Instagram unterstützt, weitere Kanäle werden in Zukunft folgen.</p>
+          <p>Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an. Zur Zeit wird
+            Facebook, Instagram, Twitter und LinkedIn unterstützt.</p>
           <p>Ihr Team der pdir / digital agentur</p>
         </div>
         <div class="clr"></div>
