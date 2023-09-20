@@ -33,7 +33,7 @@
     "contao/core-bundle": "^4.4",
     "contao/news-bundle": "^4.4",
     "nickdnk/graph-sdk": "^6.0 || ^7.0",
-    "abraham/twitteroauth": "~1.1 || ~2.0",
+    "abraham/twitteroauth": "~4.0",
     "guzzlehttp/guzzle": "^7.3",
     "kevinrob/guzzle-cache-middleware": "^3.2",
     "doctrine/cache": "^2.1",
