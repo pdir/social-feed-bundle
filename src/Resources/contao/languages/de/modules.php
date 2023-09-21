@@ -25,5 +25,5 @@ declare(strict_types=1);
 $GLOBALS['TL_LANG']['MOD']['pdir'] = 'pdir Apps';
 $GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][0] = 'Social Feed Info';
 $GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][1] = 'Verwalten Sie hier das Social Feed Bundle';
-$GLOBALS['TL_LANG']['MOD']['socialFeed'][0] = 'Social Feed Accounts';
+$GLOBALS['TL_LANG']['MOD']['socialFeed'][0] = 'Social Feed Konto';
 $GLOBALS['TL_LANG']['MOD']['socialFeed'][1] = 'Konfigurieren Sie hier das Social Feed Bundle.';

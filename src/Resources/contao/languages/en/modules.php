@@ -25,5 +25,5 @@ declare(strict_types=1);
 $GLOBALS['TL_LANG']['MOD']['pdir'] = 'pdir Apps';
 $GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][0] = 'Social Feed Info';
 $GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][1] = 'Here you can manage the social feed setup.';
-$GLOBALS['TL_LANG']['MOD']['socialFeed'][0] = 'Social Feed Accounts';
-$GLOBALS['TL_LANG']['MOD']['socialFeed'][1] = 'Here you can manage the social feed accounts.';
+$GLOBALS['TL_LANG']['MOD']['socialFeed'][0] = 'Social Feed accounts';
+$GLOBALS['TL_LANG']['MOD']['socialFeed'][1] = 'Here you can manage the Social Feed accounts.';

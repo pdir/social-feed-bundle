@@ -28,7 +28,7 @@ $GLOBALS['TL_LANG']['tl_news']['social_feed_account_picture'] = ['Social Feed Ac
 
 $GLOBALS['TL_LANG']['tl_news']['moderate'] = ['Get Feed', 'Moderate Social Feed Posts'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['moderate'] = ['Get Feed', 'Moderate Social Feed Posts'];
-$GLOBALS['TL_LANG']['tl_news_moderate']['moderateHint'] = 'Only Instagram is currently available for moderated import. Use cron import for other services, you can find the settings in the social feed accounts.';
+$GLOBALS['TL_LANG']['tl_news_moderate']['moderateHint'] = 'Only Instagram is currently available for moderated import. Use cron import for other services, you can find the settings in the Social Feed accounts.';
 $GLOBALS['TL_LANG']['tl_news_moderate']['account'] = ['Social Feed Account'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['number_posts'] = ['Number of posts', 'Enter the maximum number of posts to be imported here.'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['selectAll'] = 'Select all';
