@@ -111,7 +111,7 @@ class CronListener extends System
                     $this->savePostPictures($picturePath, $media);
 
                     // Write in Database
-                    $message = $this->getPostMessage($media['caption']);
+                    $message = $this->getPostMessage($media['caption']) ?? '';
 
                     // add/fetch file from DBAFS
                     $objFile = Dbafs::addResource($imgPath.$media['id'].'.jpg');
