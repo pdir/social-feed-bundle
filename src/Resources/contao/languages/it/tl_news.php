@@ -28,6 +28,7 @@ $GLOBALS['TL_LANG']['tl_news']['social_feed_account_picture'] = ['Immagine del p
 
 $GLOBALS['TL_LANG']['tl_news']['moderate'] = ['Recupera alimentazione', 'Moderare le voci dei social feed.'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['moderate'] = ['Importa il Social Feed', 'Modera l\'importazione del Social Feed'];
+$GLOBALS['TL_LANG']['tl_news_moderate']['moderateHint'] = 'Solo Instagram è attualmente disponibile per l\'importazione moderata. Per gli altri servizi, utilizzare l\'importazione tramite cron; le impostazioni sono disponibili negli account dei feed sociali.';
 $GLOBALS['TL_LANG']['tl_news_moderate']['account'] = ['Account Social Feed'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['number_posts'] = ['Numero di posti', 'Qui puoi limitare il numero di post che vengono recuperati.'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['selectAll'] = 'Seleziona tutti';

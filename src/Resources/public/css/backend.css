@@ -1,17 +1,22 @@
 
+#tl_navigation .group-pdir {
+    background: url(/bundles/pdirsocialfeed/img/pdir_icon_pdir.svg) 0 0 no-repeat;
+    background-size: 18px 18px;
+}
+
 .be_socialfeed_setup a {
-	color: #7abfbc;
+    color: #7abfbc;
 }
 
 .be_socialfeed_setup .right {
     float: right;
     width: 40%;
-	margin: 15px 0;
+    margin: 15px 0;
 }
 .be_socialfeed_setup .left {
     float: left;
     width: 50%;
-	margin: 15px 0;
+    margin: 15px 0;
 }
 
 .be_socialfeed_setup .logo {
@@ -19,7 +24,7 @@
 }
 
 .be_socialfeed_setup h2 {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .be_socialfeed_setup hr {
@@ -28,11 +33,11 @@
 }
 
 .be_socialfeed_setup .devlog {
-	margin: 10px 0;
+    margin: 10px 0;
 }
 
 .be_socialfeed_setup .link-list li {
-	padding: 5px 0 5px 0;
+    padding: 5px 0 5px 0;
 }
 
 .be_socialfeed_setup .feed .item {
@@ -41,7 +46,7 @@
 
 .be_socialfeed_setup .feed .item span {
     padding-right: 10px;
-	color: #7abfbc;
+    color: #7abfbc;
 }
 
 .be_socialfeed_setup .button {
@@ -58,40 +63,44 @@
 }
 
 .be_socialfeed_setup small {
-	color: #cccccc;
+    color: #cccccc;
 }
 
 
 .be_socialfeed_setup .api-status .blink {
-	width: 15px;
-	height: 15px;
-	padding: 10px;
-	box-sizing: border-box;
-	border-radius: 10px;
-	background: #ACDA3D;
-	display: inline-block;
-	position: relative;
-	top: 5px;
-	margin-left: 5px;
+    width: 15px;
+    height: 15px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background: #ACDA3D;
+    display: inline-block;
+    position: relative;
+    top: 5px;
+    margin-left: 5px;
 }
 
 .be_socialfeed_setup .api-status .blink.red {
-	background: #cc3d09;
+    background: #cc3d09;
 }
 
 .be_socialfeed_setup .debug-info {
-	background: #ccc;
-	color: #fff;
-	padding: 10px;
-	margin-top: 15px;
+    background: #ccc;
+    color: #fff;
+    padding: 10px;
+    margin-top: 15px;
 }
 
 .selectAll {
-	margin: 15px 15px 10px;
-	display: flex;
-	align-items: center;
+    margin: 15px 15px 10px;
+    display: flex;
+    align-items: center;
 }
 
 .selectAll input {
-	margin-right: 5px;
+    margin-right: 5px;
+}
+
+a.header_socialFeedAccounts {
+    background-size: 16px;
 }

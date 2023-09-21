@@ -28,3 +28,4 @@ $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['twitterNotSupported'] = 'Tw
 $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['linkedInNotSupported'] = 'LinkedIn posts can\'t yet be imported into the news archive via the manual import. Please set up a cronjob in the social feed account and use the automatic import. Currently, only Instagram posts can be imported via the manual import.';
 $GLOBALS['TL_LANG']['BE_MOD']['psfNoAccessToken'] = 'No access token given.';
 $GLOBALS['TL_LANG']['MSC']['pdirSocialFeedNoTitel'] = 'No title';
+$GLOBALS['TL_LANG']['MSC']['socialFeedAccounts'] = 'Social Feed accounts';

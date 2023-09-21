@@ -18,6 +18,8 @@
 
     <h2 class="sub_headline"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['moderate'][1] ?></h2>
 
+    <div class="tl_message"><p class="tl_info"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['moderateHint'] ?></p></div>
+
     <?= $this->message ?>
 
     <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">

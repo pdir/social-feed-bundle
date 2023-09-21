@@ -28,6 +28,7 @@ $GLOBALS['TL_LANG']['tl_news']['social_feed_account_picture'] = ['Social Feed Pr
 
 $GLOBALS['TL_LANG']['tl_news']['moderate'] = ['Feed abrufen', 'Social Feed Einträge moderieren'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['moderate'] = ['Feed abrufen', 'Social Feed Einträge moderieren'];
+$GLOBALS['TL_LANG']['tl_news_moderate']['moderateHint'] = 'Für den moderierten Import steht derzeit nur Instagram zur Verfügung. Nutze für andere Dienste den Import per Cron, die Einstellungen findest du in den Social Feed Konten.';
 $GLOBALS['TL_LANG']['tl_news_moderate']['account'] = ['Social Feed Konto', ''];
 $GLOBALS['TL_LANG']['tl_news_moderate']['number_posts'] = ['Anzahl der Posts', 'Hier kannst du die Anzahl der Posts, die abgerufen werden sollen, begrenzen.'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['selectAll'] = 'Alles auswählen';
