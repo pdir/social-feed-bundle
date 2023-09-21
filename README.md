@@ -58,6 +58,9 @@ Dependencies
 License
 -------
 GNU Lesser General Public License v3.0
+Font Awesome Free License
+
+See LICENSE files in package root.
 
 Developing & Pull Request
 -------
