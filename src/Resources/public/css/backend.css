@@ -1,6 +1,6 @@
 
 #tl_navigation .group-pdir {
-    background: url(/bundles/pdirsocialfeed/img/pdir_icon_pdir.svg) 0 0 no-repeat;
+    background: url(/bundles/pdirsocialfeed/img/pdir_logo.svg) 0 0 no-repeat;
     background-size: 18px 18px;
 }
 
@@ -66,7 +66,6 @@
     color: #cccccc;
 }
 
-
 .be_socialfeed_setup .api-status .blink {
     width: 15px;
     height: 15px;
@@ -89,6 +88,41 @@
     color: #fff;
     padding: 10px;
     margin-top: 15px;
+}
+
+.be_socialfeed_setup .plus-logo {
+    float: right;
+}
+
+.be_socialfeed_setup .high-plus {
+    content: '';
+    background: url(/bundles/pdirsocialfeed/img/icon_plus.svg) 0 0 no-repeat;
+    background-size: 12px;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 5px;
+}
+
+.be_socialfeed_setup .benefit {
+    margin-top: 12px;
+    line-height: 18px;
+}
+
+.be_socialfeed_setup .benefit li {
+    margin-left: 20px;
+}
+
+.be_socialfeed_setup .benefit li:before {
+    content: '';
+    background: url(/bundles/pdirsocialfeed/img/icon_plus.svg) 0 0 no-repeat;
+    background-size: 12px;
+    height: 12px;
+    width: 12px;
+    display: inline-block;
+    position: absolute;
+    margin-left: -19px;
+    margin-top: 3px;
 }
 
 .selectAll {

@@ -1,25 +1,19 @@
 <div class="tl_listing_container">
   <div id="pdir" class="be_socialfeed_setup clr">
     <hr>
-    <h1 id="tl_welcome">SocialFeedBundle (Version: <?= $this->version ?>)</h1>
+    <h1 id="tl_welcome"><?= $GLOBALS['TL_LANG']['tl_social_feed']['setupWelcome'] ?> (Version: <?= $this->version ?>)</h1>
     <div class="intro">
       <div class="right">
-        <p>Das SocialFeedBundle ist gesponsert von der <a href="http://www.pdir.de/" target="_blank">pdir / digital agentur</a></p>
-        <h2>Interessante Links</h2>
-        <ul class="link-list">
-          <li><a href="https://pdir.de/docs/de/contao/extensions/socialfeed/" target="_blank" style="text-decoration: underline;">Dokumentation</a></li>
-          <li><a href="https://github.com/pdir/social-feed-bundle/issues" target="_blank" style="text-decoration: underline;">Probleme melden</a></li>
-          <li><a href="https://github.com/pdir/social-feed-bundle/" target="_blank" style="text-decoration: underline;">Github</a></li>
-          <li><a href="https://contao-themes.net/sponsoring.html?isorc=3" target="_blank" style="text-decoration: underline;">Sponsoring / Unterstützen</a></li>
-        </ul>
-        </div>
-        <div class="left">
-          <h2>Willkommen beim SocialFeedBundle für Contao</h2>
-          <p>Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an. Zur Zeit wird
-            Facebook, Instagram, Twitter und LinkedIn unterstützt.</p>
-          <p>Ihr Team der pdir / digital agentur</p>
-        </div>
-        <div class="clr"></div>
+        <?= $GLOBALS['TL_LANG']['tl_social_feed']['setupLinks'] ?>
       </div>
+      <div class="left">
+        <h2><?= $GLOBALS['TL_LANG']['tl_social_feed']['setupHeadline'] ?></h2>
+        <p><?= $GLOBALS['TL_LANG']['tl_social_feed']['setupDesc'] ?></p>
+        <img src="/bundles/pdirsocialfeed/img/pdir_icon_socialfeed_plus.svg" width="70" alt="Social Feed+ Logo" class="plus-logo" />
+        <?= $GLOBALS['TL_LANG']['tl_social_feed']['setupPlus']; ?>
+        <p><?= $GLOBALS['TL_LANG']['tl_social_feed']['setupFooter'] ?></p>
+      </div>
+      <div class="clr"></div>
     </div>
+  </div>
 </div>

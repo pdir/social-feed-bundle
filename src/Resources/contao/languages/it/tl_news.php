@@ -18,7 +18,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-$GLOBALS['TL_LANG']['tl_news']['sf_moderate'] = ['Social Feed', 'Aggiungi la voce del feed sociale.'];
+$GLOBALS['TL_LANG']['tl_news']['sf_moderate'] = ['Importa moderati', 'Qui è possibile importare i post di Instagram moderati.'];
 
 $GLOBALS['TL_LANG']['tl_news']['pdir_sf_settings_legend'] = 'Impostazioni Social Feed';
 $GLOBALS['TL_LANG']['tl_news']['social_feed_id'] = ['Social Feed Post-ID', ''];
