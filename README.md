@@ -5,7 +5,14 @@ Social Feed extension for Contao 4
 [![Total Downloads](https://poser.pugx.org/pdir/social-feed-bundle/downloads)](https://packagist.org/packages/pdir/social-feed-bundle)
 [![License](https://poser.pugx.org/pdir/social-feed-bundle/license)](https://packagist.org/packages/pdir/social-feed-bundle)
 
-About
+Social Feed+ version
+-------------------------
+
+| [![Social Feed Plus](https://pdir.de/assets/images/f/pdir_icon_socialfeed_plus-0c93e4f1.svg)](https://pdir.de/socialfeed+) | ![Platzhalter](https://contao-themes.net/files/contao-themes-net/screenshots/platzhalter.png) | ![Platzhalter](https://contao-themes.net/files/contao-themes-net/screenshots/platzhalter.png) |
+|:----------------------------------------------------------------------------------------------------------:|:---:|:---:|
+| [**Screenshots**](https://pdir.de/socialfeed+#screenshots) <br> [Kaufen](https://pdir.de/socialfeed+#buy)  |  |  |
+
+About the free version
 -----
 
 The Social Feed Extension shows a user feed from the most popular social
@@ -17,7 +24,7 @@ in news archive for instagram is available.
 **Deutsch**
 
 Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen
-Netzwerken an. Zur Zeit wird Facebook, Instagram, Twitter und LinkedIn unterstützt,
+Netzwerken an. Zurzeit werden Facebook, Instagram, Twitter und LinkedIn unterstützt,
 weitere Kanäle folgen in Zukunft. Die Posts werden direkt in die Datenbank
 geschrieben, als News angelegt und können anschließend mit dem Modultyp
 Nachrichtenliste auf der Webseite angezeigt werden. Seit Version 2.5.0
