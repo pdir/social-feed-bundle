@@ -12,11 +12,6 @@
       "role":"Developer"
     },
     {
-      "name":"Kamil Kuzminski",
-      "homepage":"https://github.com/qzminski",
-      "role":"Developer"
-    },
-    {
       "name":"Mathias Arzberger",
       "homepage":"https://pdir.de/",
       "role":"Developer"
@@ -34,11 +29,11 @@
     "contao/news-bundle": "^4.4",
     "nickdnk/graph-sdk": "^6.0 || ^7.0",
     "abraham/twitteroauth": "~4.0",
-    "guzzlehttp/guzzle": "^7.3",
+    "guzzlehttp/guzzle": "6.0 | ~7.7",
     "kevinrob/guzzle-cache-middleware": "^3.2",
     "doctrine/cache": "^2.1",
     "doctrine/dbal": "^2.0 || ^3.0",
-    "samoritano/linkedin-api-php-client-v2": "dev-master as 0.0.20"
+    "samoritano/linkedin-api-php-client-v2": "dev-master as 0.1.5"
   },
   "require-dev": {
     "bamarni/composer-bin-plugin": "^1.4",
