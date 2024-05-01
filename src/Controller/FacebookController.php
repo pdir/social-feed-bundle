@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -20,6 +20,9 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Controller;
 
+use Contao\Input;
+use Contao\Message;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -34,29 +37,20 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class FacebookController
 {
-    /**
-     * @var Connection
-     */
-    private $db;
+    private Connection $db;
 
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private RouterInterface $router;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private SessionInterface $session;
 
     /**
      * FacebookController constructor.
      */
-    public function __construct(Connection $db, RouterInterface $router, SessionInterface $session)
+    public function __construct(Connection $db, RouterInterface $router)
     {
         $this->db = $db;
         $this->router = $router;
-        $this->session = $session;
+        $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
     }
 
     /**
@@ -73,18 +67,29 @@ class FacebookController
             'code' => $request->query->get('code'),
         ];
 
-        $json = file_get_contents('https://graph.facebook.com/v11.0/oauth/access_token?'.http_build_query($data));
+        $json = @file_get_contents('https://graph.facebook.com/v11.0/oauth/access_token?'.http_build_query($data));
+
+        if (false === $json) {
+            Message::addError(Input::get('error_message'));
+            return new RedirectResponse($sessionData['backUrl']);
+        }
+
         $obj = json_decode($json);
         $userAccessToken = $obj->access_token;
 
-        $json = file_get_contents('https://graph.facebook.com/'.$sessionData['page'].'?fields=access_token&access_token='.$userAccessToken);
+        $json = @file_get_contents('https://graph.facebook.com/'.$sessionData['page'].'?fields=access_token&access_token='.$userAccessToken);
 
         // set error message
-        if (true === \is_bool($json)) {
-            $pageAccessToken = 'FACEBOOK GRAPH ERROR: empty return! Please check your credentials or account name.';
+        if (\is_bool($json) && false === $json) {
+            if (Input::get('error_message')) {
+                Message::addError(Input::get('error_message'));
+            } else {
+                $pageAccessToken = 'FACEBOOK GRAPH ERROR: empty return! Please check your credentials or account name.';
+                Message::addError($pageAccessToken);
+            }
         }
 
-        if (false === \is_bool($json)) {
+        if (!\is_bool($json)) {
             $obj = json_decode($json);
             $pageAccessToken = $obj->access_token;
         }

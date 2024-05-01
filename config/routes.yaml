@@ -1,0 +1,3 @@
+pdir_social_feed.controller:
+  resource: ../src/Controller
+  type: annotation

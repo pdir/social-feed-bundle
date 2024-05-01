@@ -1,0 +1,62 @@
+<div class="mod_sf_moderate">
+  <form action="<?= Contao\StringUtil::ampersand($this->action) ?>" id="tl_news_moderate" class="tl_form" method="post">
+
+  <div class="tl_formbody_edit">
+
+    <div id="tl_buttons">
+      <a href="<?= \Contao\StringUtil::ampersand($this->backUrl) ?>" class="header_back"
+         title="<?= \Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) ?>"
+         accesskey="b"><?= $GLOBALS['TL_LANG']['MSC']['backBT'] ?></a>
+    </div>
+
+    <?php $this->block('headline'); ?>
+      <?php if ($this->headline): ?>
+        <h1 id="main_headline"><?= $this->headline ?></h1>
+
+      <?php endif; ?>
+    <?php $this->endblock(); ?>
+
+    <h2 class="sub_headline"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['moderate'][1] ?></h2>
+
+    <div class="tl_message">
+      <p class="tl_info"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['moderateHint'] ?></p>
+      <?= $this->message ?>
+    </div>
+
+    <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
+    <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
+
+    <fieldset class="tl_tbox nolegend">
+
+      <div class="widget w50">
+        <h3><label for="account"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['account'][0] ?></label></h3>
+        <select name="account" id="account" class="tl_select">
+        <?php foreach ($this->options as $value => $label): ?>
+          <option value="<?= $value ?>" <?php if($this->activeAccount == $value): echo " selected"; endif; ?>><?= $label ?></option>
+        <?php endforeach; ?>
+        </select>
+        <p class="tl_help tl_tip"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['account'][1] ?></p>
+      </div>
+
+      <div class="widget w50">
+        <h3><label for="account"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['number_posts'][0] ?></label></h3>
+        <input class="tl_text" type="text" name="number_posts" value="20">
+        <p class="tl_help tl_tip"><?= $GLOBALS['TL_LANG']['tl_news_moderate']['number_posts'][1] ?></p>
+      </div>
+
+    </fieldset>
+  </div>
+
+  <div class="tl_formbody_submit">
+    <div class="tl_submit_container">
+      <input type="submit" name="moderate" id="moderate" class="tl_submit" accesskey="e"
+             value="<?= \Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_news_moderate']['moderate'][0]) ?>">
+    </div>
+  </div>
+
+  <?php if($this->moderationList): ?>
+    <?= $this->moderationList ?>
+  <?php endif; ?>
+
+  </form>
+</div>

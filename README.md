@@ -50,6 +50,13 @@ Installation & Configuration
 ----------------------------
 * [Dokumentation](https://pdir.de/docs/de/contao/extensions/socialfeed/)
 
+Commands
+----------------------------
+
+    php vendor/bin/contao-console linkedin:import
+    php vendor/bin/contao-console linkedin:import -d true -m 30
+
+
 Demo
 ----------------------------
 * [Social Feed Demo](https://demo.pdir.de/social-feed.html)

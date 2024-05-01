@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -111,7 +111,7 @@ class CronListener extends System
                     $this->savePostPictures($picturePath, $media);
 
                     // Write in Database
-                    $message = $this->getPostMessage($media['caption']) ?? '';
+                    $message = $media['caption']?? '';
 
                     // add/fetch file from DBAFS
                     $objFile = Dbafs::addResource($imgPath.$media['id'].'.jpg');
@@ -202,8 +202,7 @@ class CronListener extends System
                                 $title = mb_substr($post['message'], 0);
                             }
 
-                            $message = $this->getPostMessage((string) $post['message']);
-
+                            $message = $post['message'];
                             $message = str_replace("\n", '<br>', $message);
                             $timestamp = strtotime($post['created_time']);
 
@@ -326,7 +325,7 @@ class CronListener extends System
                             $objFile = Dbafs::addResource($imgPath.$element['id'].'.jpg');
                         }
 
-                        $message = $this->getPostMessage($element['text']['text']);
+                        $message = $element['text']['text']?? '';
                         $this->saveLinkedInNews($objNews, $obj, $objFile, $message, $element, $organization);
                     }
 
@@ -614,7 +613,7 @@ class CronListener extends System
         try {
             $resMedia = $fb->get('/'.$id.'/attachments', $accessToken);
 
-            if ($resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0']['media']) {
+            if (isset($resMedia->getDecodedBody()['data']['0']['subattachments']) && $resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0']['media']) {
                 $arrMedia = $resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0'];
             } elseif ($resMedia->getDecodedBody()['data']['0']['media']) {
                 $arrMedia = $resMedia->getDecodedBody()['data']['0'];
@@ -658,26 +657,6 @@ class CronListener extends System
             echo 'Facebook SDK returned an error: '.$e->getMessage();
             exit;
         }
-    }
-
-    private function getPostMessage($messageText)
-    {
-        if (version_compare(VERSION, '4.5', '<')) {
-            //reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ?
-            $message = preg_replace(
-                '/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]'.
-                '|[\x00-\x7F][\x80-\xBF]+'.
-                '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*'.
-                '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})'.
-                '|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/S',
-                '',
-                $messageText
-            );
-        } else {
-            $message = $messageText;
-        }
-
-        return $message;
     }
 
     private function setLastImportDate($id): void
@@ -734,7 +713,7 @@ class CronListener extends System
         $objNews->save();
     }
 
-    private function saveLinkedInNews($objNews, $obj, $objFile, $message, $element, $organization): void
+    private function saveLinkedInNews($objNews, $obj, $objFile, $message, $element, $organization = null): void
     {
         $objNews->pid = $obj->pdir_sf_fb_news_archive;
         $objNews->author = $obj->user;
@@ -757,7 +736,7 @@ class CronListener extends System
         $objNews->social_feed_type = $obj->socialFeedType;
         $objNews->social_feed_id = $element['id'];
         $objNews->social_feed_config = $obj->id;
-        $objNews->social_feed_account = $organization['localizedName'];
+        $objNews->social_feed_account = $organization?? $organization['localizedName'];
         //$objNews->social_feed_account_picture = Dbafs::addResource($accountPicture)->uuid;
         $objNews->source = 'external';
         $objNews->url = 'https://www.linkedin.com/feed/update/'.$element['activity'];

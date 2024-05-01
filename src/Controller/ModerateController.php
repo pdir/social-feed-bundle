@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -34,25 +34,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ModerateController
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private RequestStack $requestStack;
 
-    /**
-     * @var BackendTemplate
-     */
-    private $template;
+    private BackendTemplate $template;
 
-    /**
-     * @var string
-     */
-    private $message;
+    private string $message;
 
     /**
      * ExportController constructor.
@@ -71,7 +59,7 @@ class ModerateController
      *
      * @codeCoverageIgnore
      */
-    public function run()
+    public function run(): string
     {
         $formId = 'tl_news_moderate';
 
@@ -91,6 +79,8 @@ class ModerateController
      */
     protected function processForm(Request $request): void
     {
+        $importItems = null;
+
         if (!$request->request->get('account')) {
             return;
         }
@@ -104,12 +94,14 @@ class ModerateController
         $items = $objImporter->getPostsByAccount($request->request->get('account'), $request->request->get('number_posts'));
 
         // import selected items
-        $importItems = $request->request->get('importItems');
+        $allValues = $request->request->all();
 
-        if ($importItems && \count($importItems) > 0) {
+        // do import if importItems is set
+        if (isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
             foreach ($items as $item) {
-                if (\in_array($item['id'], $importItems, true)) {
-                    $importer = new NewsImporter($item);
+                if (\in_array($item['id'], $allValues['importItems'], true)) {
+                    $importer = new NewsImporter();
+                    $importer->setNews($item);
                     $importer->accountImage = $objImporter->getAccountImage();
                     $importer->execute($newsArchiveId, $objSocialFeedModel->socialFeedType, $objSocialFeedModel->id);
                 }
@@ -117,8 +109,8 @@ class ModerateController
         }
 
         // set import message
-        if (\is_array($items) && isset($importItems) && \count($importItems) > 0) {
-            $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($importItems));
+        if (\is_array($items) && isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
+            $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($allValues['importItems']));
         }
 
         if (null === $items) {
@@ -137,8 +129,8 @@ class ModerateController
         }
 
         $this->template->activeAccount = $request->request->get('account');
-        $this->template->moderationList = $html;
-        $this->template->message = $this->message;
+        $this->template->moderationList = $html?? '';
+        $this->template->message = isset($this->message)? '<div class="tl_sucess">' . $this->message . '</div></div>' : '';;
     }
 
     /**
@@ -150,7 +142,7 @@ class ModerateController
      *
      * @codeCoverageIgnore
      */
-    protected function getTemplate($formId)
+    protected function getTemplate(string $formId): BackendTemplate
     {
         /**
          * @var Environment
@@ -158,18 +150,17 @@ class ModerateController
          * @var System      $system
          */
         $environment = $this->framework->getAdapter(Environment::class);
-        $message = $this->framework->getAdapter(Message::class);
         $system = $this->framework->getAdapter(System::class);
 
-        if ($this->message) {
-            $message->addInfo($this->message);
+        if (isset($this->message)) {
+            Message::addInfo($this->message);
         }
 
         $this->template->backUrl = $system->getReferer();
         $this->template->action = $environment->get('request');
         $this->template->formId = $formId;
-        $this->template->message = $message->generate();
-        $this->template->options = $this->generateOptions();
+        $this->template->message = isset($this->message)? '<div class="tl_confirm">' . $this->message . '</div>' : '';
+        $this->template->options = $this->generateOptions('Instagram');
         $this->template->headline = $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['headline'].Input::get('id');
 
         return $this->template;
@@ -182,29 +173,63 @@ class ModerateController
      *
      * @codeCoverageIgnore
      */
-    protected function generateOptions()
+    protected function generateOptions($filter = false): array
     {
         $options = [];
 
+        if ($filter) {
+            $objFeedModel = SocialFeedModel::findAll();
+        }
+
         $objFeedModel = SocialFeedModel::findAll();
 
+        dump($options);
+        dump('Filter: '.$filter);
+
         foreach ($objFeedModel as $feed) {
-            if ('Facebook' === $feed->socialFeedType) {
+            dump('TYPE: '.$feed->socialFeedType);
+
+            if (false !== $filter && $feed->socialFeedType !== $filter) {
+                dump($filter);
+                dump($feed->socialFeedType);
+                continue;
+            }
+
+            if ('Facebook' === $feed->socialFeedType && !$filter || $feed->socialFeedType == $filter) {
+                dump('Facebook' === $feed->socialFeedType && !$filter);
+                dump($feed->socialFeedType);
+                dump($feed->socialFeedType === $filter);
+                dump('Facebook');
+                dump($feed->socialFeedType);
                 $options[$feed->id] = $feed->socialFeedType.' '.$feed->pdir_sf_fb_account;
             }
 
-            if ('Instagram' === $feed->socialFeedType) {
-                $options[$feed->id] = $feed->socialFeedType.' '.$feed->instagram_account;
+            if ('Instagram' === $feed->socialFeedType && !$filter || $feed->socialFeedType == $filter) {
+                dump('Instagram');
+                #dump($feed);
+                #dump($feed->socialFeedType.' '.$feed->instagram_account);
+                # $options[$feed->id] = $feed->socialFeedType;
+                $options[$feed->id] = $feed->instagram_account; // \sprintf('%s %s', $feed->socialFeedType, $feed->instagram_account);
+                #dump($feed->socialFeedType);
+                #dump($feed->instagram_account);
             }
 
-            if ('Twitter' === $feed->socialFeedType) {
+            if ('Twitter' === $feed->socialFeedType && !$filter || $feed->socialFeedType === $filter) {
+                dump('Twitter' === $feed->socialFeedType && !$filter);
+                dump($feed->socialFeedType);
+                dump($filter);
+                dump($feed->socialFeedType === $filter);
+                dump('Twitter');
                 $options[$feed->id] = $feed->socialFeedType.' '.$feed->twitter_account;
             }
 
-            if ('LinkedIn' === $feed->socialFeedType) {
+            if ('LinkedIn' === $feed->socialFeedType && !$filter || $feed->socialFeedType === $filter) {
+                dump('LinkedIn');
                 $options[$feed->id] = $feed->socialFeedType.' '.$feed->linkedin_account;
             }
         }
+
+        dump($options);
 
         return $options;
     }

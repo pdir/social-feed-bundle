@@ -18,11 +18,19 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Pdir\SocialFeedBundle\Model;
+use Contao\ArrayUtil;
 
-use Contao\Model;
+$table = 'tl_news_archive';
 
-class SocialFeedModel extends Model
-{
-    protected static $strTable = 'tl_social_feed';
-}
+/*
+ * Add global operations
+ */
+ArrayUtil::arrayInsert($GLOBALS['TL_DCA'][$table]['list']['global_operations'], 0, [
+    'socialFeedAccounts' => [
+        'label' => &$GLOBALS['TL_LANG']['MSC']['socialFeedAccounts'],
+        'href' => 'do=socialFeed',
+        'class' => 'header_socialFeedAccounts',
+        'icon' => '/bundles/pdirsocialfeed/img/icon_fa_list-solid.svg',
+        'attributes' => 'onclick="Backend.getScrollOffset()"',
+    ],
+]);

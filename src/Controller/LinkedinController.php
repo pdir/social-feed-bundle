@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -22,6 +22,7 @@ namespace Pdir\SocialFeedBundle\Controller;
 
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Exception;
 use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,29 +36,20 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class LinkedinController
 {
-    /**
-     * @var Connection
-     */
-    private $db;
+    private Connection $db;
 
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private RouterInterface $router;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private SessionInterface $session;
 
     /**
      * LinkedinController constructor.
      */
-    public function __construct(Connection $db, RouterInterface $router, SessionInterface $session)
+    public function __construct(Connection $db, RouterInterface $router)
     {
         $this->db = $db;
         $this->router = $router;
-        $this->session = $session;
+        $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
     }
 
     /**

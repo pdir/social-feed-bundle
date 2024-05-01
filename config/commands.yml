@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    _instanceof:
+        Contao\CoreBundle\Framework\FrameworkAwareInterface:
+            calls:
+                - [setFramework, ['@contao.framework']]
+
+    pdir_social_feed.command.automator:
+        class: Pdir\SocialFeedBundle\Command\LinkedInImportCommand
+        arguments:
+            - '@contao.framework'

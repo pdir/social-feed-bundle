@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -30,11 +30,6 @@ class NewsImporter
 {
     public $accountImage;
     protected $arrNews;
-
-    public function __construct($arrNews)
-    {
-        $this->arrNews = $arrNews;
-    }
 
     public function execute($newsArchiveId, $socialFeedType, $socialFeedAccount): void
     {
@@ -80,7 +75,7 @@ class NewsImporter
         }
 
         // message and teaser
-        $message = $this->getPostMessage($this->arrNews['caption']) ?? '';
+        $message = $this->arrNews['caption']?? '';
         $more = '';
 
         if (\strlen($message) > 50) {
@@ -97,6 +92,9 @@ class NewsImporter
         $message = str_replace("\n", '<br>', $message);
         $objNews->teaser = $message;
 
+        // author
+        $objNews->author = $socialFeedAccount->user;
+
         // date and time
         $objNews->date = strtotime($this->arrNews['timestamp']);
         $objNews->time = strtotime($this->arrNews['timestamp']);
@@ -109,6 +107,11 @@ class NewsImporter
         $objNews->tstamp = time();
 
         $objNews->save();
+    }
+
+    public function setNews($arr): void
+    {
+        $this->arrNews = $arr;
     }
 
     public function createImageFolder($account)
@@ -124,26 +127,6 @@ class NewsImporter
         }
 
         return $imgPath;
-    }
-
-    private function getPostMessage($messageText)
-    {
-        if (version_compare(VERSION, '4.5', '<')) {
-            //reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ?
-            $message = preg_replace(
-                '/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]'.
-                '|[\x00-\x7F][\x80-\xBF]+'.
-                '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*'.
-                '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})'.
-                '|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/S',
-                '',
-                $messageText
-            );
-        } else {
-            $message = $messageText;
-        }
-
-        return $message;
     }
 
     private function saveImage($strPath, $strUrl)

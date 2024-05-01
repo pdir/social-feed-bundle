@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -20,12 +20,17 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\EventListener;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Image\ImageSizes;
+use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\Environment;
 use Contao\Input;
+use Contao\System;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Security;
 
 class SocialFeedListener
 {
@@ -41,13 +46,18 @@ class SocialFeedListener
      */
     private $session;
 
+    private Security $security;
+    private ImageSizes $imageSizes;
+
     /**
      * ModuleListener constructor.
      */
-    public function __construct(RouterInterface $router, SessionInterface $session)
+    public function __construct(RouterInterface $router, Security $security, ImageSizes $imageSizes)
     {
         $this->router = $router;
-        $this->session = $session;
+        $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();;
+        $this->security = $security;
+        $this->imageSizes = $imageSizes;
     }
 
     /**
@@ -151,5 +161,46 @@ class SocialFeedListener
         ];
 
         throw new RedirectResponseException('https://www.linkedin.com/oauth/v2/authorization?'.http_build_query($data));
+    }
+
+    /**
+     * @Callback(table="tl_social_feed", target="fields.linkedin_account_picture_size.options")
+     * @Callback(table="tl_social_feed", target="fields.instagram_account_picture_size.options")
+     */
+    public function getImageSizeOptions(): array
+    {
+        $user = $this->security->getUser();
+
+        if (!$user instanceof BackendUser) {
+            return [];
+        }
+
+        return $this->imageSizes->getOptionsForUser($user);
+    }
+
+    /**
+     * Dynamically add flags to the "singleSRC" field.
+     *
+     * @Callback(table="tl_social_feed", target="fields.linkedin_account_picture.load")
+     * @Callback(table="tl_social_feed", target="fields.instagram_account_picture.load")
+     */
+    public function setSingleSrcFlags(mixed $varValue, DataContainer $dc): mixed
+    {
+        if ($dc->activeRecord && isset($dc->activeRecord->type)) {
+            switch ($dc->activeRecord->type) {
+                case 'text':
+                case 'hyperlink':
+                case 'image':
+                case 'accordionSingle':
+                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
+                    break;
+
+                case 'download':
+                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('allowedDownload');
+                    break;
+            }
+        }
+
+        return $varValue;
     }
 }

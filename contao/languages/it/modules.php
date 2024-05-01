@@ -18,11 +18,12 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Pdir\SocialFeedBundle\Model;
+/*
+ * Module translation
+ */
 
-use Contao\Model;
-
-class SocialFeedModel extends Model
-{
-    protected static $strTable = 'tl_social_feed';
-}
+$GLOBALS['TL_LANG']['MOD']['pdir'] = 'Applicazioni Pdir';
+$GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][0] = 'Social Feed';
+$GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][1] = 'Gestione del modulo Social Feed';
+$GLOBALS['TL_LANG']['MOD']['socialFeed'][0] = 'Social Feed Accounts';
+$GLOBALS['TL_LANG']['MOD']['socialFeed'][1] = 'Configurazione del modulo Social Feed.';

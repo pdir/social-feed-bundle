@@ -10,6 +10,13 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [2.13.0](https://github.com/pdir/social-feed-bundle/tree/2.13.0) - 2023-03-11
+
+- [Added] Add Contao 5.3 support
+- [Changed] Requires Contao 4.13 and PHP 8.0 as minimum requirements
+- [Changed] Improvment of usability in back end
+- [Fixed] Icons in dark mode
+
 ## [2.12.5](https://github.com/pdir/social-feed-bundle/tree/2.12.5) - 2023-09-20
 
 - [Changed] doctrine/cache from 1.9 to ^2.1
