@@ -450,11 +450,11 @@ class CronListener extends System
                             $objNews->author = $obj->user;
                             $objNews->tstamp = time();
 
-                            if (\strlen($post->full_text) > 50) {
+                            $more = '';
+                            if (null !== $post->full_text && \strlen($post->full_text) > 50) {
                                 $more = ' ...';
-                            } else {
-                                $more = '';
                             }
+
                             $objNews->headline = mb_substr($post->full_text, 0, 50).$more;
 
                             if ('1' === $obj->hashtags_link) {
@@ -690,11 +690,11 @@ class CronListener extends System
             $message = $media['id'];
         }
 
-        if (\strlen($message) > 50) {
+        $more = '';
+        if (null !== $message && \strlen($message) > 50) {
             $more = ' ...';
-        } else {
-            $more = '';
         }
+
         $objNews->headline = mb_substr($message, 0, 50).$more;
 
         $message = str_replace("\n", '<br>', $message);

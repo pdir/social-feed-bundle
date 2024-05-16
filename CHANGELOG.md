@@ -14,8 +14,9 @@ Types of changes
 
 - [Added] Add Contao 5.3 support
 - [Changed] Requires Contao 4.13 and PHP 8.0 as minimum requirements
-- [Changed] Improvment of usability in back end
+- [Changed] Improvement of usability in back end
 - [Fixed] Icons in dark mode
+- [Fixed] Remove warnings in cron listener
 
 ## [2.12.5](https://github.com/pdir/social-feed-bundle/tree/2.12.5) - 2023-09-20
 
