@@ -71,6 +71,7 @@ class FacebookController
 
         if (false === $json) {
             Message::addError(Input::get('error_message'));
+
             return new RedirectResponse($sessionData['backUrl']);
         }
 

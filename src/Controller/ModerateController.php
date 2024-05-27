@@ -55,8 +55,6 @@ class ModerateController
     /**
      * Run the controller.
      *
-     * @return string
-     *
      * @codeCoverageIgnore
      */
     public function run(): string
@@ -73,118 +71,11 @@ class ModerateController
     }
 
     /**
-     * Process the form.
-     *
-     * @codeCoverageIgnore
-     */
-    protected function processForm(Request $request): void
-    {
-        $importItems = null;
-
-        if (!$request->request->get('account')) {
-            return;
-        }
-
-        $socialFeedAccount = $request->request->get('account');
-        //$numberPosts = $request->request->get('number_posts');
-        $objSocialFeedModel = SocialFeedModel::findById($socialFeedAccount);
-        $newsArchiveId = Input::get('id');
-
-        $objImporter = new Importer();
-        $items = $objImporter->getPostsByAccount($request->request->get('account'), $request->request->get('number_posts'));
-
-        // import selected items
-        $allValues = $request->request->all();
-
-        // do import if importItems is set
-        if (isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
-            foreach ($items as $item) {
-                if (\in_array($item['id'], $allValues['importItems'], true)) {
-                    $importer = new NewsImporter();
-
-                    // set headline
-                    $item['headline'] = NewsImporter::shortenHeadline($item['caption']);
-
-                    // set teaser
-                    $item['teaser'] = \str_replace("\n", '<br>', $item['caption']);
-
-                    // add image
-                    $item['singleSRC'] = $this->getPostImage();
-
-                    $importer->setNews($item);
-                    $importer->accountImage = $objImporter->getAccountImage();
-                    $importer->execute($newsArchiveId, $objSocialFeedModel);
-                }
-            }
-        }
-
-        // set import message
-        if (\is_array($items) && isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
-            $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($allValues['importItems']));
-        }
-
-        if (null === $items) {
-            Message::addInfo($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['noItems']);
-        }
-
-        // get items for moderation list
-        if (null !== $items) {
-            $moderationItems = $objImporter->moderation($items);
-
-            if (0 < \count($moderationItems)) {
-                $template = new BackendTemplate('be_sf_moderation_list');
-                $template->arr = $moderationItems;
-                $html = $template->parse();
-            }
-        }
-
-        $this->template->activeAccount = $request->request->get('account');
-        $this->template->moderationList = $html?? '';
-        $this->template->message = isset($this->message)? '<div class="tl_sucess">' . $this->message . '</div></div>' : '';;
-    }
-
-    /**
-     * Get the template.
-     *
-     * @param string $formId
-     *
-     * @return BackendTemplate
-     *
-     * @codeCoverageIgnore
-     */
-    protected function getTemplate(string $formId): BackendTemplate
-    {
-        /**
-         * @var Environment
-         * @var Message     $message
-         * @var System      $system
-         */
-        $environment = $this->framework->getAdapter(Environment::class);
-        $system = $this->framework->getAdapter(System::class);
-
-        if (isset($this->message)) {
-            Message::addInfo($this->message);
-        }
-
-        $this->template->backUrl = $system->getReferer();
-        $this->template->action = $environment->get('request');
-        $this->template->formId = $formId;
-        $this->template->message = isset($this->message)? '<div class="tl_confirm">' . $this->message . '</div>' : '';
-        $this->template->options = $this->generateOptions('Instagram');
-        $this->template->headline = $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['headline'].Input::get('id');
-
-        return $this->template;
-    }
-
-    /**
      * Generate the options.
      *
-     * @param bool $filter
-     * @return array
-     *
      * @codeCoverageIgnore
      */
-    public static function generateOptions(bool $filter = false): array
+    public static function generateOptions(bool|string $filter = false): array
     {
         $options = [];
 
@@ -221,14 +112,14 @@ class ModerateController
 
     public function shortenHeadline(): void
     {
-        $message = $this->arrNews['headline']?? '';
+        $message = $this->arrNews['headline'] ?? '';
         $more = '';
 
         if (\strlen($message) > 50) {
             $more = ' ...';
         }
 
-        $this->arrNews['headline'] = \mb_substr($message, 0, 50).$more;
+        $this->arrNews['headline'] = mb_substr($message, 0, 50).$more;
     }
 
     public function getPostImage(SocialFeedModel $socialFeedAccount): void
@@ -251,5 +142,102 @@ class ModerateController
 
             $this->arrNews['singleSRC'] = $pictureUuid;
         }
+    }
+
+    /**
+     * Process the form.
+     *
+     * @codeCoverageIgnore
+     */
+    protected function processForm(Request $request): void
+    {
+        if (!$request->request->get('account')) {
+            return;
+        }
+
+        $socialFeedAccount = $request->request->get('account');
+        $objSocialFeedModel = SocialFeedModel::findById($socialFeedAccount);
+        $newsArchiveId = Input::get('id');
+
+        $objImporter = new Importer();
+        $items = $objImporter->getPostsByAccount($request->request->get('account'), $request->request->get('number_posts'));
+
+        // import selected items
+        $allValues = $request->request->all();
+
+        // do import if importItems is set
+        if (isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
+            foreach ($items as $item) {
+                if (\in_array($item['id'], $allValues['importItems'], true)) {
+                    $importer = new NewsImporter();
+
+                    // set headline
+                    $item['headline'] = NewsImporter::shortenHeadline($item['caption']);
+
+                    // set teaser
+                    $item['teaser'] = str_replace("\n", '<br>', $item['caption']);
+
+                    // add image
+                    $item['singleSRC'] = $this->getPostImage();
+
+                    $importer->setNews($item);
+                    $importer->accountImage = $objImporter->getAccountImage();
+                    $importer->execute($newsArchiveId, $objSocialFeedModel);
+                }
+            }
+        }
+
+        // set import message
+        if (\is_array($items) && isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
+            $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($allValues['importItems']));
+        }
+
+        if (null === $items) {
+            Message::addInfo($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['noItems']);
+        }
+
+        // get items for moderation list
+        if (null !== $items) {
+            $moderationItems = $objImporter->moderation($items);
+
+            if (0 < \count($moderationItems)) {
+                $template = new BackendTemplate('be_sf_moderation_list');
+                $template->arr = $moderationItems;
+                $html = $template->parse();
+            }
+        }
+
+        $this->template->activeAccount = $request->request->get('account');
+        $this->template->moderationList = $html ?? '';
+        $this->template->message = isset($this->message) ? '<div class="tl_sucess">'.$this->message.'</div></div>' : '';
+    }
+
+    /**
+     * Get the template.
+     *
+     * @codeCoverageIgnore
+     */
+    protected function getTemplate(string $formId): BackendTemplate
+    {
+        /**
+         * @var Environment
+         * @var Message     $message
+         * @var System      $system
+         */
+        $environment = $this->framework->getAdapter(Environment::class);
+        $system = $this->framework->getAdapter(System::class);
+
+        if (isset($this->message)) {
+            Message::addInfo($this->message);
+        }
+
+        $this->template->backUrl = $system->getReferer();
+        $this->template->action = $environment->get('request');
+        $this->template->formId = $formId;
+        $this->template->message = isset($this->message) ? '<div class="tl_confirm">'.$this->message.'</div>' : '';
+        $this->template->options = $this->generateOptions('Instagram');
+        $this->template->headline = $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['headline'].Input::get('id');
+
+        return $this->template;
     }
 }

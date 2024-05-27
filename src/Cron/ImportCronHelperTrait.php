@@ -26,6 +26,7 @@ trait ImportCronHelperTrait
      * @var true
      */
     private bool $poorManCron = true;
+
     public function setPoorManCronMode($flag): void
     {
         if (false === $flag) {

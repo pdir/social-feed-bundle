@@ -62,7 +62,6 @@ class NewsImporter
         // $accountPictureUuid = $this->saveImage($accountPicturePath, $this->accountImage);
         // $objNews->social_feed_account_picture = $accountPictureUuid;
 
-
         // headline and teaser
         $objNews->headline = $this->arrNews['headline'];
 
@@ -150,7 +149,7 @@ class NewsImporter
             $more = ' ...';
         }
 
-        return \mb_substr($message, 0, 50).$more;
+        return mb_substr($message, 0, 50).$more;
     }
 
     public static function setLastImportDate(SocialFeedModel $socialFeedModel): void

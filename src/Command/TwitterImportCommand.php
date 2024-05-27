@@ -69,7 +69,7 @@ class TwitterImportCommand extends Command
         try {
             $cron = new TwitterImportCron($this->framework);
             $cron->setPoorManCronMode(false);
-            $cron->__invoke();
+            $cron();
         } catch (InvalidArgumentException $e) {
             $output->writeln(sprintf('%s (see help social-feed:x:import).', $e->getMessage()));
 

@@ -43,7 +43,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class FacebookImportCommand extends Command
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(ContaoFramework $framework)
     {
         parent::__construct();
     }
@@ -54,7 +54,7 @@ class FacebookImportCommand extends Command
     protected function configure(): void
     {
         $this->addOption('max-posts', 'm', InputOption::VALUE_REQUIRED, 'The maximum number of posts to execute (default 100)', '100');
-        $this->addOption('enable-debug', 'd', InputArgument::OPTIONAL, "Log debug information to console");
+        $this->addOption('enable-debug', 'd', InputArgument::OPTIONAL, 'Log debug information to console');
     }
 
     /**
@@ -69,15 +69,15 @@ class FacebookImportCommand extends Command
         try {
             $cron = new FacebookImportCron($this->framework);
             $cron->setPoorManCronMode(false);
-            $cron->__invoke();
+            $cron();
         } catch (InvalidArgumentException $e) {
             $output->writeln(sprintf('%s (see help social-feed:facebook:import).', $e->getMessage()));
 
             return Command::FAILURE;
         }
 
-        if(0 < $cron->counter) {
-            $output->writeln('imported ' . $cron->counter . ' items.');
+        if (0 < $cron->counter) {
+            $output->writeln('imported '.$cron->counter.' items.');
         }
 
         if (0 === $cron->counter) {

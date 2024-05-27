@@ -36,6 +36,7 @@ use Psr\Log\LogLevel;
 class InstagramImportCron
 {
     use ImportCronHelperTrait;
+
     public int $counter = 0;
     public function __construct(private ContaoFramework $framework)
     {

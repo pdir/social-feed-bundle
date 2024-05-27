@@ -28,7 +28,6 @@ use Contao\Dbafs;
 use Contao\File;
 use Contao\NewsModel;
 use Contao\System;
-use Pdir\SocialFeedBundle\Importer\Importer;
 use Pdir\SocialFeedBundle\Importer\NewsImporter;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 use Psr\Log\LogLevel;
@@ -37,6 +36,7 @@ use Psr\Log\LogLevel;
 class TwitterImportCron
 {
     use ImportCronHelperTrait;
+
     public int $counter = 0;
 
     public function __construct(private ContaoFramework $framework)

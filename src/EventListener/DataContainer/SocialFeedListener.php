@@ -55,7 +55,7 @@ class SocialFeedListener
     public function __construct(RouterInterface $router, Security $security, ImageSizes $imageSizes)
     {
         $this->router = $router;
-        $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();;
+        $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
         $this->security = $security;
         $this->imageSizes = $imageSizes;
     }
@@ -84,6 +84,47 @@ class SocialFeedListener
     public function onRequestTokenSave()
     {
         return null;
+    }
+
+    /**
+     * @Callback(table="tl_social_feed", target="fields.linkedin_account_picture_size.options")
+     * @Callback(table="tl_social_feed", target="fields.instagram_account_picture_size.options")
+     */
+    public function getImageSizeOptions(): array
+    {
+        $user = $this->security->getUser();
+
+        if (!$user instanceof BackendUser) {
+            return [];
+        }
+
+        return $this->imageSizes->getOptionsForUser($user);
+    }
+
+    /**
+     * Dynamically add flags to the "singleSRC" field.
+     *
+     * @Callback(table="tl_social_feed", target="fields.linkedin_account_picture.load")
+     * @Callback(table="tl_social_feed", target="fields.instagram_account_picture.load")
+     */
+    public function setSingleSrcFlags(mixed $varValue, DataContainer $dc): mixed
+    {
+        if ($dc->activeRecord && isset($dc->activeRecord->type)) {
+            switch ($dc->activeRecord->type) {
+                case 'text':
+                case 'hyperlink':
+                case 'image':
+                case 'accordionSingle':
+                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
+                    break;
+
+                case 'download':
+                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('allowedDownload');
+                    break;
+            }
+        }
+
+        return $varValue;
     }
 
     /**
@@ -161,46 +202,5 @@ class SocialFeedListener
         ];
 
         throw new RedirectResponseException('https://www.linkedin.com/oauth/v2/authorization?'.http_build_query($data));
-    }
-
-    /**
-     * @Callback(table="tl_social_feed", target="fields.linkedin_account_picture_size.options")
-     * @Callback(table="tl_social_feed", target="fields.instagram_account_picture_size.options")
-     */
-    public function getImageSizeOptions(): array
-    {
-        $user = $this->security->getUser();
-
-        if (!$user instanceof BackendUser) {
-            return [];
-        }
-
-        return $this->imageSizes->getOptionsForUser($user);
-    }
-
-    /**
-     * Dynamically add flags to the "singleSRC" field.
-     *
-     * @Callback(table="tl_social_feed", target="fields.linkedin_account_picture.load")
-     * @Callback(table="tl_social_feed", target="fields.instagram_account_picture.load")
-     */
-    public function setSingleSrcFlags(mixed $varValue, DataContainer $dc): mixed
-    {
-        if ($dc->activeRecord && isset($dc->activeRecord->type)) {
-            switch ($dc->activeRecord->type) {
-                case 'text':
-                case 'hyperlink':
-                case 'image':
-                case 'accordionSingle':
-                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
-                    break;
-
-                case 'download':
-                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('allowedDownload');
-                    break;
-            }
-        }
-
-        return $varValue;
     }
 }

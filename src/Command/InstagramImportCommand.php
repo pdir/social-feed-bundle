@@ -69,7 +69,7 @@ class InstagramImportCommand extends Command
         try {
             $cron = new InstagramImportCron($this->framework);
             $cron->setPoorManCronMode(false);
-            $cron->__invoke();
+            $cron();
         } catch (InvalidArgumentException $e) {
             $output->writeln(sprintf('%s (see help social-feed:instagram:import).', $e->getMessage()));
 

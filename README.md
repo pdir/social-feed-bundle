@@ -1,4 +1,4 @@
-Social Feed extension for Contao 4
+Social Feed extension for Contao
 ============================================================
 
 [![Latest Stable Version](https://poser.pugx.org/pdir/social-feed-bundle/v/stable)](https://packagist.org/packages/pdir/social-feed-bundle)

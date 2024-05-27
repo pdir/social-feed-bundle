@@ -38,6 +38,7 @@ use Psr\Log\LogLevel;
 class FacebookImportCron
 {
     use ImportCronHelperTrait;
+
     public int $counter = 0;
     private ?object $logger;
 
