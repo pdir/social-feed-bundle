@@ -152,6 +152,13 @@ a.header_socialFeedAccounts {
     background: url(/bundles/pdirsocialfeed/img/icon_fa_download-solid.svg) 0 0 no-repeat;
 }
 
-html[data-color-scheme="dark"] .header_sf_moderate:before {
-    filter: invert(1);
+html[data-color-scheme="dark"] {
+    .header_socialFeedAccounts,
+    .header_sf_moderate:before {
+        filter: invert(1);
+    }
+
+    .header_socialFeedAccounts {
+        color: #000;
+    }
 }
