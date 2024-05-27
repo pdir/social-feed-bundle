@@ -43,7 +43,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class FacebookImportCommand extends Command
 {
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
         parent::__construct();
     }

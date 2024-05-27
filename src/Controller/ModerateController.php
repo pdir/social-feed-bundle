@@ -178,7 +178,7 @@ class ModerateController
                     $item['teaser'] = str_replace("\n", '<br>', $item['caption']);
 
                     // add image
-                    $item['singleSRC'] = $this->getPostImage();
+                    $item['singleSRC'] = $this->getPostImage($socialFeedAccount);
 
                     $importer->setNews($item);
                     $importer->accountImage = $objImporter->getAccountImage();
