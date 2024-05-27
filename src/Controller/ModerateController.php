@@ -110,37 +110,37 @@ class ModerateController
         return $options;
     }
 
-    public function shortenHeadline(): void
+    public function shortenHeadline($item): void
     {
-        $message = $this->arrNews['headline'] ?? '';
+        $message = $item['headline'] ?? '';
         $more = '';
 
         if (\strlen($message) > 50) {
             $more = ' ...';
         }
 
-        $this->arrNews['headline'] = mb_substr($message, 0, 50).$more;
+        $item['headline'] = mb_substr($message, 0, 50).$more;
     }
 
-    public function getPostImage(SocialFeedModel $socialFeedAccount): void
+    public function getPostImage(SocialFeedModel $socialFeedAccount, $item): void
     {
         $imgPath = NewsImporter::createImageFolder($socialFeedAccount->id); // create image folder
 
-        if ('VIDEO' === $this->arrNews['media_type'] || 'IMAGE' === $this->arrNews['media_type'] || 'CAROUSEL_ALBUM' === $this->arrNews['media_type']) {
+        if ('VIDEO' === $item['media_type'] || 'IMAGE' === $item['media_type'] || 'CAROUSEL_ALBUM' === $item['media_type']) {
             $imgSrc = '';
 
-            if (isset($this->arrNews['media_url'])) {
-                $imgSrc = false !== strpos($this->arrNews['media_url'], 'jpg') ? $this->arrNews['media_url'] : $this->arrNews['thumbnail_url'];
+            if (isset($item['media_url'])) {
+                $imgSrc = false !== strpos($item['media_url'], 'jpg') ? $item['media_url'] : $item['thumbnail_url'];
             }
 
-            if (!isset($this->arrNews['media_url']) && isset($this->arrNews['children']['data'][0]['media_url'])) {
-                $imgSrc = $this->arrNews['children']['data'][0]['media_url'];
+            if (!isset($item['media_url']) && isset($item['children']['data'][0]['media_url'])) {
+                $imgSrc = $item['children']['data'][0]['media_url'];
             }
 
-            $picturePath = $imgPath.$this->arrNews['id'].'.jpg';
+            $picturePath = $imgPath.$item['id'].'.jpg';
             $pictureUuid = NewsImporter::saveImage($picturePath, $imgSrc);
 
-            $this->arrNews['singleSRC'] = $pictureUuid;
+            $item['singleSRC'] = $pictureUuid;
         }
     }
 
@@ -178,7 +178,7 @@ class ModerateController
                     $item['teaser'] = str_replace("\n", '<br>', $item['caption']);
 
                     // add image
-                    $item['singleSRC'] = $this->getPostImage($objSocialFeedModel);
+                    $item['singleSRC'] = $this->getPostImage($objSocialFeedModel, $item);
 
                     $importer->setNews($item);
                     $importer->accountImage = $objImporter->getAccountImage();
