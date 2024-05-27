@@ -1,26 +1,45 @@
 {
-  "name":"pdir/social-feed-bundle",
-  "description":"Social feed extension for Contao CMS",
-  "keywords":["contao","social","feed","facebook","instagram","x","twitter","google plus","pinterest","vk","rss","bundle","linkedin"],
-  "type":"contao-bundle",
-  "homepage":"https://pdir.de",
-  "license":"LGPL-3.0-or-later",
-  "authors":[
+  "name": "pdir/social-feed-bundle",
+  "description": "Social feed extension for Contao CMS",
+  "keywords": [
+    "contao",
+    "social",
+    "feed",
+    "facebook",
+    "instagram",
+    "x",
+    "twitter",
+    "google plus",
+    "pinterest",
+    "vk",
+    "rss",
+    "bundle",
+    "linkedin"
+  ],
+  "type": "contao-bundle",
+  "homepage": "https://pdir.de",
+  "license": "LGPL-3.0-or-later",
+  "authors": [
     {
-      "name":"Philipp Seibt",
-      "homepage":"https://pdir.de/",
-      "role":"Developer"
+      "name": "Philipp Seibt",
+      "homepage": "https://pdir.de/",
+      "role": "Developer"
     },
     {
-      "name":"Mathias Arzberger",
-      "homepage":"https://pdir.de/",
-      "role":"Developer"
+      "name": "Mathias Arzberger",
+      "homepage": "https://pdir.de/",
+      "role": "Developer"
+    },
+    {
+      "name": "pdir GmbH",
+      "homepage": "https://pdir.de/",
+      "role": "Developer"
     }
   ],
-  "support":{
-    "issues":"https://github.com/pdir/social-feed-bundle/issues",
-    "source":"https://github.com/pdir/social-feed-bundle",
-    "docs":"https://docs.pdir.de",
+  "support": {
+    "issues": "https://github.com/pdir/social-feed-bundle/issues",
+    "source": "https://github.com/pdir/social-feed-bundle",
+    "docs": "https://docs.pdir.de",
     "donate": "https://contao-themes.net/sponsoring.html"
   },
   "require": {
@@ -34,7 +53,7 @@
     "kevinrob/guzzle-cache-middleware": "^3.2",
     "doctrine/cache": "^2.1",
     "doctrine/dbal": "^2.0 || ^3.0",
-    "samoritano/linkedin-api-php-client-v2": "dev-master as 0.1.5"
+    "samoritano/linkedin-api-php-client-v2": "dev-master as 1.0.0"
   },
   "conflict": {
     "contao/core": "*",
