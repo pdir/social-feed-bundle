@@ -24,14 +24,17 @@ use Contao\Dbafs;
 use Contao\File;
 use Contao\FilesModel;
 use Contao\Folder;
+use Contao\NewsArchiveModel;
 use Contao\NewsModel;
+use Contao\System;
+use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 
 class NewsImporter
 {
     public $accountImage;
     protected $arrNews;
 
-    public function execute($newsArchiveId, $socialFeedType, $socialFeedAccount): void
+    public function execute($newsArchiveId, SocialFeedModel $socialFeedAccount): void
     {
         $objNews = new NewsModel();
 
@@ -43,61 +46,35 @@ class NewsImporter
         $objNews->pid = $newsArchiveId;
 
         // social feed
-        $objNews->social_feed_type = $socialFeedType;
+        $objNews->social_feed_type = $socialFeedAccount->socialFeedType;
         $objNews->social_feed_id = $this->arrNews['id'];
-        $objNews->social_feed_config = $socialFeedAccount;
+        $objNews->social_feed_config = $socialFeedAccount->id;
 
-        // images
-        $imgPath = $this->createImageFolder($socialFeedAccount); // create image folder
+        // post image
+        $objNews->singleSRC = $this->arrNews['singleSRC'];
+
+        if (!empty($objNews->singleSRC)) {
+            $objNews->addImage = 1;
+        }
 
         // account image
-        // $accountPicturePath = $imgPath . $socialFeedAccount . '.jpg';
+        // $accountPicturePath = $imgPath . $socialFeedAccount->id . '.jpg';
         // $accountPictureUuid = $this->saveImage($accountPicturePath, $this->accountImage);
         // $objNews->social_feed_account_picture = $accountPictureUuid;
 
-        // post images
-        if ('VIDEO' === $this->arrNews['media_type'] || 'IMAGE' === $this->arrNews['media_type'] || 'CAROUSEL_ALBUM' === $this->arrNews['media_type']) {
-            $imgSrc = '';
 
-            if (isset($this->arrNews['media_url'])) {
-                $imgSrc = false !== strpos($this->arrNews['media_url'], 'jpg') ? $this->arrNews['media_url'] : $this->arrNews['thumbnail_url'];
-            }
-
-            if (!isset($this->arrNews['media_url']) && isset($this->arrNews['children']['data'][0]['media_url'])) {
-                $imgSrc = $this->arrNews['children']['data'][0]['media_url'];
-            }
-
-            $picturePath = $imgPath.$objNews->social_feed_id.'.jpg';
-            $pictureUuid = $this->saveImage($picturePath, $imgSrc);
-
-            $objNews->addImage = 1;
-            $objNews->singleSRC = $pictureUuid;
-        }
-
-        // message and teaser
-        $message = $this->arrNews['caption']?? '';
-        $more = '';
-
-        if (\strlen($message) > 50) {
-            $more = ' ...';
-        }
-
-        $objNews->headline = mb_substr($message, 0, 50).$more;
+        // headline and teaser
+        $objNews->headline = $this->arrNews['headline'];
 
         // set headline to id if headline is not set
         if ('' === $objNews->headline) {
             $objNews->headline = $this->arrNews['id'];
         }
 
-        $message = str_replace("\n", '<br>', $message);
-        $objNews->teaser = $message;
+        $objNews->teaser = $this->arrNews['teaser'];
 
         // author
         $objNews->author = $socialFeedAccount->user;
-
-        // date and time
-        $objNews->date = strtotime($this->arrNews['timestamp']);
-        $objNews->time = strtotime($this->arrNews['timestamp']);
 
         // default
         $objNews->published = 1;
@@ -105,7 +82,15 @@ class NewsImporter
         $objNews->target = 1;
         $objNews->url = $this->arrNews['permalink'];
         $objNews->tstamp = time();
+        $objNews->date = $this->arrNews['date'];
+        $objNews->time = $this->arrNews['time'];
+        $objNews->alias = $this->generateAlias($objNews->headline, $objNews->pid);
 
+        if (null !== NewsModel::findOneByAlias($objNews->alias)) {
+            $objNews->alias .= '-'.$this->arrNews['id'];
+        }
+
+        // save the news
         $objNews->save();
     }
 
@@ -114,7 +99,7 @@ class NewsImporter
         $this->arrNews = $arr;
     }
 
-    public function createImageFolder($account)
+    public static function createImageFolder($account): string
     {
         // Create Public Image Folder
         $imgPath = 'files/social-feed/'.$account.'/';
@@ -129,7 +114,7 @@ class NewsImporter
         return $imgPath;
     }
 
-    private function saveImage($strPath, $strUrl)
+    public static function saveImage($strPath, $strUrl): ?string
     {
         if (!file_exists($strPath)) {
             $strImage = file_get_contents($strUrl);
@@ -147,5 +132,30 @@ class NewsImporter
         $objFile = FilesModel::findByPath($strPath);
 
         return $objFile->uuid;
+    }
+
+    public function generateAlias($headline, $newsArchiveId)
+    {
+        return System::getContainer()->get('contao.slug')->generate($headline, NewsArchiveModel::findById($newsArchiveId)->jumpTo);
+    }
+
+    public static function shortenHeadline($str): string
+    {
+        $arr = explode("\n", $str);
+
+        $message = $arr[0] ?? $str;
+        $more = '';
+
+        if (\strlen($message) > 50) {
+            $more = ' ...';
+        }
+
+        return \mb_substr($message, 0, 50).$more;
+    }
+
+    public static function setLastImportDate(SocialFeedModel $socialFeedModel): void
+    {
+        $socialFeedModel->pdir_sf_fb_news_last_import_date = time();
+        $socialFeedModel->save();
     }
 }

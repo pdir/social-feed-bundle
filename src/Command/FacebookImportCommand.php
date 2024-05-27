@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\Command;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Pdir\SocialFeedBundle\Importer\LinkedIn;
+use Pdir\SocialFeedBundle\Cron\FacebookImportCron;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -34,14 +34,14 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @internal
  */
 #[AsCommand(
-    name: 'social-feed:linkedin:import',
-    description: 'Import LinkedIn posts from API.',
-    aliases: ['sf:linkedin']
+    name: 'social-feed:facebook:import',
+    description: 'Import Facebook posts from API.',
+    aliases: ['sf:facebook']
 )]
 /**
- * Import LinkedIn posts.
+ * Import Facebook posts.
  */
-class LinkedInImportCommand extends Command
+class FacebookImportCommand extends Command
 {
     public function __construct(private ContaoFramework $framework)
     {
@@ -64,26 +64,23 @@ class LinkedInImportCommand extends Command
     {
         $this->framework->initialize();
 
-        $output->writeln('Social Feed: Run LinkedIn import ...');
+        $output->writeln('Social Feed: Run Facebook import ...');
 
         try {
-            $importer = new LinkedIn();
-            $importer->setIgnoreInterval(true);
-            $importer->setDebugMode((bool) $input->getOption('enable-debug'));
-            $importer->setMaxPosts((int) $input->getOption('max-posts')?? 100);
-            $strLog = $importer->import();
-
+            $cron = new FacebookImportCron($this->framework);
+            $cron->setPoorManCronMode(false);
+            $cron->__invoke();
         } catch (InvalidArgumentException $e) {
-            $output->writeln(sprintf('%s (see help social-feed:linkedin:import).', $e->getMessage()));
+            $output->writeln(sprintf('%s (see help social-feed:facebook:import).', $e->getMessage()));
 
             return Command::FAILURE;
         }
 
-        if(0 < $importer->counter) {
-            $output->writeln('... imported ' . $importer->counter . ' items.');
+        if(0 < $cron->counter) {
+            $output->writeln('imported ' . $cron->counter . ' items.');
         }
 
-        if (0 === $importer->counter) {
+        if (0 === $cron->counter) {
             $output->writeln('... nothing to import');
         }
 

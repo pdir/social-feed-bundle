@@ -1,7 +1,7 @@
 {
   "name":"pdir/social-feed-bundle",
   "description":"Social feed extension for Contao CMS",
-  "keywords":["contao","social","feed","facebook","instagram","twitter","google plus","pinterest","vk","rss","bundle","linkedin"],
+  "keywords":["contao","social","feed","facebook","instagram","x","twitter","google plus","pinterest","vk","rss","bundle","linkedin"],
   "type":"contao-bundle",
   "homepage":"https://pdir.de",
   "license":"LGPL-3.0-or-later",
@@ -88,7 +88,8 @@
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "contao/manager-plugin": true,
       "bamarni/composer-bin-plugin": true,
-      "php-http/discovery": true
+      "php-http/discovery": true,
+      "contao-community-alliance/composer-plugin": true
     }
   }
 }

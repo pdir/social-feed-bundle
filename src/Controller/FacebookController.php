@@ -24,7 +24,7 @@ use Contao\Input;
 use Contao\Message;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
+use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

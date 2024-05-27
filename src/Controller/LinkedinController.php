@@ -22,8 +22,7 @@ namespace Pdir\SocialFeedBundle\Controller;
 
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Exception;
-use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
+use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

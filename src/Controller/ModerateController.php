@@ -101,9 +101,19 @@ class ModerateController
             foreach ($items as $item) {
                 if (\in_array($item['id'], $allValues['importItems'], true)) {
                     $importer = new NewsImporter();
+
+                    // set headline
+                    $item['headline'] = NewsImporter::shortenHeadline($item['caption']);
+
+                    // set teaser
+                    $item['teaser'] = \str_replace("\n", '<br>', $item['caption']);
+
+                    // add image
+                    $item['singleSRC'] = $this->getPostImage();
+
                     $importer->setNews($item);
                     $importer->accountImage = $objImporter->getAccountImage();
-                    $importer->execute($newsArchiveId, $objSocialFeedModel->socialFeedType, $objSocialFeedModel->id);
+                    $importer->execute($newsArchiveId, $objSocialFeedModel);
                 }
             }
         }
@@ -169,68 +179,77 @@ class ModerateController
     /**
      * Generate the options.
      *
+     * @param bool $filter
      * @return array
      *
      * @codeCoverageIgnore
      */
-    protected function generateOptions($filter = false): array
+    public static function generateOptions(bool $filter = false): array
     {
         $options = [];
 
         if ($filter) {
+            $objFeedModel = SocialFeedModel::findBy('socialFeedType', $filter);
+        } else {
             $objFeedModel = SocialFeedModel::findAll();
         }
 
-        $objFeedModel = SocialFeedModel::findAll();
-
-        dump($options);
-        dump('Filter: '.$filter);
-
         foreach ($objFeedModel as $feed) {
-            dump('TYPE: '.$feed->socialFeedType);
+            $options[$feed->id] = $feed->socialFeedType.' ';
 
-            if (false !== $filter && $feed->socialFeedType !== $filter) {
-                dump($filter);
-                dump($feed->socialFeedType);
-                continue;
+            if ('Facebook' === $feed->socialFeedType) {
+                $options[$feed->id] = $feed->pdir_sf_fb_account;
             }
 
-            if ('Facebook' === $feed->socialFeedType && !$filter || $feed->socialFeedType == $filter) {
-                dump('Facebook' === $feed->socialFeedType && !$filter);
-                dump($feed->socialFeedType);
-                dump($feed->socialFeedType === $filter);
-                dump('Facebook');
-                dump($feed->socialFeedType);
-                $options[$feed->id] = $feed->socialFeedType.' '.$feed->pdir_sf_fb_account;
+            if ('Instagram' === $feed->socialFeedType) {
+                $options[$feed->id] .= $feed->instagram_account;
             }
 
-            if ('Instagram' === $feed->socialFeedType && !$filter || $feed->socialFeedType == $filter) {
-                dump('Instagram');
-                #dump($feed);
-                #dump($feed->socialFeedType.' '.$feed->instagram_account);
-                # $options[$feed->id] = $feed->socialFeedType;
-                $options[$feed->id] = $feed->instagram_account; // \sprintf('%s %s', $feed->socialFeedType, $feed->instagram_account);
-                #dump($feed->socialFeedType);
-                #dump($feed->instagram_account);
+            if ('Twitter' === $feed->socialFeedType) {
+                $options[$feed->id] .= $feed->twitter_account;
             }
 
-            if ('Twitter' === $feed->socialFeedType && !$filter || $feed->socialFeedType === $filter) {
-                dump('Twitter' === $feed->socialFeedType && !$filter);
-                dump($feed->socialFeedType);
-                dump($filter);
-                dump($feed->socialFeedType === $filter);
-                dump('Twitter');
-                $options[$feed->id] = $feed->socialFeedType.' '.$feed->twitter_account;
+            if ('LinkedIn' === $feed->socialFeedType) {
+                $options[$feed->id] .= $feed->linkedin_account;
             }
 
-            if ('LinkedIn' === $feed->socialFeedType && !$filter || $feed->socialFeedType === $filter) {
-                dump('LinkedIn');
-                $options[$feed->id] = $feed->socialFeedType.' '.$feed->linkedin_account;
-            }
+            $options[$feed->id] .= ' (ID '.$feed->id.')';
         }
 
-        dump($options);
-
         return $options;
+    }
+
+    public function shortenHeadline(): void
+    {
+        $message = $this->arrNews['headline']?? '';
+        $more = '';
+
+        if (\strlen($message) > 50) {
+            $more = ' ...';
+        }
+
+        $this->arrNews['headline'] = \mb_substr($message, 0, 50).$more;
+    }
+
+    public function getPostImage(SocialFeedModel $socialFeedAccount): void
+    {
+        $imgPath = NewsImporter::createImageFolder($socialFeedAccount->id); // create image folder
+
+        if ('VIDEO' === $this->arrNews['media_type'] || 'IMAGE' === $this->arrNews['media_type'] || 'CAROUSEL_ALBUM' === $this->arrNews['media_type']) {
+            $imgSrc = '';
+
+            if (isset($this->arrNews['media_url'])) {
+                $imgSrc = false !== strpos($this->arrNews['media_url'], 'jpg') ? $this->arrNews['media_url'] : $this->arrNews['thumbnail_url'];
+            }
+
+            if (!isset($this->arrNews['media_url']) && isset($this->arrNews['children']['data'][0]['media_url'])) {
+                $imgSrc = $this->arrNews['children']['data'][0]['media_url'];
+            }
+
+            $picturePath = $imgPath.$this->arrNews['id'].'.jpg';
+            $pictureUuid = NewsImporter::saveImage($picturePath, $imgSrc);
+
+            $this->arrNews['singleSRC'] = $pictureUuid;
+        }
     }
 }

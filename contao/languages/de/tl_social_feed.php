@@ -24,6 +24,8 @@ $GLOBALS['TL_LANG']['tl_social_feed']['show'] = ['', 'Informationen anzeigen'];
 $GLOBALS['TL_LANG']['tl_social_feed']['new'] = ['Neues Konto', 'Neues Konto anlegen.'];
 
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_type_legend'] = 'Social Feed Konfiguration';
+$GLOBALS['TL_LANG']['tl_social_feed']['socialFeedAccountLegend'] = 'Konto und Authentifizierung';
+$GLOBALS['TL_LANG']['tl_social_feed']['socialFeedImportLegend'] = 'Import-Einstellungen';
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_account_image_legend'] = 'Profilbild Konfiguration';
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_legend'] = 'Facebook-Konfiguration';
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_account'] = ['Facebook-Account', 'Geben Sie hier den Namen der Facebook-Seite an, wie er in der URL steht (z. B. meissen.online).'];
@@ -51,13 +53,13 @@ $GLOBALS['TL_LANG']['tl_social_feed']['daily'] = 'Täglich';
 $GLOBALS['TL_LANG']['tl_social_feed']['monthly'] = 'Monatlich';
 $GLOBALS['TL_LANG']['tl_social_feed']['weekly'] = 'Wöchentlich';
 $GLOBALS['TL_LANG']['tl_social_feed']['number_posts'] = ['Maximale Anzahl an Posts', 'Geben Sie hier die maximale Anzahl der Posts an, die importiert werden sollen.'];
-$GLOBALS['TL_LANG']['tl_social_feed']['twitter_account'] = ['Twitter-Account', 'Geben Sie hier den Namen Ihres Twitter-Accounts ein (ohne @).'];
+$GLOBALS['TL_LANG']['tl_social_feed']['twitter_account'] = ['X-Account', 'Geben Sie hier den Namen Ihres X-Accounts ein (ohne @).'];
 $GLOBALS['TL_LANG']['tl_social_feed']['search'] = ['Suchbegriff', 'Statt nach einem bestimmten Account können Sie auch nach einem Suchbegriff suchen. Sind Account und Suchbegriff angegeben, wird der Account abgerufen und in den Tweets nach dem Suchbegriff gesucht.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['show_retweets'] = ['Importiere auch Retweets', 'Wenn diese Option aktiviert ist werden auch Retweets importiert.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['show_reply'] = ['Importiere auch Antworten', 'Wenn diese Option aktiviert ist werden auch Antworten importiert.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['hashtags_link'] = ['Hashtags und Mentions verlinken', 'Wenn diese Option aktiviert ist werden die Hashtags und Mentions verlinkt. Dafür muss das extended-Template verwendet werden.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_key'] = ['API Key', 'Geben Sie hier den API Key ein.'];
-$GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_secret_key'] = ['API Secret Key', 'Geben Sie hier den API Secret Key ein.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_secret_key'] = ['API Key Secret', 'Geben Sie hier den API Key Secret ein.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token'] = ['Access Token', 'Geben Sie hier den Access Token ein.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token_secret'] = ['Access Token Secret', 'Geben Sie hier den Access Token Secret ein.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_client_id'] = ['Client ID', 'Geben Sie hier die Client ID aus der App ein.'];
@@ -73,6 +75,8 @@ $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelSearchTerm'] = '(Suchwort <span s
 $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoAccount'] = 'Kein Account angegeben';
 $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoType'] = 'Kein Typ angegeben';
 $GLOBALS['TL_LANG']['tl_social_feed']['user'] = ['Benutzer', 'Geben Sie hier bitte an, welcher Benutzer für neu importierte Nachrichten gesetzt werden soll.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['linkedinImportSharedContent'] = ['Geteilte Beiträge importieren?', 'Aktivieren um geteilte Beiträge der Unternehmens-Seite zu importiert.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['noteForRefreshTokenMail'] = ['Hinweis für Refresh Token E-Mail', 'Geben Sie hier bitte an, welche Domain oder welcher Hinweis in der Refresh Token E-Mail angezeigt werden soll.'];
 
 $GLOBALS['TL_LANG']['tl_social_feed']['setupWelcome'] = 'Social Feed Bundle';
 $GLOBALS['TL_LANG']['tl_social_feed']['setupLinks'] = <<<HTML
@@ -87,7 +91,7 @@ $GLOBALS['TL_LANG']['tl_social_feed']['setupLinks'] = <<<HTML
 HTML;
 
 $GLOBALS['TL_LANG']['tl_social_feed']['setupHeadline'] = 'Willkommen beim Social Feed Bundle für Contao';
-$GLOBALS['TL_LANG']['tl_social_feed']['setupDesc'] = 'Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an. Zur Zeit werden Facebook, Instagram, Twitter und LinkedIn unterstützt. Die Erweiterung kann kostenfrei genutzt werden. Es gibt eine kostenpflichtige Plus Version um Beiträge in allen sozialen Medien auf einmal zu veröffentlichen oder dies manuell durchzuführen.';
+$GLOBALS['TL_LANG']['tl_social_feed']['setupDesc'] = 'Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen Netzwerken an. Zur Zeit werden Facebook, Instagram, X ehemals Twitter und LinkedIn unterstützt. Die Erweiterung kann kostenfrei genutzt werden. Es gibt eine kostenpflichtige Plus Version um Beiträge in allen sozialen Medien auf einmal zu veröffentlichen oder dies manuell durchzuführen.';
 $GLOBALS['TL_LANG']['tl_social_feed']['setupPlus'] = <<<HTML
   <h3>Social Feed<span class="high-plus"></span> Version</h3>
     <ul class="benefit">
@@ -99,4 +103,4 @@ $GLOBALS['TL_LANG']['tl_social_feed']['setupPlus'] = <<<HTML
     </ul>
     <p><br><span class="price">99,- € inkl. MwSt.</span> <a href="https://pdir.de/socialfeed+?mtm_campaign=ExtensionSetup&mtm_content=de" target="_blank" class="tl_submit">Jetzt kaufen</a></p>
 HTML;
-$GLOBALS['TL_LANG']['tl_social_feed']['setupFooter'] = 'Ihr Team der <img src="/bundles/pdirsocialfeed/img/pdir_logo.svg" width="50" alt="pdir logo" style="vertical-align: sub;"> / digital agentur';
+$GLOBALS['TL_LANG']['tl_social_feed']['setupFooter'] = 'Dein Team der <img src="/bundles/pdirsocialfeed/img/pdir_logo.svg" width="50" alt="pdir logo" style="vertical-align: sub;"> / digital agentur';

@@ -1,4 +1,14 @@
 services:
+    _defaults:
+        autoconfigure: true
+        autowire: true
+
+    Pdir\SocialFeedBundle\:
+        resource: ../src/*
+
+    Pdir\SocialFeedBundle\EventListener\DataContainer\SetupListener:
+        public: true
+
     Pdir\SocialFeedBundle\Importer\InstagramClient:
         public: true
         arguments:
@@ -35,7 +45,7 @@ services:
             - "@database_connection"
             - "@router"
 
-    Pdir\SocialFeedBundle\EventListener\SocialFeedListener:
+    Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener:
         public: true
         arguments:
             - "@router"
@@ -48,3 +58,41 @@ services:
         arguments:
             - "@contao.framework"
             - "@request_stack"
+
+    Pdir\SocialFeedBundle\Cron\FacebookImportCron:
+        public: true
+        tags:
+            - { name: contao.cron, cli: true, priority: 10 }
+        arguments:
+            - '@contao.framework'
+
+    Pdir\SocialFeedBundle\Cron\InstagramImportCron:
+        public: true
+        tags:
+            - { name: contao.cron, cli: true, priority: 10 }
+        arguments:
+            - '@contao.framework'
+
+    Pdir\SocialFeedBundle\Cron\LinkedInImportCron:
+        public: true
+        tags:
+            - { name: contao.cron, cli: true, priority: 10 }
+        arguments:
+            - '@contao.framework'
+            -
+    Pdir\SocialFeedBundle\Cron\RefreshAccessTokenCron:
+        public: true
+        tags:
+            - { name: contao.cron, cli: true, priority: 10 }
+        arguments:
+            - '@contao.framework'
+
+    Pdir\SocialFeedBundle\Cron\TwitterImportCron:
+        public: true
+        tags:
+            - { name: contao.cron, cli: true, priority: 10 }
+        arguments:
+            - '@contao.framework'
+
+    Pdir\SocialFeedBundle\SocialFeed\SocialFeedNewsClass:
+        public: true

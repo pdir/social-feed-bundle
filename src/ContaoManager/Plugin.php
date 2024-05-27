@@ -26,6 +26,7 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Contao\NewsBundle\ContaoNewsBundle;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -40,7 +41,13 @@ class Plugin implements BundlePluginInterface,RoutingPluginInterface
     {
         return [
             BundleConfig::create(PdirSocialFeedBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class, CodefogNewsCategoriesBundle::class]) // @phpstan-ignore-line
+                ->setLoadAfter(
+                    [
+                        ContaoCoreBundle::class,
+                        ContaoNewsBundle::class,
+                        CodefogNewsCategoriesBundle::class
+                    ]
+                ) // @phpstan-ignore-line
                 ->setReplace(['socialfeedbundle']),
         ];
     }

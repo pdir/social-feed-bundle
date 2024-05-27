@@ -23,9 +23,12 @@ namespace Pdir\SocialFeedBundle\Importer;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Dbafs;
 use Contao\File;
+use Contao\FilesModel;
+use Contao\News;
 use Contao\NewsModel;
 use Contao\System;
 use LinkedIn\Client;
+use LinkedIn\Exception;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 use Psr\Log\LogLevel;
 
@@ -33,219 +36,204 @@ class LinkedIn
 {
     private int $maxPosts = 100;
     private bool $debug = false;
-
+    public int $counter = 0;
+    public bool $poorManCron = false;
     private bool $ignoreInterval = false;
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
     public function import(): bool
     {
         $logger = System::getContainer()->get('monolog.logger.contao');
 
-        $objSocialFeed = SocialFeedModel::findAll();
+        if (!$this->poorManCron) {
+            $objSocialFeed = SocialFeedModel::findBy('socialFeedType', 'LinkedIn');
+        } else {
+            $objSocialFeed = SocialFeedModel::findBy(
+                ['socialFeedType = ?', 'pdir_sf_fb_news_cronjob != ?'], ['LinkedIn', 'no_cronjob']
+            );
+        }
 
-        if($this->debug) {
+        if ($this->debug) {
             dump($objSocialFeed);
         }
 
         if (null === $objSocialFeed) {
-            dump('--- no social feed account available!');
+            if ($this->debug) {
+                dump('--- no LinkedIn social feed account available!');
+            }
             return false;
         }
 
-        foreach ($objSocialFeed as $obj) {
-            if ('LinkedIn' === $obj->socialFeedType) {
-                #dump($obj->socialFeedType);
-                $cron = $obj->pdir_sf_fb_news_cronjob;
-                $lastImport = $obj->pdir_sf_fb_news_last_import_date;
-                $tstamp = time();
+        $this->counter = 0;
 
-                # dump('LastImport: '.$lastImport);
-                if ('' === $lastImport) {
-                    $lastImport = 0;
+        foreach ($objSocialFeed as $account) {
+            $this->counter = 0;
+            $cron = $account->pdir_sf_fb_news_cronjob;
+            $lastImport = $account->pdir_sf_fb_news_last_import_date;
+
+            if ($this->poorManCron) {
+                $this->maxPosts = $account->number_posts;
+            }
+
+            if ('' === $lastImport) {
+                $lastImport = 0;
+            }
+            $interval = \time() - $lastImport;
+
+            if (($interval >= $cron && 'no_cronjob' !== $cron) || (0 === $lastImport && 'no_cronjob' !== $cron) || true === $this->ignoreInterval) {
+                NewsImporter::setLastImportDate($account);
+
+                $client = new Client(
+                    $account->linkedin_client_id,
+                    $account->linkedin_client_secret
+                );
+
+                $client->setApiHeaders([
+                    'Content-Type' => 'application/json',
+                    'X-Restli-Protocol-Version' => '2.0.0', // use protocol v2
+                ]);
+
+                $client->setAccessToken($account->linkedin_access_token);
+
+                /*
+                if ($this->debug) {
+                    #dump('-- List organizationalEntityAcls');
+                    #$profile = $client->get('organizationalEntityAcls',['q' => 'roleAssignee']);
+                    #dump($profile);
                 }
-                $interval = $tstamp - $lastImport;
 
-                dump(($interval >= $cron && 'no_cronjob' !== $cron) || (0 === $lastImport && 'no_cronjob' !== $cron));
-                if (($interval >= $cron && 'no_cronjob' !== $cron) || (0 === $lastImport && 'no_cronjob' !== $cron) || true === $this->ignoreInterval) {
-                    dump('Check Interval: '.$interval);
+                if ($this->debug) {
+                    dump('-- List organizations');
+                    #$companyInfo = $client->get('organizations/'.$account->linkedin_company_id);
+                    dump($companyInfo);
+                }
+                */
 
-                    $this->setLastImportDate($obj);
+                # $client->setApiRoot('https://api.linkedin.com/rest/');
+                $client->setApiHeaders([
+                    'Content-Type' => 'application/json',
+                    'X-Restli-Protocol-Version' => '2.0.0', // use protocol v2,
+                    'LinkedIn-Version' => '202306',
+                ]);
 
-                    $client = new Client(
-                        $obj->linkedin_client_id,
-                        $obj->linkedin_client_secret
-                    );
+                // get posts
+                $posts = $client->get(
+                    'ugcPosts?q=authors&authors=List(urn%3Ali%3Aorganization%3A70570732)&sortBy=LAST_MODIFIED&count=' . $this->maxPosts
+                );
 
-                    $client->setApiHeaders([
-                        'Content-Type' => 'application/json',
-                        'X-Restli-Protocol-Version' => '2.0.0', // use protocol v2
-                    ]);
+                if (!\is_array($posts['elements'])) {
+                    continue;
+                }
 
-                    $client->setAccessToken($obj->linkedin_access_token);
+                foreach ($posts['elements'] as $element) {
+                    $objFile = null;
 
-                    /* Not enough permissions to access: GET /me
-                     $profile = $client->get(
-                        'me',
-                        ['fields' => 'id,firstName,lastName']
-                    );
-                    print_r($profile); */
-
-                    if($this->debug) {
-                        dump('-- List companies where you are an admin');
-                        $profile = $client->get(
-                            'organizationalEntityAcls',
-                            ['q' => 'roleAssignee']
-                        );
-                        dump($profile);
+                    if ($this->debug) {
+                        dump('-- LinkedIn API: element data');
+                        dump($element);
                     }
 
-                    /*
-                    $ugcPosts = $client->get(
-                        'ugcPosts?author=urn:li:organization:'.$obj->linkedin_company_id #.'&lifecycleState=PUBLISHED'
-                    );
-                    dump($ugcPosts);
-                    */
+                    // @todo import shared content only if wanted by user $account->linkedinImportSharedContent
 
-
-                    $companyInfo = $client->get('organizations/' . $obj->linkedin_company_id);
-                    dump('-- List organizations');
-                    dump($companyInfo);
-
-                    # urn:li:organization:70570732
-                    # urn%3ali%3aorganization%3a70570732
-                    # $client->setApiRoot('https://api.linkedin.com/rest/');
-                    $client->setApiHeaders([
-                        'Content-Type' => 'application/json',
-                        'X-Restli-Protocol-Version' => '2.0.0', // use protocol v2,
-                        'LinkedIn-Version' => '202306',
-                        #'X-RestLi-Method' => 'BATCH_GET'
-                    ]);
-
-                    /*
-                    $profile = $client->get(
-                        'me',
-                        ['fields' => 'id,firstName,lastName']
-                    );
-                    print_r($profile);*/
-
-                    # ma urn:li:person:pX1FysEalk
-                    $posts = $client->get(
-                        # 'posts?q=owners&owners=urn:li:organization:'.$obj->linkedin_company_id.'&sortBy=LAST_MODIFIED&sharesPerOwner='.$this->maxPosts
-                        # 'dmaPosts/urn:li:ugcPost:70570732'
-                        # 'dmaPosts?ids=List(urn:li:ugcPost:70570732,urn:li:share:70570732)'
-                        # 'dmaPosts?ids=List(urn%3ali%3augcPost%3a70570732,urn%3ali%3ashare%3a70570732)'
-                        'posts?ids=List(urn%3ali%3augcPost%3a70570732,urn%3ali%3ashare%3a70570732)'
-                        # 'posts?ids=List(urn%3ali%3augcPost%3a70570732,urn%3ali%3ashare%3a70570732,urn%3ali%3aorganization%3a70570732)'
-                        # 'posts?ids=List(urn%3ali%3agroupPost%3a70570732,urn%3ali%3augcPost%3a70570732,urn%3ali%3ashare%3a70570732,urn%3ali%3aorganization%3a70570732)'
-                        # 'posts?ids=List(urn%3ali%3agroupPost%3a70570732,urn%3ali%3augcPost%3a70570732,urn%3ali%3ashare%3a70570732)'
-                        # 'posts?ids=List(urn%3ali%3augcPost%3a70570732,urn%3ali%3ashare%3a70570732)'
-                        # 'posts/urn%3ali%3aorganization%3a70570732/?ids=List(urn%3ali%3augcPost%3a70570732,urn%3ali%3ashare%3a70570732)'
-                        #'posts/urn%3Ali%3AugcPost%3A70570732'
-                        # 'posts/urn%3Ali%3AugcPost%3ApX1FysEalk'
-                    );
-
-                    dump('-- Get post details');
-                    dump($posts);
-
-                    /* Resource dmaPosts does not exist
-                    $posts = $client->get(
-                    # 'posts/urn%3Ali%3Aorganization%3A70570732' # 'shares'
-                        'dmaPosts?q=authors&authors=List(urn%3Ali%3Aorganization%3A70570732)&sortBy=LAST_MODIFIED'
-                    );
-                    dump('-- List posts');
-                    dump($posts);
-                    */
-
-                    $posts = $client->get(
-                        # 'posts/urn%3Ali%3Aorganization%3A70570732' # 'shares'
-                        'ugcPosts?q=authors&authors=List(urn%3Ali%3Aorganization%3A70570732)&sortBy=LAST_MODIFIED'
-                    );
-                    dump('-- List posts');
-                    dump($posts);
-
-
-                    /* message":"Invalid query parameters passed to request
-                    dump('shares?q=owners&owners=urn:li:organization:'.$obj->linkedin_company_id.'&sortBy=LAST_MODIFIED&sharesPerOwner='.$this->maxPosts);
-                    $posts = $client->get(
-                        'shares?q=owners&owners=urn:li:organization:'.$obj->linkedin_company_id.'&sortBy=LAST_MODIFIED&sharesPerOwner='.$this->maxPosts
-                    );
-
-                    dump($posts); */
-
-                    /* works
-                    $organization = $client->get(
-                        'organizations/'.$obj->linkedin_company_id
-                    );
-
-                    dump($organization);
-                    */
-
-                    if (!\is_array($posts['elements'])) {
+                    // continue if news exists
+                    if (null !== NewsModel::findBy('social_feed_id', $element['id'])) {
+                        if ($this->debug) {
+                            dump('ignore existing post ' . $element['id']);
+                        }
                         continue;
                     }
 
-                    $counter = 1;
+                    $item = [];
 
-                    foreach ($posts['elements'] as $element) {
-                        if ($counter++ > $obj->number_posts) {
-                            continue;
+                    // get post image
+                    $media = $element['specificContent']['com.linkedin.ugc.ShareContent']['media'];
+
+                    if (!empty($media) && is_array($media)) {
+                        $imgPath = NewsImporter::createImageFolder($account->linkedin_company_id);
+                        $picturePath = $imgPath . \str_replace('urn:li:share:', '', $element['id']) . '.jpg';
+
+                        // use originalUrl of media for image download
+                        $firstImage = $media[0]['originalUrl'] ?? null;
+
+                        // use first thumbnail for articles
+                        if (isset($media[0]) && str_contains($media[0]['media'], 'urn:li:article:') && isset($media[0]['thumbnails'][0])) {
+                            $firstImage = $media[0]['thumbnails'][0]['url']?? null;
                         }
 
-                        $objNews = new NewsModel();
+                        // get first image
+                        if (!file_exists($picturePath) && isset($firstImage)) {
+                            // Write to filesystem
+                            $file = new File($picturePath);
+                            $file->write(file_get_contents($firstImage));
+                            $file->close();
 
-                        if (null !== $objNews->findBy('social_feed_id', $element['id'])) {
-                            continue;
+                            // Add the resource
+                            $objFile = Dbafs::addResource($picturePath);
                         }
 
-                        $objFile = '';
-
-                        if (null !== $element['content']['contentEntities'][0]['thumbnails'][0]['resolvedUrl']) {
-                            $imgPath = $this->createImageFolder($obj->linkedin_company_id);
-                            $picturePath = $imgPath.$element['id'].'.jpg';
-
-                            if (!file_exists($picturePath)) {
-                                $file = new File($picturePath);
-                                $file->write(file_get_contents($element['content']['contentEntities'][0]['thumbnails'][0]['resolvedUrl']));
-                                $file->close();
-                            }
-
-                            $objFile = Dbafs::addResource($imgPath.$element['id'].'.jpg');
+                        // get files model for existing image
+                        if (file_exists($picturePath) && null === $objFile) {
+                            $objFile = FilesModel::findByPath($picturePath);
                         }
-
-                        $message = $element['text']['text']?? '';
-                        $this->saveLinkedInNews($objNews, $obj, $objFile, $message, $element, $organization);
                     }
 
-                    $logger->log(LogLevel::INFO, 'Social Feed: LinkedIn Import Account', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
+                    $item['id'] = $element['id'];
+                    $item['headline'] = NewsImporter::shortenHeadline($element['specificContent']['com.linkedin.ugc.ShareContent']['shareCommentary']['text'] ?? '');
+                    $item['teaser'] = \str_replace("\n", '<br>', $element['specificContent']['com.linkedin.ugc.ShareContent']['shareCommentary']['text'] ?? '');
+                    $item['singleSRC'] = null !== $objFile ? $objFile->uuid : '';
+                    $item['date'] = $element['firstPublishedAt'] / 1000;
+                    $item['time'] = $element['firstPublishedAt'] / 1000;
+                    $item['permalink'] = 'https://www.linkedin.com/feed/update/' . $item['id'] . '/';
 
-                    #$this->import('Automator');
-                    #$this->Automator->generateSymlinks();
+                    // @todo get organization and set account picture
+                    // $item['social_feed_account'] = $organization?? $organization['localizedName'];
+
+                    if ($this->debug) {
+                        dump('-- Post data for import');
+                        dump($item);
+                    }
+
+                    // write to db
+                    $importer = new NewsImporter();
+                    $importer->setNews($item);
+                    $importer->execute($account->pdir_sf_fb_news_archive, $account);
+
+                    $this->counter++;
                 }
 
-                $logger->log(LogLevel::INFO, 'Social Feed: LinkedIn Import - nothing to import', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
+                if (0 < $this->counter) {
+                    $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): LinkedIn - imported ' . $this->counter . ' items.', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
+                }
+            }
 
-                #$this->import('Automator');
-                #$this->Automator->generateSymlinks();
+            if (0 === $this->counter) {
+                $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): LinkedIn Import - nothing to import', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
             }
         }
 
         return true;
     }
 
-    private function setLastImportDate($socialFeedModel): void
+    public function setPoorManCronMode($flag): void
     {
-        $socialFeedModel->pdir_sf_fb_news_last_import_date = time();
-        $socialFeedModel->save();
+        if (true === $flag) {
+            $this->poorManCron = true;
+        }
     }
 
     public function setDebugMode($flag): void
     {
-        if(true === $flag) {
+        if (true === $flag) {
             $this->debug = true;
         }
     }
 
     public function setIgnoreInterval($flag): void
     {
-        if(true === $flag) {
+        if (true === $flag) {
             $this->ignoreInterval = true;
         }
     }

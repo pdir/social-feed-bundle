@@ -18,13 +18,13 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Pdir\SocialFeedBundle\Dca;
+namespace Pdir\SocialFeedBundle\EventListener\DataContainer;
 
 use Contao\BackendTemplate;
 use Contao\DataContainer;
 use Safe\Exceptions\StringsException;
 
-class tl_social_feed
+class SetupListener
 {
     /**
      * social-feed-bundle version.

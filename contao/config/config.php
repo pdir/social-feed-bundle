@@ -56,26 +56,12 @@ if (\str_contains($GLOBALS['FE_MOD']['news']['newslist'], 'Codefog\NewsCategorie
 }
 
 /*
- * Crons
+ * CSS for Backend
  */
-$GLOBALS['TL_CRON']['minutely'][] = ['Pdir\SocialFeedBundle\EventListener\CronListener', 'getFbPosts'];
-$GLOBALS['TL_CRON']['minutely'][] = ['Pdir\SocialFeedBundle\EventListener\CronListener', 'getInstagramPosts'];
-$GLOBALS['TL_CRON']['minutely'][] = ['Pdir\SocialFeedBundle\EventListener\CronListener', 'getTwitterPosts'];
-$GLOBALS['TL_CRON']['minutely'][] = ['Pdir\SocialFeedBundle\EventListener\CronListener', 'getLinkedinPosts'];
-$GLOBALS['TL_CRON']['daily'][] = ['Pdir\SocialFeedBundle\EventListener\CronListener', 'refreshInstagramAccessToken'];
-$GLOBALS['TL_CRON']['daily'][] = ['Pdir\SocialFeedBundle\EventListener\CronListener', 'refreshLinkedInAccessToken'];
-
-/*
- * CSS for Frontend
- */
-$currentRequest = System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('');
+$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 $scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
 
-if ($scopeMatcher->isFrontendRequest($currentRequest)) {
-    $GLOBALS['TL_CSS']['social_feed'] = $assetsDir.'/css/social_feed.min.css|static';
-}
-
-if ($scopeMatcher->isBackendRequest($currentRequest)) {
+if ($request && $scopeMatcher->isBackendRequest($request)) {
     $GLOBALS['TL_CSS'][] = $assetsDir.'/css/sf_moderation.scss|static';
     $GLOBALS['TL_CSS'][] = $assetsDir.'/css/backend.css|static';
 }

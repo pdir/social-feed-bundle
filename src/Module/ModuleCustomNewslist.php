@@ -30,7 +30,7 @@ class ModuleCustomNewslist extends ModuleNewsList
      *
      * @var string
      */
-    protected $strTemplate = 'mod_newslist';
+    protected $strTemplate = 'mod_newslist_social_feed';
 
     protected function compile(): void
     {
@@ -46,5 +46,7 @@ class ModuleCustomNewslist extends ModuleNewsList
         if (null !== $layout->scripts && strpos($layout->scripts, 'lazyload')) {
             $this->Template->lazyload = true;
         }
+
+        $GLOBALS['TL_CSS']['social_feed'] = 'bundles/pdirsocialfeed/css/social_feed.min.css|static';
     }
 }

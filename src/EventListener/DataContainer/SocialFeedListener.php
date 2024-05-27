@@ -18,16 +18,16 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Pdir\SocialFeedBundle\EventListener;
+namespace Pdir\SocialFeedBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Image\ImageSizes;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\Environment;
 use Contao\Input;
 use Contao\System;
+use Pdir\SocialFeedBundle\EventListener\Config;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;

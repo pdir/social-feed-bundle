@@ -58,7 +58,7 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_type'] = [
     'filter' => true,
     'sorting' => true,
     'inputType' => 'select',
-    'options' => ['Facebook', 'Instagram', 'Twitter'],
+    'options' => ['Facebook', 'Instagram', 'Twitter', 'LinkedIn'],
     'eval' => ['includeBlankOption' => true, 'tl_class' => 'w50'],
     'sql' => "varchar(255) NOT NULL default ''",
 ];
@@ -110,18 +110,7 @@ class tl_news_socialfeed extends Backend
     public function setSingleSrcFlags(mixed $varValue, DataContainer $dc): mixed
     {
         if ($dc->activeRecord) {
-            switch ($dc->activeRecord->type) {
-                case 'text':
-                case 'hyperlink':
-                case 'image':
-                case 'accordionSingle':
-                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
-                    break;
-
-                case 'download':
-                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('allowedDownload');
-                    break;
-            }
+           $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
         }
 
         return $varValue;

@@ -21,16 +21,16 @@ declare(strict_types=1);
 $GLOBALS['TL_LANG']['tl_news']['sf_moderate'] = ['Import moderated', 'Here you can import posts from Instagram moderated.'];
 
 $GLOBALS['TL_LANG']['tl_news']['pdir_sf_settings_legend'] = 'Social Feed Settings';
-$GLOBALS['TL_LANG']['tl_news']['social_feed_id'] = ['Social Feed Post ID', ''];
-$GLOBALS['TL_LANG']['tl_news']['social_feed_type'] = ['Social Feed Type', ''];
-$GLOBALS['TL_LANG']['tl_news']['social_feed_account'] = ['Social Feed Account', ''];
-$GLOBALS['TL_LANG']['tl_news']['social_feed_account_picture'] = ['Social Feed Account Picture', ''];
+$GLOBALS['TL_LANG']['tl_news']['social_feed_id'] = ['Social Feed Post ID', 'Here you can specify the ID of the social feed.'];
+$GLOBALS['TL_LANG']['tl_news']['social_feed_type'] = ['Social Feed Type', 'Here you can specify the type of social feed.'];
+$GLOBALS['TL_LANG']['tl_news']['social_feed_account'] = ['Social Feed Account', 'Here you can specify the account of the social feed.'];
+$GLOBALS['TL_LANG']['tl_news']['social_feed_account_picture'] = ['Social Feed Profile Picture', 'Here you can specify the profile picture of the social feed.'];
 
 $GLOBALS['TL_LANG']['tl_news']['moderate'] = ['Get Feed', 'Moderate Social Feed Posts'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['moderate'] = ['Get Feed', 'Moderate Social Feed Posts'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['moderateHint'] = 'Only Instagram is currently available for moderated import. Use cron import for other services, you can find the settings in the Social Feed accounts.';
-$GLOBALS['TL_LANG']['tl_news_moderate']['account'] = ['Social Feed Account'];
-$GLOBALS['TL_LANG']['tl_news_moderate']['number_posts'] = ['Number of posts', 'Enter the maximum number of posts to be imported here.'];
+$GLOBALS['TL_LANG']['tl_news_moderate']['account'] = ['Social Feed Account', 'Here you can specify the account for moderation.'];
+$GLOBALS['TL_LANG']['tl_news_moderate']['number_posts'] = ['Number of posts', 'Here you can limit the number of posts to be retrieved'];
 $GLOBALS['TL_LANG']['tl_news_moderate']['selectAll'] = 'Select all';
 $GLOBALS['TL_LANG']['tl_news_moderate']['open'] = 'Open';
 $GLOBALS['TL_LANG']['tl_news_moderate']['importEntry'] = 'Import entries';

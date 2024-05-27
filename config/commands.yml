@@ -7,7 +7,22 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
-    pdir_social_feed.command.automator:
+    pdir_social_feed.command.facebook:
+        class: Pdir\SocialFeedBundle\Command\FacebookImportCommand
+        arguments:
+            - '@contao.framework'
+
+    pdir_social_feed.command.instagram:
+        class: Pdir\SocialFeedBundle\Command\InstagramImportCommand
+        arguments:
+            - '@contao.framework'
+
+    pdir_social_feed.command.linkedin:
         class: Pdir\SocialFeedBundle\Command\LinkedInImportCommand
+        arguments:
+            - '@contao.framework'
+
+    pdir_social_feed.command.x:
+        class: Pdir\SocialFeedBundle\Command\TwitterImportCommand
         arguments:
             - '@contao.framework'

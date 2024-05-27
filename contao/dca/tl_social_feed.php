@@ -18,12 +18,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-use Contao\Backend;
-use Contao\Config;
-use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
-use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
+use Pdir\SocialFeedBundle\EventListener\DataContainer\SetupListener;
+use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener;
 
 System::loadLanguageFile('tl_social_feed');
 
@@ -35,10 +33,10 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         'dataContainer' => DC_Table::class,
         'enableVersioning' => true,
         'onsubmit_callback' => [
-            ['Pdir\SocialFeedBundle\EventListener\SocialFeedListener', 'onSubmitCallback'],
+            [SocialFeedListener::class, 'onSubmitCallback'],
         ],
         /*'onload_callback' => [
-            ['Pdir\\SocialFeedBundle\\Dca\\tl_social_feed', 'renderFooter'],
+            [SetupListener::class, 'renderFooter'],
         ],*/
         'sql' => [
             'keys' => [
@@ -57,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 
         'label' => [
             'fields' => ['socialFeedType, pdir_sf_fb_account', 'instagram_account', 'twitter_account', 'search', 'linkedin_company_id'],
-            'label_callback' => ['Pdir\\SocialFeedBundle\\Dca\\tl_social_feed', 'onGenerateLabel'],
+            'label_callback' => [SetupListener::class, 'onGenerateLabel'],
         ],
 
         'global_operations' => [
@@ -104,10 +102,10 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     ],
 
     'subpalettes' => [
-        'socialFeedType_Facebook' => 'pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,psf_facebookRequestToken,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,user,pdir_sf_fb_posts,pdir_sf_fb_news_last_import_date',
-        'socialFeedType_Instagram' => 'psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,psf_instagramRequestToken,access_token_expires,instagram_account,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,user,pdir_sf_fb_news_last_import_date,psf_instagramImportMentions;{pdir_sf_account_image_legend},instagram_account_picture,instagram_account_picture_size',
-        'socialFeedType_Twitter' => 'twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account,search,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,user,show_retweets,hashtags_link,show_reply,pdir_sf_fb_news_last_import_date',
-        'socialFeedType_LinkedIn' => 'linkedin_client_id,linkedin_client_secret,linkedin_company_id,linkedin_request_token,linkedin_access_token,number_posts,pdir_sf_fb_news_archive,pdir_sf_fb_news_cronjob,user,access_token_expires,linkedin_refresh_token_expires,pdir_sf_fb_news_last_import_date,linkedin_account_picture,linkedin_account_picture_size',
+        'socialFeedType_Facebook' => ';{socialFeedAccountLegend},pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token,psf_facebookRequestToken;{socialFeedImportLegend},pdir_sf_fb_news_archive,user,pdir_sf_fb_posts,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date',
+        'socialFeedType_Instagram' => ';{socialFeedAccountLegend},psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,psf_instagramRequestToken,noteForRefreshTokenMail,access_token_expires;{socialFeedImportLegend},instagram_account,number_posts,pdir_sf_fb_news_archive,user,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,psf_instagramImportMentions;{pdir_sf_account_image_legend},instagram_account_picture,instagram_account_picture_size',
+        'socialFeedType_Twitter' => ';{socialFeedAccountLegend},twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account;{socialFeedImportLegend},search,number_posts,pdir_sf_fb_news_archive,user,show_retweets,hashtags_link,show_reply,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date',
+        'socialFeedType_LinkedIn' => ';{socialFeedAccountLegend},linkedin_client_id,linkedin_client_secret,linkedin_company_id,linkedin_access_token,linkedin_request_token,access_token_expires,linkedin_refresh_token_expires,noteForRefreshTokenMail;{socialFeedImportLegend},pdir_sf_fb_news_archive,user,linkedinImportSharedContent,number_posts,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date;{pdir_sf_account_image_legend},linkedin_account_picture,linkedin_account_picture_size',
     ],
 
     'fields' => [
@@ -360,7 +358,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => [
-                'tl_class' => 'clr',
+                'tl_class' => 'clr w50',
             ],
             'sql' => "char(1) NOT NULL default ''",
         ],
@@ -370,7 +368,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => [
-                'tl_class' => 'clr',
+                'tl_class' => 'clr ',
             ],
             'sql' => "char(1) NOT NULL default ''",
         ],
@@ -380,7 +378,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => [
-                'tl_class' => 'clr',
+                'tl_class' => 'w50',
             ],
             'sql' => "char(1) NOT NULL default ''",
         ],
@@ -435,7 +433,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 
         'psf_setup' => [
             'exclude' => true,
-            'input_field_callback' => ['Pdir\\SocialFeedBundle\\Dca\\tl_social_feed', 'setupExplanation'],
+            'input_field_callback' => [SetupListener::class, 'setupExplanation'],
         ],
 
         // LinkedIn
@@ -491,7 +489,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'checkbox',
             'eval' => [
                 'doNotSaveEmpty' => true,
-                'tl_class' => 'clr',
+                'tl_class' => 'w50 m12',
                 'submitOnChange'=> true
             ],
             'save_callback' => [
@@ -550,6 +548,16 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             ],
         ],
 
+        'linkedinImportSharedContent' => [
+            'default' => 0,
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => [
+                'tl_class' => 'w50 m12',
+            ],
+            'sql' => "char(1) NOT NULL default ''",
+        ],
+
         'user' => [
             'inputType' => 'select',
             'exclude' => false,
@@ -566,6 +574,16 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
                 'length' => 11,
                 'fixed' => true,
             ],
+        ],
+
+        'noteForRefreshTokenMail' => [
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'maxlength' => 255,
+                'tl_class' => 'w50',
+            ],
+            'sql' => 'text NULL',
         ],
     ],
 ];

@@ -23,7 +23,7 @@ namespace Pdir\SocialFeedBundle\Controller;
 use Contao\BackendUser;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
+use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener;
 use Pdir\SocialFeedBundle\Importer\InstagramClient;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
