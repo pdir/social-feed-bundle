@@ -168,7 +168,6 @@ class ModerateController
         // do import if importItems is set
         if (isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
             foreach ($items as $item) {
-                dump($item);
                 if (\in_array($item['id'], $allValues['importItems'], true)) {
                     $importer = new NewsImporter();
 
