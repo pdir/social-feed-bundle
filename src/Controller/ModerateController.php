@@ -168,6 +168,7 @@ class ModerateController
         // do import if importItems is set
         if (isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
             foreach ($items as $item) {
+                dump($item);
                 if (\in_array($item['id'], $allValues['importItems'], true)) {
                     $importer = new NewsImporter();
 
@@ -179,6 +180,9 @@ class ModerateController
 
                     // add image
                     $item['singleSRC'] = $this->getPostImage($objSocialFeedModel, $item);
+
+                    $item['date'] = strtotime($item['timestamp']);
+                    $item['time'] = strtotime($item['timestamp']);
 
                     $importer->setNews($item);
                     $importer->accountImage = $objImporter->getAccountImage();
