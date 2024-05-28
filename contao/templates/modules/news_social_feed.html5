@@ -8,7 +8,6 @@
             </div>
             <?php endif; ?>
 
-            <?php if ($this->hasMetaFields): ?>
             <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished">
                 <?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?>
                 <?php if($this->socialFeedType == "Facebook" || $this->socialFeedType == ""): ?>
@@ -21,7 +20,6 @@
                     <img src="bundles/pdirsocialfeed/img/linkedin-in-brands.svg" alt="LinkedIn Icon">
                 <?php endif; ?>
             </p>
-            <?php endif; ?>
 
             <div class="title"><?= $this->sfFbAccount ?></div>
         </a>
