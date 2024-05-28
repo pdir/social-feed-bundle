@@ -9,7 +9,7 @@
             <?php endif; ?>
 
             <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished">
-                <?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?>
+                <?= $this->date ?></time>
                 <?php if($this->socialFeedType == "Facebook" || $this->socialFeedType == ""): ?>
                     <img src="bundles/pdirsocialfeed/img/icon_facebook.svg" alt="Facebook Icon">
                 <?php elseif($this->socialFeedType == "Instagram"): ?>
