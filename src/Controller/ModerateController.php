@@ -180,6 +180,9 @@ class ModerateController
                     // add image
                     $item['singleSRC'] = $this->getPostImage($objSocialFeedModel, $item);
 
+                    $item['date'] = strtotime($item['timestamp']);
+                    $item['time'] = strtotime($item['timestamp']);
+
                     $importer->setNews($item);
                     $importer->accountImage = $objImporter->getAccountImage();
                     $importer->execute($newsArchiveId, $objSocialFeedModel);
