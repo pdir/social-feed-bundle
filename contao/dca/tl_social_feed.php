@@ -18,6 +18,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
+use Contao\BackendUser;
 use Contao\DC_Table;
 use Contao\System;
 use Pdir\SocialFeedBundle\EventListener\DataContainer\SetupListener;
@@ -245,6 +246,9 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'imageSize',
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
             'eval' => ['rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50'],
+            'options_callback' => static function () {
+                return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
+            },
             'sql' => "varchar(64) NOT NULL default ''",
         ],
 
@@ -512,6 +516,9 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'inputType' => 'imageSize',
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
             'eval' => ['rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50'],
+            'options_callback' => static function () {
+                return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
+            },
             'sql' => "varchar(64) NOT NULL default ''",
         ],
 
