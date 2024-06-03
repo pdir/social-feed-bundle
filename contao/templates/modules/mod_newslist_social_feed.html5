@@ -27,9 +27,9 @@
         });
       });
     </script>";
-?>
-<?php if($this->lazyload) : ?>
-  <?php $GLOBALS['TL_BODY'][] = "<script>$('.social_feed_element img').on('load', function () {grid.masonry({itemSelector:'.social_feed_element'});});</script>"; ?>
-<?php endif; ?>
+  ?>
+  <?php if($this->lazyload): ?>
+    <?php $GLOBALS['TL_BODY'][] = "<script>$('.social_feed_element img').on('load', function () {grid.masonry({itemSelector:'.social_feed_element'});});</script>"; ?>
+  <?php endif; ?>
 
 <?php endif; ?>
