@@ -48,6 +48,7 @@ class FacebookImportCron
 
     /**
      * @throws FacebookSDKException
+     * @throws \Exception
      */
     public function __invoke(): void
     {
