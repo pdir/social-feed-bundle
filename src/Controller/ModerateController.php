@@ -89,7 +89,7 @@ class ModerateController
             $options[$feed->id] = $feed->socialFeedType.' ';
 
             if ('Facebook' === $feed->socialFeedType) {
-                $options[$feed->id] = $feed->pdir_sf_fb_account;
+                $options[$feed->id] .= $feed->pdir_sf_fb_account;
             }
 
             if ('Instagram' === $feed->socialFeedType) {
@@ -130,7 +130,7 @@ class ModerateController
             $imgSrc = '';
 
             if (isset($item['media_url'])) {
-                $imgSrc = false !== strpos($item['media_url'], 'jpg') ? $item['media_url'] : $item['thumbnail_url'];
+                $imgSrc = false !== \strpos($item['media_url'], 'jpg') ? $item['media_url'] : $item['thumbnail_url'];
             }
 
             if (!isset($item['media_url']) && isset($item['children']['data'][0]['media_url'])) {
@@ -192,7 +192,7 @@ class ModerateController
 
         // set import message
         if (\is_array($items) && isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
-            $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($allValues['importItems']));
+            $this->message = \sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($allValues['importItems']));
         }
 
         if (null === $items) {
