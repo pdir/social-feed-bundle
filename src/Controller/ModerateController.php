@@ -41,15 +41,17 @@ class ModerateController
     private BackendTemplate $template;
 
     private string $message;
+    private CsrfTokenManagerInterface $csrfTokenManager;
 
     /**
      * ExportController constructor.
      */
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack)
+    public function __construct(ContaoFramework $framework, RequestStack $requestStack, CsrfTokenManagerInterface $csrfTokenManager)
     {
         $this->framework = $framework;
         $this->requestStack = $requestStack;
         $this->template = new BackendTemplate('be_sf_moderate');
+        $this->csrfTokenManager = $csrfTokenManager;
     }
 
     /**
@@ -240,6 +242,7 @@ class ModerateController
         $this->template->message = isset($this->message) ? '<div class="tl_confirm">'.$this->message.'</div>' : '';
         $this->template->options = $this->generateOptions('Instagram');
         $this->template->headline = $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['headline'].Input::get('id');
+        $this->template->requestToken = $this->csrfTokenManager->getDefaultTokenValue();
 
         return $this->template;
     }

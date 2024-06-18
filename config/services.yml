@@ -58,6 +58,7 @@ services:
         arguments:
             - "@contao.framework"
             - "@request_stack"
+            - '@contao.csrf.token_manager'
 
     Pdir\SocialFeedBundle\Cron\FacebookImportCron:
         public: true

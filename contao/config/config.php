@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 /*
  * Backend modules
  */
-if (!isset($GLOBALS['BE_MOD']['pdir']) || !is_array($GLOBALS['BE_MOD']['pdir'])) {
+if (!isset($GLOBALS['BE_MOD']['pdir']) || !\is_array($GLOBALS['BE_MOD']['pdir'])) {
     \array_splice($GLOBALS['BE_MOD'], 1,0, ['pdir' => []]);
 }
 
