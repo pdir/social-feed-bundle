@@ -133,17 +133,17 @@ class FacebookImportCron
                             $imageTitle = $image['title']?? '';
                         }
                         // set variables
-                        if (null !== $post['message'] && strpos($post['message'], "\n")) {
-                            $title = mb_substr($post['message'], 0, strpos($post['message'], "\n"));
+                        if (null !== $post['message'] && \strpos($post['message'], "\n")) {
+                            $title = \mb_substr($post['message'], 0, \strpos($post['message'], "\n"));
                         } elseif (empty($post['message'])) {
                             $title = $GLOBALS['TL_LANG']['MSC']['pdirSocialFeedNoTitel'];
                         } else {
-                            $title = mb_substr($post['message'], 0);
+                            $title = \mb_substr($post['message'], 0);
                         }
 
-                        $message = $post['message'];
-                        $message = str_replace("\n", '<br>', $message);
-                        $timestamp = strtotime($post['created_time']);
+                        $message = $post['message']?? '';
+                        $message = \str_replace("\n", '<br>', $message);
+                        $timestamp = \strtotime($post['created_time']);
 
                         if (!empty($imageSrc) && !empty($image)) {
                             $img = $imgPath . $post['id'] . '.jpg';
@@ -167,8 +167,8 @@ class FacebookImportCron
                             $objNews->singleSRC = $objFile->uuid;
                             $objNews->addImage = 1;
                         }
-                        $objNews->tstamp = time();
-                        $objNews->headline = mb_substr($title, 0, 255);
+                        $objNews->tstamp = \time();
+                        $objNews->headline = \mb_substr($title, 0, 255);
 
                         if ('' === $message && !empty($imageTitle)) {
                             $objNews->teaser = $imageTitle;
