@@ -71,7 +71,7 @@ class RefreshAccessTokenCron
      */
     private function refreshLinkedInAccessToken(SocialFeedModel $socialFeedModel): void
     {
-        if ($socialFeedModel->linkedin_refresh_token_expires <= \strtotime('+1 week', \time())) {
+        if (\strtotime('+1 week', \time()) >= $socialFeedModel->linkedin_refresh_token_expires || '' === $socialFeedModel->linkedin_refresh_token_expires) {
             $objMail = new Email();
             $objMail->subject = $GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInSubject'];
             $objMail->html = sprintf($GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInHtml'], $socialFeedModel->noteForRefreshTokenMail?? '-', $socialFeedModel->linkedin_company_id);
