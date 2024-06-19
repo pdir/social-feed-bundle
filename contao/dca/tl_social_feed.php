@@ -294,6 +294,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'doNotSaveEmpty' => true,
                 'tl_class' => 'w50 m12',
+                'submitOnChange'=> true
             ],
             'save_callback' => [
                 [SocialFeedListener::class, 'onRequestTokenSave'],
