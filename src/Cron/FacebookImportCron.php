@@ -168,7 +168,7 @@ class FacebookImportCron
                             $objNews->addImage = 1;
                         }
                         $objNews->tstamp = \time();
-                        $objNews->headline = \mb_substr($title, 0, 255);
+                        $objNews->headline = \mb_substr($title?? '', 0, 255);
 
                         if ('' === $message && !empty($imageTitle)) {
                             $objNews->teaser = $imageTitle;
