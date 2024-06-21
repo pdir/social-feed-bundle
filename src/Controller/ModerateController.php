@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\Controller;
 
 use Contao\BackendTemplate;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\Input;
@@ -31,7 +32,6 @@ use Pdir\SocialFeedBundle\Importer\NewsImporter;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class ModerateController
 {
@@ -42,12 +42,12 @@ class ModerateController
     private BackendTemplate $template;
 
     private string $message;
-    private CsrfTokenManagerInterface $csrfTokenManager;
+    private ContaoCsrfTokenManager  $csrfTokenManager;
 
     /**
      * ExportController constructor.
      */
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack, CsrfTokenManagerInterface $csrfTokenManager)
+    public function __construct(ContaoFramework $framework, RequestStack $requestStack, ContaoCsrfTokenManager $csrfTokenManager)
     {
         $this->framework = $framework;
         $this->requestStack = $requestStack;
