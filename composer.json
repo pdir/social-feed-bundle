@@ -1,44 +1,63 @@
 {
-  "name":"pdir/social-feed-bundle",
-  "description":"Social feed extension for Contao CMS",
-  "keywords":["contao","social","feed","facebook","instagram","twitter","google plus","pinterest","vk","rss","bundle","linkedin"],
-  "type":"contao-bundle",
-  "homepage":"https://pdir.de",
-  "license":"LGPL-3.0-or-later",
-  "authors":[
+  "name": "pdir/social-feed-bundle",
+  "description": "Social feed extension for Contao CMS",
+  "keywords": [
+    "contao",
+    "social",
+    "feed",
+    "facebook",
+    "instagram",
+    "x",
+    "twitter",
+    "google plus",
+    "pinterest",
+    "vk",
+    "rss",
+    "bundle",
+    "linkedin"
+  ],
+  "type": "contao-bundle",
+  "homepage": "https://pdir.de",
+  "license": "LGPL-3.0-or-later",
+  "authors": [
     {
-      "name":"Philipp Seibt",
-      "homepage":"https://pdir.de/",
-      "role":"Developer"
+      "name": "Philipp Seibt",
+      "homepage": "https://pdir.de/",
+      "role": "Developer"
     },
     {
-      "name":"Kamil Kuzminski",
-      "homepage":"https://github.com/qzminski",
-      "role":"Developer"
+      "name": "Mathias Arzberger",
+      "homepage": "https://pdir.de/",
+      "role": "Developer"
     },
     {
-      "name":"Mathias Arzberger",
-      "homepage":"https://pdir.de/",
-      "role":"Developer"
+      "name": "pdir GmbH",
+      "homepage": "https://pdir.de/",
+      "role": "Developer"
     }
   ],
-  "support":{
-    "issues":"https://github.com/pdir/social-feed-bundle/issues",
-    "source":"https://github.com/pdir/social-feed-bundle",
-    "docs":"https://docs.pdir.de",
+  "support": {
+    "issues": "https://github.com/pdir/social-feed-bundle/issues",
+    "source": "https://github.com/pdir/social-feed-bundle",
+    "docs": "https://docs.pdir.de",
     "donate": "https://contao-themes.net/sponsoring.html"
   },
   "require": {
-    "php": "^7.4 || ^8.0",
-    "contao/core-bundle": "^4.4",
-    "contao/news-bundle": "^4.4",
+    "php": "^8.0",
+    "ext-json": "*",
+    "contao/core-bundle": "^4.13 || ^5.3",
+    "contao/news-bundle": "^4.13 || ^5.3",
     "nickdnk/graph-sdk": "^6.0 || ^7.0",
     "abraham/twitteroauth": "~4.0",
-    "guzzlehttp/guzzle": "^7.3",
+    "guzzlehttp/guzzle": "6.0 | ~7.7",
     "kevinrob/guzzle-cache-middleware": "^3.2",
     "doctrine/cache": "^2.1",
     "doctrine/dbal": "^2.0 || ^3.0",
-    "samoritano/linkedin-api-php-client-v2": "dev-master as 0.0.20"
+    "samoritano/linkedin-api-php-client-v2": "^0.1"
+  },
+  "conflict": {
+    "contao/core": "*",
+    "contao/manager-plugin": "<2.0 || >=3.0"
   },
   "require-dev": {
     "bamarni/composer-bin-plugin": "^1.4",
@@ -52,22 +71,15 @@
     "slam/phpstan-extensions": "^4.0 || ^5.1 || ^6.0",
     "thecodingmachine/phpstan-strict-rules": "^0.12 || ^1.0"
   },
-  "conflict": {
-    "contao/manager-plugin": "<2.0 || >=3.0"
-  },
   "autoload": {
     "psr-4": {
       "Pdir\\SocialFeedBundle\\": "src/"
-    },
-    "classmap": [
-      "src/Resources/contao/"
-    ],
-    "exclude-from-classmap": [
-      "src/Resources/contao/config/",
-      "src/Resources/contao/dca/",
-      "src/Resources/contao/languages/",
-      "src/Resources/contao/templates/"
-    ]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Pdir\\SocialFeedBundle\\Tests\\": "tests/"
+    }
   },
   "funding": [
     {
@@ -80,6 +92,7 @@
     }
   ],
   "suggest": {
+    "pdir/social-feed-plus-bundle": "Publish news, events or regular pages on all available social media channels at once or do this manually with one click / News, Events oder regulären Seiten auf allen verfügbaren Social Media Kanälen auf einmal veröffentlichen oder dies manuell mit einem Klick tun.",
     "contao-themes-net/mate-theme-bundle": "MATE Theme includes all styles for social feed bundle. / MATE Theme enthält Stylesheets für das Social Feed Bundle.",
     "contao-themes-net/odd-theme-bundle": "ODD Theme includes all styles for social feed bundle. / ODD Theme enthält Stylesheets für das Social Feed Bundle.",
     "contao-themes-net/nature-theme-bundle": "NATURE Theme includes all styles for social feed bundle. / NATURE Theme enthält Stylesheets für das Social Feed Bundle.",
@@ -94,7 +107,8 @@
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "contao/manager-plugin": true,
       "bamarni/composer-bin-plugin": true,
-      "php-http/discovery": true
+      "php-http/discovery": true,
+      "contao-community-alliance/composer-plugin": true
     }
   }
 }

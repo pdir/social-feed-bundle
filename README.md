@@ -1,4 +1,4 @@
-Social Feed extension for Contao 4
+Social Feed extension for Contao
 ============================================================
 
 [![Latest Stable Version](https://poser.pugx.org/pdir/social-feed-bundle/v/stable)](https://packagist.org/packages/pdir/social-feed-bundle)
@@ -8,15 +8,15 @@ Social Feed extension for Contao 4
 Social Feed+ version
 -------------------------
 
-| [![Social Feed Plus](https://pdir.de/assets/images/f/pdir_icon_socialfeed_plus-0c93e4f1.svg)](https://pdir.de/socialfeed+) | With the paid Social Feed+ version, you can publish your news, events or regular pages to all available social media channels at once or do it manually with one click. Use Contao's own on-board tools to schedule your posts for Facebook, Twitter, Instagram or LinkedIn and publish them automatically to all connected channels 10 minutes after publishing the news, event or a subpage. |
-|:--------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-|                                                                                                                            |                                                                                                                                          [**Screenshots**](https://pdir.de/socialfeed+#screenshots) <br> [Kaufen](https://pdir.de/socialfeed+#buy)                                                                                                                                             |
+| [![Social Feed Plus](https://pdir.de/assets/images/f/pdir_icon_socialfeed_plus-0c93e4f1.svg)](https://pdir.de/socialfeed+) | With the paid Social Feed+ version, you can publish your news, events or regular pages to all available social media channels at once or do it manually with one click. Use Contao's own on-board tools to schedule your posts for Facebook, X ehemals Twitter, Instagram or LinkedIn and publish them automatically to all connected channels 10 minutes after publishing the news, event or a subpage. |
+|:--------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|                                                                                                                            |                                                                                                                                                [**Screenshots**](https://pdir.de/socialfeed+#screenshots) <br> [Kaufen](https://pdir.de/socialfeed+#buy)                                                                                                                                                 |
 
 About the free version
 -----
 
 The Social Feed Extension shows a user feed from the most popular social
-networks (Facebook, Instagram, Twitter and Linkedin). The posts are written directly
+networks (Facebook, Instagram, X formerly known as Twitter and LinkedIn). The posts are written directly
 into the database, created as news and can then displayed on the website
 using the module type news list. Since version 2.5.0 modaration of posts
 in news archive for instagram is available.
@@ -24,7 +24,7 @@ in news archive for instagram is available.
 **Deutsch**
 
 Die Social Feed Erweiterung zeigt einen Feed aus den beliebtesten sozialen
-Netzwerken an. Zurzeit werden Facebook, Instagram, Twitter und LinkedIn unterstützt,
+Netzwerken an. Zurzeit werden Facebook, Instagram, X ehemals Twitter und LinkedIn unterstützt,
 weitere Kanäle folgen in Zukunft. Die Posts werden direkt in die Datenbank
 geschrieben, als News angelegt und können anschließend mit dem Modultyp
 Nachrichtenliste auf der Webseite angezeigt werden. Seit Version 2.5.0
@@ -49,6 +49,13 @@ System requirements
 Installation & Configuration
 ----------------------------
 * [Dokumentation](https://pdir.de/docs/de/contao/extensions/socialfeed/)
+
+Commands
+----------------------------
+
+    php vendor/bin/contao-console linkedin:import
+    php vendor/bin/contao-console linkedin:import -d true -m 30
+
 
 Demo
 ----------------------------

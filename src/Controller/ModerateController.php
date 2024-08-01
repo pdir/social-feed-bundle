@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\Controller;
 
 use Contao\BackendTemplate;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\Input;
@@ -34,44 +35,32 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ModerateController
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private RequestStack $requestStack;
 
-    /**
-     * @var BackendTemplate
-     */
-    private $template;
+    private BackendTemplate $template;
 
-    /**
-     * @var string
-     */
-    private $message;
+    private string $message;
+    private ContaoCsrfTokenManager  $csrfTokenManager;
 
     /**
      * ExportController constructor.
      */
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack)
+    public function __construct(ContaoFramework $framework, RequestStack $requestStack, ContaoCsrfTokenManager $csrfTokenManager)
     {
         $this->framework = $framework;
         $this->requestStack = $requestStack;
         $this->template = new BackendTemplate('be_sf_moderate');
+        $this->csrfTokenManager = $csrfTokenManager;
     }
 
     /**
      * Run the controller.
      *
-     * @return string
-     *
      * @codeCoverageIgnore
      */
-    public function run()
+    public function run(): string
     {
         $formId = 'tl_news_moderate';
 
@@ -82,6 +71,80 @@ class ModerateController
         }
 
         return $this->getTemplate($formId)->parse();
+    }
+
+    /**
+     * Generate the options.
+     *
+     * @codeCoverageIgnore
+     */
+    public static function generateOptions(bool|string $filter = false): array
+    {
+        $options = [];
+
+        if ($filter) {
+            $objFeedModel = SocialFeedModel::findBy('socialFeedType', $filter);
+        } else {
+            $objFeedModel = SocialFeedModel::findAll();
+        }
+
+        foreach ($objFeedModel as $feed) {
+            $options[$feed->id] = $feed->socialFeedType.' ';
+
+            if ('Facebook' === $feed->socialFeedType) {
+                $options[$feed->id] .= $feed->pdir_sf_fb_account;
+            }
+
+            if ('Instagram' === $feed->socialFeedType) {
+                $options[$feed->id] .= $feed->instagram_account;
+            }
+
+            if ('Twitter' === $feed->socialFeedType) {
+                $options[$feed->id] .= $feed->twitter_account;
+            }
+
+            if ('LinkedIn' === $feed->socialFeedType) {
+                $options[$feed->id] .= $feed->linkedin_account;
+            }
+
+            $options[$feed->id] .= ' (ID '.$feed->id.')';
+        }
+
+        return $options;
+    }
+
+    public function shortenHeadline($item): void
+    {
+        $message = $item['headline'] ?? '';
+        $more = '';
+
+        if (\strlen($message) > 50) {
+            $more = ' ...';
+        }
+
+        $item['headline'] = mb_substr($message, 0, 50).$more;
+    }
+
+    public function getPostImage(SocialFeedModel $socialFeedAccount, $item): void
+    {
+        $imgPath = NewsImporter::createImageFolder($socialFeedAccount->id); // create image folder
+
+        if ('VIDEO' === $item['media_type'] || 'IMAGE' === $item['media_type'] || 'CAROUSEL_ALBUM' === $item['media_type']) {
+            $imgSrc = '';
+
+            if (isset($item['media_url'])) {
+                $imgSrc = false !== \strpos($item['media_url'], 'jpg') ? $item['media_url'] : $item['thumbnail_url'];
+            }
+
+            if (!isset($item['media_url']) && isset($item['children']['data'][0]['media_url'])) {
+                $imgSrc = $item['children']['data'][0]['media_url'];
+            }
+
+            $picturePath = $imgPath.$item['id'].'.jpg';
+            $pictureUuid = NewsImporter::saveImage($picturePath, $imgSrc);
+
+            $item['singleSRC'] = $pictureUuid;
+        }
     }
 
     /**
@@ -96,7 +159,6 @@ class ModerateController
         }
 
         $socialFeedAccount = $request->request->get('account');
-        //$numberPosts = $request->request->get('number_posts');
         $objSocialFeedModel = SocialFeedModel::findById($socialFeedAccount);
         $newsArchiveId = Input::get('id');
 
@@ -104,21 +166,36 @@ class ModerateController
         $items = $objImporter->getPostsByAccount($request->request->get('account'), $request->request->get('number_posts'));
 
         // import selected items
-        $importItems = $request->request->get('importItems');
+        $allValues = $request->request->all();
 
-        if ($importItems && \count($importItems) > 0) {
+        // do import if importItems is set
+        if (isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
             foreach ($items as $item) {
-                if (\in_array($item['id'], $importItems, true)) {
-                    $importer = new NewsImporter($item);
+                if (\in_array($item['id'], $allValues['importItems'], true)) {
+                    $importer = new NewsImporter();
+
+                    // set headline
+                    $item['headline'] = NewsImporter::shortenHeadline($item['caption']);
+
+                    // set teaser
+                    $item['teaser'] = str_replace("\n", '<br>', $item['caption']);
+
+                    // add image
+                    $item['singleSRC'] = $this->getPostImage($objSocialFeedModel, $item);
+
+                    $item['date'] = strtotime($item['timestamp']);
+                    $item['time'] = strtotime($item['timestamp']);
+
+                    $importer->setNews($item);
                     $importer->accountImage = $objImporter->getAccountImage();
-                    $importer->execute($newsArchiveId, $objSocialFeedModel->socialFeedType, $objSocialFeedModel->id);
+                    $importer->execute($newsArchiveId, $objSocialFeedModel);
                 }
             }
         }
 
         // set import message
-        if (\is_array($items) && isset($importItems) && \count($importItems) > 0) {
-            $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($importItems));
+        if (\is_array($items) && isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
+            $this->message = \sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($allValues['importItems']));
         }
 
         if (null === $items) {
@@ -137,20 +214,16 @@ class ModerateController
         }
 
         $this->template->activeAccount = $request->request->get('account');
-        $this->template->moderationList = $html;
-        $this->template->message = $this->message;
+        $this->template->moderationList = $html ?? '';
+        $this->template->message = isset($this->message) ? '<div class="tl_sucess">'.$this->message.'</div></div>' : '';
     }
 
     /**
      * Get the template.
      *
-     * @param string $formId
-     *
-     * @return BackendTemplate
-     *
      * @codeCoverageIgnore
      */
-    protected function getTemplate($formId)
+    protected function getTemplate(string $formId): BackendTemplate
     {
         /**
          * @var Environment
@@ -158,54 +231,20 @@ class ModerateController
          * @var System      $system
          */
         $environment = $this->framework->getAdapter(Environment::class);
-        $message = $this->framework->getAdapter(Message::class);
         $system = $this->framework->getAdapter(System::class);
 
-        if ($this->message) {
-            $message->addInfo($this->message);
+        if (isset($this->message)) {
+            Message::addInfo($this->message);
         }
 
         $this->template->backUrl = $system->getReferer();
         $this->template->action = $environment->get('request');
         $this->template->formId = $formId;
-        $this->template->message = $message->generate();
-        $this->template->options = $this->generateOptions();
+        $this->template->message = isset($this->message) ? '<div class="tl_confirm">'.$this->message.'</div>' : '';
+        $this->template->options = $this->generateOptions('Instagram');
         $this->template->headline = $GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['headline'].Input::get('id');
+        $this->template->requestToken = $this->csrfTokenManager->getDefaultTokenValue();
 
         return $this->template;
-    }
-
-    /**
-     * Generate the options.
-     *
-     * @return array
-     *
-     * @codeCoverageIgnore
-     */
-    protected function generateOptions()
-    {
-        $options = [];
-
-        $objFeedModel = SocialFeedModel::findAll();
-
-        foreach ($objFeedModel as $feed) {
-            if ('Facebook' === $feed->socialFeedType) {
-                $options[$feed->id] = $feed->socialFeedType.' '.$feed->pdir_sf_fb_account;
-            }
-
-            if ('Instagram' === $feed->socialFeedType) {
-                $options[$feed->id] = $feed->socialFeedType.' '.$feed->instagram_account;
-            }
-
-            if ('Twitter' === $feed->socialFeedType) {
-                $options[$feed->id] = $feed->socialFeedType.' '.$feed->twitter_account;
-            }
-
-            if ('LinkedIn' === $feed->socialFeedType) {
-                $options[$feed->id] = $feed->socialFeedType.' '.$feed->linkedin_account;
-            }
-        }
-
-        return $options;
     }
 }

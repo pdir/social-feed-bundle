@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -21,15 +21,23 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\SocialFeed;
 
 use Contao\FilesModel;
-use Contao\Picture;
 use Contao\StringUtil;
+use Contao\System;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 
 class SocialFeedNewsClass
 {
+    private string|array|bool|int|null|float $projectDir;
+    private $staticUrl;
+
     public function parseNews($objTemplate, $arrRow, $objModule): void
     {
         if ('' !== $arrRow['social_feed_id']) {
+
+            $container = System::getContainer();
+            $this->projectDir = $container->getParameter('kernel.project_dir');
+            $this->staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
+
             $teaser = $arrRow['teaser'];
 
             if ($objModule->pdir_sf_text_length > 0 && null !== $teaser) {
@@ -48,31 +56,33 @@ class SocialFeedNewsClass
             $objTemplate->teaser = $teaser;
             $objTemplate->socialFeedType = $arrRow['social_feed_type'];
 
+            $pictureFactory = System::getContainer()->get('contao.image.picture_factory');
+
             if (null !== $arrRow['social_feed_account_picture']) {
-                $imagePath = FilesModel::findByUuid($arrRow['social_feed_account_picture'])->path;
+                $imagePath = FilesModel::findByUuid($arrRow['social_feed_account_picture'])->path?? null;
 
                 if (null === $imagePath) {
                     $objTemplate->accountPicture = '';
                 }
 
                 if (null !== $imagePath) {
-                    $pictureObj = Picture::create($imagePath);
+                    $pictureObj = $pictureFactory->create($this->projectDir.DIRECTORY_SEPARATOR.$imagePath);
 
                     if (null !== $pictureObj) {
-                        $objTemplate->accountPicture = $pictureObj->getTemplateData();
+                        $objTemplate->accountPicture = $this->getTemplateData($pictureObj);
                     }
                 }
             } else {
                 $socialFeedAccount = SocialFeedModel::findBy('id', $arrRow['social_feed_config']);
 
                 if (null !== $socialFeedAccount->instagram_account_picture) {
-                    $imagePath = FilesModel::findByUuid($socialFeedAccount->instagram_account_picture)->path;
-                    $size = deserialize($socialFeedAccount->instagram_account_picture_size);
-                    $objTemplate->accountPicture = Picture::create($imagePath, $size)->getTemplateData();
+                    $image = FilesModel::findByUuid($socialFeedAccount->instagram_account_picture);
+                    $size = StringUtil::deserialize($socialFeedAccount->instagram_account_picture_size);
+                    $objTemplate->accountPicture = $this->getTemplateData($pictureFactory->create($this->projectDir.DIRECTORY_SEPARATOR.$image->path, $size));
                 } elseif (null !== $socialFeedAccount->linkedin_account_picture) {
-                    $imagePath = FilesModel::findByUuid($socialFeedAccount->linkedin_account_picture)->path;
-                    $size = deserialize($socialFeedAccount->linkedin_account_picture_size);
-                    $objTemplate->accountPicture = Picture::create($imagePath, $size)->getTemplateData();
+                    $image = FilesModel::findByUuid($socialFeedAccount->linkedin_account_picture);
+                    $size = StringUtil::deserialize($socialFeedAccount->linkedin_account_picture_size);
+                    $objTemplate->accountPicture = $this->getTemplateData($pictureFactory->create($this->projectDir.DIRECTORY_SEPARATOR.$image->path, $size));
                 }
             }
 
@@ -83,5 +93,17 @@ class SocialFeedNewsClass
                 $objTemplate->sfFbAccount = $socialFeedAccount->instagram_account;
             }
         }
+    }
+
+    private function getTemplateData($picture)
+    {
+        if (null === $picture) {
+            return;
+        }
+
+        return [
+            'img' => $picture->getImg($this->projectDir, $this->staticUrl),
+            'sources' => $picture->getSources($this->projectDir, $this->staticUrl),
+        ];
     }
 }

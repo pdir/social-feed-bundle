@@ -1,0 +1,99 @@
+services:
+    _defaults:
+        autoconfigure: true
+        autowire: true
+
+    Pdir\SocialFeedBundle\:
+        resource: ../src/*
+
+    Pdir\SocialFeedBundle\EventListener\DataContainer\SetupListener:
+        public: true
+
+    Pdir\SocialFeedBundle\Importer\InstagramClient:
+        public: true
+        arguments:
+            - "@Pdir\\SocialFeedBundle\\Importer\\InstagramRequestCache"
+            - "@contao.framework"
+            - "@?logger"
+        tags:
+            - { name: monolog.logger, channel: contao }
+
+    Pdir\SocialFeedBundle\Importer\InstagramRequestCache:
+        public: true
+        arguments:
+            - "@filesystem"
+            - ~ # cache_ttl to be set in extension class
+            - "%kernel.project_dir%"
+
+    Pdir\SocialFeedBundle\Controller\InstagramController:
+        public: true
+        arguments:
+            - "@Pdir\\SocialFeedBundle\\Importer\\InstagramClient"
+            - "@database_connection"
+            - "@router"
+            - "@security.token_storage"
+
+    Pdir\SocialFeedBundle\Controller\LinkedinController:
+        public: true
+        arguments:
+            - "@database_connection"
+            - "@router"
+
+    Pdir\SocialFeedBundle\Controller\FacebookController:
+        public: true
+        arguments:
+            - "@database_connection"
+            - "@router"
+
+    Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener:
+        public: true
+        arguments:
+            - "@router"
+            - '@security.helper'
+            - '@contao.image.sizes'
+
+    pdir_social_feed_moderate.controller:
+        class: Pdir\SocialFeedBundle\Controller\ModerateController
+        public: true
+        arguments:
+            - "@contao.framework"
+            - "@request_stack"
+            - '@contao.csrf.token_manager'
+
+    Pdir\SocialFeedBundle\Cron\FacebookImportCron:
+        public: true
+        tags:
+            - { name: contao.cron, cli: true, priority: 10 }
+        arguments:
+            - '@contao.framework'
+
+    Pdir\SocialFeedBundle\Cron\InstagramImportCron:
+        public: true
+        tags:
+            - { name: contao.cron, cli: true, priority: 10 }
+        arguments:
+            - '@contao.framework'
+
+    Pdir\SocialFeedBundle\Cron\LinkedInImportCron:
+        public: true
+        tags:
+            - { name: contao.cron, cli: true, priority: 10 }
+        arguments:
+            - '@contao.framework'
+            -
+    Pdir\SocialFeedBundle\Cron\RefreshAccessTokenCron:
+        public: true
+        tags:
+            - { name: contao.cron, cli: true, priority: 10 }
+        arguments:
+            - '@contao.framework'
+
+    Pdir\SocialFeedBundle\Cron\TwitterImportCron:
+        public: true
+        tags:
+            - { name: contao.cron, cli: true, priority: 10 }
+        arguments:
+            - '@contao.framework'
+
+    Pdir\SocialFeedBundle\SocialFeed\SocialFeedNewsClass:
+        public: true

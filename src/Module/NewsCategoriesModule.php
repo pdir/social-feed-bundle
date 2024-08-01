@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -30,7 +30,7 @@ class NewsCategoriesModule extends NewsListModule
      *
      * @var string
      */
-    protected $strTemplate = 'mod_newslist';
+    protected $strTemplate = 'mod_newslist_social_feed';
 
     protected function compile(): void
     {
@@ -46,5 +46,7 @@ class NewsCategoriesModule extends NewsListModule
         if (null !== $layout->scripts && strpos($layout->scripts, 'lazyload')) {
             $this->Template->lazyload = true;
         }
+
+        $GLOBALS['TL_CSS']['social_feed'] = 'bundles/pdirsocialfeed/css/social_feed.min.css|static';
     }
 }

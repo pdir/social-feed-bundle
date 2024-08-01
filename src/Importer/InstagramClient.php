@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -24,6 +24,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\File;
 use Contao\FilesModel;
+use Contao\Message;
 use Contao\StringUtil;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use GuzzleHttp\Client;
@@ -76,7 +77,7 @@ class InstagramClient
             $response = $this->getCachedClient($socialFeedId)->get($url, ['query' => $query]);
         } catch (ClientException | ServerException $e) {
             if (null !== $this->logger) {
-                $this->logger->error(sprintf('Unable to fetch Instagram data from "%s": %s', $url, $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]);
+                $this->logger->error(sprintf('Unable to fetch Instagram data from "%s": %s', $url, $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
 
             return null;
@@ -86,7 +87,7 @@ class InstagramClient
 
         if (!\is_array($json_data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
-                $this->logger->error(sprintf('Unable to decode Instagram data from "%s": %s', $url, json_last_error_msg()), ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]);
+                $this->logger->error(sprintf('Unable to decode Instagram data from "%s": %s', $url, json_last_error_msg()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
 
             return null;
@@ -171,7 +172,7 @@ class InstagramClient
                     $response = $this->getClient()->get($item['media_url']);
                 } catch (ClientException | ServerException $e) {
                     if (null !== $this->logger) {
-                        $this->logger->error(sprintf('Unable to fetch Instagram image from "%s": %s', $item['media_url'], $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]);
+                        $this->logger->error(sprintf('Unable to fetch Instagram image from "%s": %s', $item['media_url'], $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
                     }
 
                     continue;
@@ -189,6 +190,17 @@ class InstagramClient
         }
 
         return $data;
+    }
+
+    /**
+     * Get the tags (mentions).
+     */
+    public function getTags(string $accessToken, int $userId = null, bool $cache = true): ?array
+    {
+        return $this->getData('https://graph.instagram.com/'.$userId.'/tags', [
+            'access_token' => $accessToken,
+            'fields' => 'id,username',
+        ], $userId, $cache);
     }
 
     /**
@@ -222,7 +234,7 @@ class InstagramClient
             ]);
         } catch (ClientException | ServerException $e) {
             if (null !== $this->logger) {
-                $this->logger->error(sprintf('Unable to fetch the Instagram short-lived access token: %s', $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]);
+                $this->logger->error(sprintf('Unable to fetch the Instagram short-lived access token: %s', $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
 
             return null;
@@ -232,7 +244,7 @@ class InstagramClient
 
         if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
-                $this->logger->error(sprintf('Unable to fetch the Instagram short-lived access token: %s', json_last_error_msg()), ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]);
+                $this->logger->error(sprintf('Unable to fetch the Instagram short-lived access token: %s', json_last_error_msg()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
 
             return null;
@@ -256,7 +268,7 @@ class InstagramClient
             ]);
         } catch (ClientException | ServerException $e) {
             if (null !== $this->logger) {
-                $this->logger->error(sprintf('Unable to fetch the Instagram long-lived access token: %s', $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]);
+                $this->logger->error(sprintf('Unable to fetch the Instagram long-lived access token: %s', $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
 
             return null;
@@ -266,7 +278,7 @@ class InstagramClient
 
         if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
-                $this->logger->error(sprintf('Unable to fetch the Instagram long-lived access token: %s', json_last_error_msg()), ['contao' => new ContaoContext(__METHOD__, TL_ERROR)]);
+                $this->logger->error(sprintf('Unable to fetch the Instagram long-lived access token: %s', json_last_error_msg()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
 
             return null;

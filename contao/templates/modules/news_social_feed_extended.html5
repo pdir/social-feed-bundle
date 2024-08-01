@@ -1,0 +1,38 @@
+<div class="social_feed_element extended arc_<?= $this->archive->id ?> block<?= $this->class ?>" itemscope itemtype="http://schema.org/Article">
+    <div class="inner">
+
+        <?php if($this->accountPicture): ?>
+        <div class="icon">
+            <?php $this->insert('picture_default', $this->accountPicture); ?>
+        </div>
+        <?php endif; ?>
+
+        <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished">
+            <?= $this->date ?></time>
+            <?php if($this->socialFeedType == "Facebook" || $this->socialFeedType == ""): ?>
+                <img src="bundles/pdirsocialfeed/img/icon_facebook.svg" alt="Facebook Icon">
+            <?php elseif($this->socialFeedType == "Instagram"): ?>
+                <img src="bundles/pdirsocialfeed/img/icon_instagram.svg" alt="Instagram Icon">
+            <?php elseif($this->socialFeedType == "Twitter"): ?>
+                <img src="bundles/pdirsocialfeed/img/icon_twitter.svg" alt="Twitter Icon">
+            <?php endif; ?>
+        </p>
+
+        <div class="title"><?= $this->sfFbAccount ?></div>
+
+        <?php if ($this->addImage): ?>
+            <?php if ($this->sfImages): ?>
+                <?php $this->insert('image', $this->arrData); ?>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <div class="ce_text block" itemprop="description">
+            <p><?= preg_replace('#(?:<br\s*/?>\s*?){2,}#', '</p><p>', $this->teaser) ?></p>
+        </div>
+
+        <a href="<?= $this->url ?>" target="_blank" class="more" rel="noreferrer noopener">
+            <?= $GLOBALS['TL_LANG']['MSC']['more'] ?>
+        </a>
+
+    </div>
+</div>

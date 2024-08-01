@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -21,8 +21,9 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\Controller;
 
 use Contao\BackendUser;
+use Contao\System;
 use Doctrine\DBAL\Connection;
-use Pdir\SocialFeedBundle\EventListener\SocialFeedListener;
+use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener;
 use Pdir\SocialFeedBundle\Importer\InstagramClient;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,12 +66,12 @@ class InstagramController
     /**
      * InstagramController constructor.
      */
-    public function __construct(InstagramClient $client, Connection $db, RouterInterface $router, SessionInterface $session, TokenStorageInterface $tokenStorage)
+    public function __construct(InstagramClient $client, Connection $db, RouterInterface $router, TokenStorageInterface $tokenStorage)
     {
         $this->client = $client;
         $this->db = $db;
         $this->router = $router;
-        $this->session = $session;
+        $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
         $this->tokenStorage = $tokenStorage;
     }
 
