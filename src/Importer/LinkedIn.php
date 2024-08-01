@@ -122,7 +122,7 @@ class LinkedIn
 
                 // get posts
                 $posts = $client->get(
-                    'ugcPosts?q=authors&authors=List(urn%3Ali%3Aorganization%3A70570732)&sortBy=LAST_MODIFIED&count='.$this->maxPosts
+                    'ugcPosts?q=authors&authors=List(urn%3Ali%3Aorganization%3A'.$account->linkedin_company_id.')&sortBy=LAST_MODIFIED&count='.$this->maxPosts
                 );
 
                 if (!\is_array($posts['elements'])) {
