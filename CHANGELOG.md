@@ -17,6 +17,7 @@ This version is currently only available via the “early adopter” program (EA
 Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügbar. Mehr erfährst du unter [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
 
 - [Fixed] Fix newslist module (remove void)
+- [Fixed] Missing images in moderated instagram import
 
 ## [2.13.3](https://github.com/pdir/social-feed-bundle/tree/2.13.3) - 2024-08-07
 

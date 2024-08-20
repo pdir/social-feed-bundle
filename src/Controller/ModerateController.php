@@ -125,7 +125,7 @@ class ModerateController
         $item['headline'] = mb_substr($message, 0, 50).$more;
     }
 
-    public function getPostImage(SocialFeedModel $socialFeedAccount, $item): void
+    public function getPostImage(SocialFeedModel $socialFeedAccount, $item)
     {
         $imgPath = NewsImporter::createImageFolder($socialFeedAccount->id); // create image folder
 
@@ -144,6 +144,8 @@ class ModerateController
             $pictureUuid = NewsImporter::saveImage($picturePath, $imgSrc);
 
             $item['singleSRC'] = $pictureUuid;
+
+            return $item['singleSRC'];
         }
     }
 
