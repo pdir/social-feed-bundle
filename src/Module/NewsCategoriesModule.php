@@ -25,7 +25,7 @@ use Contao\LayoutModel;
 
 class NewsCategoriesModule extends NewsListModule
 {
-    protected function compile(): void
+    protected function compile()
     {
         parent::compile();
 
