@@ -58,16 +58,13 @@ Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügba
 - [Fixed] Remove warnings in cron listener
 - [Fixed] Add missing translations (de,en,it)
 
-## [2.12.6](https://github.com/pdir/social-feed-bundle/tree/2.12.5) - 2023-09-20
-
-- [Fixed] Fix newslist module (remove void)
-
 ## [2.12.5](https://github.com/pdir/social-feed-bundle/tree/2.12.5) - 2023-09-20
 
 - [Changed] doctrine/cache from 1.9 to ^2.1
 - [Changed] guzzlehttp/guzzle from 6.3 to ^7.3
 - [Changed] Change translations and texts
 - [Fixed] temporarily supplemented samoritano/linkedin-api-php-client-v2 to support guzzle 7.3
+- [Fixed] Fix newslist module (remove void)
 
 ## [2.12.4](https://github.com/pdir/social-feed-bundle/tree/2.12.4) - 2023-07-31
 
