@@ -32,7 +32,7 @@ class ModuleCustomNewslist extends ModuleNewsList
      */
     protected $strTemplate = 'mod_newslist';
 
-    protected function compile()
+    protected function compile() // eslint-disable-line no-use-before-define
     {
         parent::compile();
 
