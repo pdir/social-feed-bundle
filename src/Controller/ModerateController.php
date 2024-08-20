@@ -141,11 +141,8 @@ class ModerateController
             }
 
             $picturePath = $imgPath.$item['id'].'.jpg';
-            $pictureUuid = NewsImporter::saveImage($picturePath, $imgSrc);
 
-            $item['singleSRC'] = $pictureUuid;
-
-            return $item['singleSRC'];
+            return NewsImporter::saveImage($picturePath, $imgSrc);
         }
     }
 
