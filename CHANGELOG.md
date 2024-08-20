@@ -10,6 +10,15 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [2.13.4](https://github.com/pdir/social-feed-bundle/tree/2.13.4) - 2024-08-20
+
+This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
+
+Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügbar. Mehr erfährst du unter [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
+
+- [Fixed] Fix newslist module (remove void)
+- [Fixed] Missing images in moderated instagram import
+
 ## [2.13.3](https://github.com/pdir/social-feed-bundle/tree/2.13.3) - 2024-08-07
 
 This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
@@ -55,6 +64,7 @@ Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügba
 - [Changed] guzzlehttp/guzzle from 6.3 to ^7.3
 - [Changed] Change translations and texts
 - [Fixed] temporarily supplemented samoritano/linkedin-api-php-client-v2 to support guzzle 7.3
+- [Fixed] Fix newslist module (remove void)
 
 ## [2.12.4](https://github.com/pdir/social-feed-bundle/tree/2.12.4) - 2023-07-31
 

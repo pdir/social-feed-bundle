@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -32,7 +32,7 @@ class NewsCategoriesModule extends NewsListModule
      */
     protected $strTemplate = 'mod_newslist';
 
-    protected function compile(): void
+    protected function compile()
     {
         parent::compile();
 

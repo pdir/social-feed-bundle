@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2023 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -74,30 +74,29 @@ $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoAccount'] = 'No account specifi
 $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoType'] = 'No type specified';
 $GLOBALS['TL_LANG']['tl_social_feed']['user'] = ['User', 'Please specify here which user should be set for newly imported messages'];
 
-
 $GLOBALS['TL_LANG']['tl_social_feed']['setupWelcome'] = 'Social Feed Bundle';
-$GLOBALS['TL_LANG']['tl_social_feed']['setupLinks'] = <<<HTML
-<p>The SocialFeedBundle is sponsored by the <a href="https://pdir.de/" target="_blank">pdir / digital agentur</a></p>
-<h2>Interesting links</h2>
-<ul class="link-list">
-  <li><a href="https://pdir.de/docs/de/contao/extensions/socialfeed/" target="_blank" style="text-decoration: underline;">Documentation</a></li>
-  <li><a href="https://github.com/pdir/social-feed-bundle/issues" target="_blank" style="text-decoration: underline;">Report problems</a></li>
-  <li><a href="https://github.com/pdir/social-feed-bundle/" target="_blank" style="text-decoration: underline;">Github</a></li>
-  <li><a href="https://contao-themes.net/sponsoring.html?isorc=3" target="_blank" style="text-decoration: underline;">Sponsorship / Support</a></li>
-</ul>
-HTML;
+$GLOBALS['TL_LANG']['tl_social_feed']['setupLinks'] = <<<'HTML'
+    <p>The SocialFeedBundle is sponsored by the <a href="https://pdir.de/" target="_blank">pdir / digital agentur</a></p>
+    <h2>Interesting links</h2>
+    <ul class="link-list">
+      <li><a href="https://pdir.de/docs/de/contao/extensions/socialfeed/" target="_blank" style="text-decoration: underline;">Documentation</a></li>
+      <li><a href="https://github.com/pdir/social-feed-bundle/issues" target="_blank" style="text-decoration: underline;">Report problems</a></li>
+      <li><a href="https://github.com/pdir/social-feed-bundle/" target="_blank" style="text-decoration: underline;">Github</a></li>
+      <li><a href="https://contao-themes.net/sponsoring.html?isorc=3" target="_blank" style="text-decoration: underline;">Sponsorship / Support</a></li>
+    </ul>
+    HTML;
 
 $GLOBALS['TL_LANG']['tl_social_feed']['setupHeadline'] = 'Welcome to the Social Feed Bundle for Contao';
 $GLOBALS['TL_LANG']['tl_social_feed']['setupDesc'] = 'The Social Feed extension displays a feed from the most popular social networks. Currently Facebook, Instagram, Twitter and LinkedIn are supported. The extension can be used free of charge. There is a paid Plus version to publish posts to all social media at once or do it manually.';
-$GLOBALS['TL_LANG']['tl_social_feed']['setupPlus'] = <<<HTML
-  <h3>Social Feed<span class="high-plus"></span> Version</h3>
-    <ul class="benefit">
-      <li>Publish to multiple social media channels at once</li>
-      <li>Automatically publish scheduled and normal posts</li>
-      <li>Customize the text in the preview before publishing</li>
-      <li>Support for tags that are automatically inserted at the end</li>
-      <li>Quick help in case of problems via our ticket system</li>
-    </ul>
-    <p><br><span class="price">99,- €</span> <a href="https://pdir.de/socialfeed+" target="_blank" class="tl_submit">Buy now</a></p>
-HTML;
+$GLOBALS['TL_LANG']['tl_social_feed']['setupPlus'] = <<<'HTML'
+      <h3>Social Feed<span class="high-plus"></span> Version</h3>
+        <ul class="benefit">
+          <li>Publish to multiple social media channels at once</li>
+          <li>Automatically publish scheduled and normal posts</li>
+          <li>Customize the text in the preview before publishing</li>
+          <li>Support for tags that are automatically inserted at the end</li>
+          <li>Quick help in case of problems via our ticket system</li>
+        </ul>
+        <p><br><span class="price">99,- €</span> <a href="https://pdir.de/socialfeed+" target="_blank" class="tl_submit">Buy now</a></p>
+    HTML;
 $GLOBALS['TL_LANG']['tl_social_feed']['setupFooter'] = 'Your team of <img src="/bundles/pdirsocialfeed/img/pdir_logo.svg" width="50" alt="pdir logo" style="vertical-align: sub;"> / digital agentur';
