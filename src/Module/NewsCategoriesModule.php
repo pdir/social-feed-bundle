@@ -32,7 +32,7 @@ class NewsCategoriesModule extends NewsListModule
      */
     protected $strTemplate = 'mod_newslist';
 
-    protected function compile(): void
+    protected function compile()
     {
         parent::compile();
 
