@@ -25,7 +25,7 @@ use Contao\ModuleNewsList;
 
 class ModuleCustomNewslist extends ModuleNewsList
 {
-    protected function compile(): void
+    protected function compile()
     {
         parent::compile();
 

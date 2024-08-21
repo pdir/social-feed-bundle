@@ -10,6 +10,15 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [2.13.4](https://github.com/pdir/social-feed-bundle/tree/2.13.4) - 2024-08-20
+
+This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
+
+Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügbar. Mehr erfährst du unter [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
+
+- [Fixed] Fix newslist module (remove void)
+- [Fixed] Missing images in moderated instagram import
+
 ## [2.13.3](https://github.com/pdir/social-feed-bundle/tree/2.13.3) - 2024-08-07
 
 This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
