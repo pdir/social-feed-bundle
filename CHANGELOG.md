@@ -58,7 +58,11 @@ Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügba
 - [Fixed] Remove warnings in cron listener
 - [Fixed] Add missing translations (de,en,it)
 
-## [2.12.5](https://github.com/pdir/social-feed-bundle/tree/2.12.5) - 2023-09-20
+## [2.12.6](https://github.com/pdir/social-feed-bundle/tree/2.12.6) - 2024-08-27
+
+- [Changed] samoritano/linkedin-api-php-client-v2 from dev-master to ^0.1
+
+## [2.12.5](https://github.com/pdir/social-feed-bundle/tree/2.12.5) - 2024-08-20
 
 - [Changed] doctrine/cache from 1.9 to ^2.1
 - [Changed] guzzlehttp/guzzle from 6.3 to ^7.3
