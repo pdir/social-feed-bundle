@@ -10,6 +10,9 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+> [!Tip]
+> Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
+
 ## [2.13.4](https://github.com/pdir/social-feed-bundle/tree/2.13.4) - 2024-08-20
 
 This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
