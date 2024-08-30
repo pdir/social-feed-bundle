@@ -15,44 +15,24 @@ Types of changes
 
 ## [2.13.4](https://github.com/pdir/social-feed-bundle/tree/2.13.4) - 2024-08-20
 
-This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
-
-Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügbar. Mehr erfährst du unter [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
-
 - [Fixed] Fix newslist module (remove void)
 - [Fixed] Missing images in moderated instagram import
 
 ## [2.13.3](https://github.com/pdir/social-feed-bundle/tree/2.13.3) - 2024-08-07
 
-This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
-
-Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügbar. Mehr erfährst du unter [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
-
 - [Fixed] missing templates in newslist module
 
 ## [2.13.2](https://github.com/pdir/social-feed-bundle/tree/2.13.2) - 2024-08-01
 
-This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
-
-Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügbar. Mehr erfährst du unter [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
-
 - [Fixed] fix LinkedIn import
 
 ## [2.13.1](https://github.com/pdir/social-feed-bundle/tree/2.13.1) - 2024-06-21
-
-This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
-
-Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügbar. Mehr erfährst du unter [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
 
 - [Added] Activate submit on change for Instagram request token (usability)
 - [Fixed] Enable request token in moderate controller
 - [Fixed] some import problems
 
 ## [2.13.0](https://github.com/pdir/social-feed-bundle/tree/2.13.0) - 2024-05-20
-
-This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
-
-Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügbar. Mehr erfährst du unter [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
 
 - [Added] Add Contao 5.3 support
 - [Changed] Requires Contao 4.13 and PHP 8.0 as minimum requirements
