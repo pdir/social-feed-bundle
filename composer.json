@@ -50,7 +50,7 @@
     "nickdnk/graph-sdk": "^6.0 || ^7.0",
     "abraham/twitteroauth": "~4.0",
     "guzzlehttp/guzzle": "6.0 | ~7.7",
-    "kevinrob/guzzle-cache-middleware": "^3.2",
+    "kevinrob/guzzle-cache-middleware": "^5.1",
     "doctrine/cache": "^2.1",
     "doctrine/dbal": "^2.0 || ^3.0",
     "samoritano/linkedin-api-php-client-v2": "^0.1"
