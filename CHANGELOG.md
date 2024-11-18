@@ -13,6 +13,10 @@ Types of changes
 > [!Tip]
 > Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
 
+## [2.13.5](https://github.com/pdir/social-feed-bundle/tree/2.13.5) - 2024-11-15
+
+- [Fixed] Fix linkedin access token generation
+
 ## [2.13.4](https://github.com/pdir/social-feed-bundle/tree/2.13.4) - 2024-08-20
 
 - [Fixed] Fix newslist module (remove void)

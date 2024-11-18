@@ -29,7 +29,7 @@ class SetupListener
     /**
      * social-feed-bundle version.
      */
-    public const VERSION = '2.13.4';
+    public const VERSION = '2.13.5';
 
     /**
      * Template.

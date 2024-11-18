@@ -67,7 +67,7 @@ class LinkedinController
             'grant_type' => 'authorization_code',
             'code' => $request->query->get('code'),
             'client_id' => $sessionData['clientId'],
-            'client_secret' => $sessionData['clientSecret'],
+            'client_secret' => \str_replace('&#61;', '=', $sessionData['clientSecret']),
             'redirect_uri' => $this->router->generate('auth_linkedin', [], RouterInterface::ABSOLUTE_URL),
         ];
 
