@@ -10,6 +10,10 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [2.12.7](https://github.com/pdir/social-feed-bundle/tree/2.12.7) - 2024-11-15
+
+-[Fixed] issue with array_insert in Contao <4.13 🤗 [koertho](https://github.com/koertho)
+
 ## [2.13.4](https://github.com/pdir/social-feed-bundle/tree/2.13.4) - 2024-08-20
 
 This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
