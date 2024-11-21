@@ -13,6 +13,14 @@ Types of changes
 > [!Tip]
 > Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
 
+## [2.13.6](https://github.com/pdir/social-feed-bundle/tree/2.13.6) - 2024-11-21
+
+-[Fixed] Update kevinrob/guzzle-cache-middleware fix #150 🤗 [contaoacademy](https://github.com/contaoacademy)
+
+## [2.12.7](https://github.com/pdir/social-feed-bundle/tree/2.12.7) - 2024-11-15
+
+-[Fixed] issue with array_insert in Contao <4.13 🤗 [koertho](https://github.com/koertho)
+
 ## [2.13.5](https://github.com/pdir/social-feed-bundle/tree/2.13.5) - 2024-11-15
 
 - [Fixed] Fix linkedin access token generation
