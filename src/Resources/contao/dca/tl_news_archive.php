@@ -18,14 +18,12 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-use Contao\ArrayUtil;
-
 $table = 'tl_news_archive';
 
 /*
  * Add global operations
  */
-ArrayUtil::arrayInsert($GLOBALS['TL_DCA'][$table]['list']['global_operations'], 0, [
+array_insert($GLOBALS['TL_DCA'][$table]['list']['global_operations'], 0, [
     'socialFeedAccounts' => [
         'label' => &$GLOBALS['TL_LANG']['MSC']['socialFeedAccounts'],
         'href' => 'do=socialFeed',
