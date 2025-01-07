@@ -30,34 +30,27 @@ use Contao\System;
 use Pdir\SocialFeedBundle\EventListener\Config;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SocialFeedListener
 {
     public const SESSION_KEY = 'social-feed-id';
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
      * @var SessionInterface
      */
     private $session;
 
-    private Security $security;
-    private ImageSizes $imageSizes;
-
     /**
      * ModuleListener constructor.
      */
-    public function __construct(RouterInterface $router, Security $security, ImageSizes $imageSizes)
+    public function __construct(
+        private readonly RouterInterface $router,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ImageSizes $imageSizes
+    )
     {
-        $this->router = $router;
         $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
-        $this->security = $security;
-        $this->imageSizes = $imageSizes;
     }
 
     /**
@@ -92,7 +85,7 @@ class SocialFeedListener
      */
     public function getImageSizeOptions(): array
     {
-        $user = $this->security->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
 
         if (!$user instanceof BackendUser) {
             return [];

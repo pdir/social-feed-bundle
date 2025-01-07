@@ -13,6 +13,11 @@ Types of changes
 > [!Tip]
 > Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
 
+## [2.14.0](https://github.com/pdir/social-feed-bundle/tree/2.14.0) - 2025-01-08
+
+- [Added] Add compatibility for Contao 5.4+
+- [Fixed] Instagram import (You need a Business ?)
+
 ## [2.13.6](https://github.com/pdir/social-feed-bundle/tree/2.13.6) - 2024-11-21
 
 -[Fixed] Update kevinrob/guzzle-cache-middleware fix #150 🤗 [contaoacademy](https://github.com/contaoacademy)
