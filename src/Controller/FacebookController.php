@@ -32,9 +32,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @Route("/_facebook", defaults={"_scope" = "backend", "_token_check" = false})
- */
+#[Route('/_facebook', name: ExampleController::class, defaults: ['_scope' => 'backend', '_token_check' => false])]
 class FacebookController
 {
     private Connection $db;

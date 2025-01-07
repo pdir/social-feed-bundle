@@ -33,9 +33,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * @Route("/_instagram", defaults={"_scope" = "backend", "_token_check" = false})
- */
+#[Route('/_instagram', name: ExampleController::class, defaults: ['_scope' => 'backend', '_token_check' => false])]
 class InstagramController
 {
     /**

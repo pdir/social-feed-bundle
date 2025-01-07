@@ -30,9 +30,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @Route("/auth", defaults={"_scope" = "backend", "_token_check" = false})
- */
+#[Route('/auth', name: ExampleController::class, defaults: ['_scope' => 'backend', '_token_check' => false])]
 class LinkedinController
 {
     private Connection $db;
