@@ -1,0 +1,18 @@
+services:
+  _defaults:
+    autoconfigure: true
+
+  Pdir\SocialFeedBundle\Controller\FacebookController:
+    public: true
+    arguments:
+      - '@database_connection'
+      - '@router'
+
+  Pdir\SocialFeedBundle\Controller\InstagramController:
+    public: true
+
+  Pdir\SocialFeedBundle\Controller\LinkedinController:
+    public: true
+    arguments:
+      - '@database_connection'
+      - '@router'

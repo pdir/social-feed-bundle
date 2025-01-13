@@ -29,10 +29,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Attributes\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
-#[Route('/_facebook', name: ExampleController::class, defaults: ['_scope' => 'backend', '_token_check' => false])]
+#[Route('_facebook', defaults: ['_scope' => 'backend', '_token_check' => false])]
 class FacebookController
 {
     private Connection $db;
@@ -51,12 +51,14 @@ class FacebookController
         $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
     }
 
-    /**
-     * @Route("/auth", name="facebook_auth", methods={"GET"})
-     */
+    #[Route('/auth', name: 'facebook_auth', methods: ['GET'])]
     public function authAction(Request $request): Response
     {
         $sessionData = $this->session->get(SocialFeedListener::SESSION_KEY);
+
+        if (empty($sessionData['backUrl'])) {
+            return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
+        }
 
         $data = [
             'client_id' => $sessionData['clientId'],

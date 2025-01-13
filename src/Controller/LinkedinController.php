@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Controller;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener;
@@ -27,10 +28,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
-#[Route('/auth', name: ExampleController::class, defaults: ['_scope' => 'backend', '_token_check' => false])]
+#[Route('auth', defaults: ['_scope' => 'backend', '_token_check' => false])]
 class LinkedinController
 {
     private Connection $db;
@@ -49,9 +50,7 @@ class LinkedinController
         $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
     }
 
-    /**
-     * @Route("/linkedin", name="auth_linkedin", methods={"GET"})
-     */
+    #[Route('/linkedin', name: 'auth_linkedin', methods: ['GET'])]
     public function authAction(Request $request): Response
     {
         $sessionData = $this->session->get(SocialFeedListener::SESSION_KEY);
@@ -76,7 +75,7 @@ class LinkedinController
             $this->db->update('tl_social_feed', ['linkedin_access_token' => $token->access_token, 'access_token_expires' => time() + $token->expires_in, 'linkedin_refresh_token' => $token->refresh_token, 'linkedin_refresh_token_expires' => time() + $token->refresh_token_expires_in], ['id' => $sessionData['socialFeedId']]);
             $this->session->remove(SocialFeedListener::SESSION_KEY);
         } catch (\Exception $e) {
-            System::log($e->getMessage(), __METHOD__, TL_GENERAL);
+            System::log($e->getMessage(), __METHOD__, ContaoContext::GENERAL);
         }
 
         return new RedirectResponse($sessionData['backUrl']);

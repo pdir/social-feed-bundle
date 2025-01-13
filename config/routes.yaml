@@ -1,3 +1,5 @@
-pdir_social_feed.controller:
-  resource: ../src/Controller
+pdir_social_feed.controllers:
+  resource:
+    path: ../src/Controller/
+    namespace: Pdir\SocialFeedBundle\Controller
   type: attribute
