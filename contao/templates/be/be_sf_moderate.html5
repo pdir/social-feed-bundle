@@ -1,5 +1,5 @@
 <div class="mod_sf_moderate">
-  <form action="<?= Contao\StringUtil::ampersand($this->action) ?>" id="tl_news_moderate" class="tl_form" method="post">
+  <form id="tl_news_moderate" class="tl_form" method="post" data-turbo="false">
 
   <div class="tl_formbody_edit">
 
