@@ -45,8 +45,8 @@
   "require": {
     "php": "^8.0",
     "ext-json": "*",
-    "contao/core-bundle": "^4.13 || ^5.3",
-    "contao/news-bundle": "^4.13 || ^5.3",
+    "contao/core-bundle": "^4.13",
+    "contao/news-bundle": "^4.13",
     "nickdnk/graph-sdk": "^6.0 || ^7.0",
     "abraham/twitteroauth": "~4.0",
     "guzzlehttp/guzzle": "6.0 | ~7.7",
