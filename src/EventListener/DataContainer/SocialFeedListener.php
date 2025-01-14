@@ -145,7 +145,7 @@ class SocialFeedListener
             'app_id' => $clientId,
             'redirect_uri' => $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL),
             'response_type' => 'code',
-            'scope' => 'user_profile,user_media',
+            'scope' => 'instagram_business_basic',
         ];
 
         throw new RedirectResponseException('https://api.instagram.com/oauth/authorize/?'.http_build_query($data));
