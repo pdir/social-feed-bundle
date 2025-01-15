@@ -47,10 +47,6 @@ services:
 
     Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener:
         public: true
-        arguments:
-            - "@router"
-            - '@security.helper'
-            - '@contao.image.sizes'
 
     pdir_social_feed_moderate.controller:
         class: Pdir\SocialFeedBundle\Controller\ModerateController

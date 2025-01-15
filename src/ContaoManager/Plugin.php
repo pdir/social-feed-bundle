@@ -56,6 +56,6 @@ class Plugin implements BundlePluginInterface,RoutingPluginInterface
         return $resolver
             ->resolve(__DIR__.'/../../config/routes.yaml')
             ->load(__DIR__.'/../../config/routes.yaml')
-            ;
+        ;
     }
 }

@@ -43,11 +43,11 @@
     "donate": "https://contao-themes.net/sponsoring.html"
   },
   "require": {
-    "php": "^8.0",
+    "php": "^8.1",
     "ext-json": "*",
-    "contao/core-bundle": "^4.13 || ^5.3",
-    "contao/news-bundle": "^4.13 || ^5.3",
-    "nickdnk/graph-sdk": "^6.0 || ^7.0",
+    "contao/core-bundle": "^5.3",
+    "contao/news-bundle": "^5.3",
+    "nickdnk/graph-sdk": "^7.0",
     "abraham/twitteroauth": "~4.0",
     "guzzlehttp/guzzle": "6.0 | ~7.7",
     "kevinrob/guzzle-cache-middleware": "^5.1",

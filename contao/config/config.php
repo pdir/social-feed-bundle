@@ -62,6 +62,6 @@ $request = System::getContainer()->get('request_stack')->getCurrentRequest();
 $scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
 
 if ($request && $scopeMatcher->isBackendRequest($request)) {
-    $GLOBALS['TL_CSS'][] = $assetsDir.'/css/sf_moderation.scss|static';
-    $GLOBALS['TL_CSS'][] = $assetsDir.'/css/backend.css|static';
+    $GLOBALS['TL_CSS'][] = $assetsDir.'/css/sf_moderation.min.css|static';
+    $GLOBALS['TL_CSS'][] = $assetsDir.'/css/backend.min.css|static';
 }
