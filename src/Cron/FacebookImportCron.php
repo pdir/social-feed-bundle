@@ -56,9 +56,9 @@ class FacebookImportCron
         $this->logger = System::getContainer()->get('monolog.logger.contao');
 
         if ($this->poorManCron) {
-            $objSocialFeed = SocialFeedModel::findBy(['socialFeedType = ?', 'pdir_sf_fb_news_cronjob != ?'], ['Facebook', 'no_cronjob']);
+            $objSocialFeed = SocialFeedModel::findBy(['type = ?', 'pdir_sf_fb_news_cronjob != ?'], ['Facebook', 'no_cronjob']);
         } else {
-            $objSocialFeed = SocialFeedModel::findBy(['socialFeedType = ?', 'pdir_sf_fb_news_cronjob = ?'], ['Facebook', 'no_cronjob']);
+            $objSocialFeed = SocialFeedModel::findBy(['type = ?', 'pdir_sf_fb_news_cronjob = ?'], ['Facebook', 'no_cronjob']);
         }
 
         if (null === $objSocialFeed) {
@@ -97,15 +97,15 @@ class FacebookImportCron
                 ]);
 
                 if (1 === $account->pdir_sf_fb_posts) {
-                    $response = $this->getFbPostList($fb, $accessToken, $account->pdir_sf_fb_account);
+                    $response = $this->getFbPostList($fb, $accessToken, $account->name);
                 } else {
-                    $response = $this->getFbFeed($fb, $accessToken, $account->pdir_sf_fb_account);
+                    $response = $this->getFbFeed($fb, $accessToken, $account->name);
                 }
 
-                $imgPath = NewsImporter::createImageFolder($account->pdir_sf_fb_account);
+                $imgPath = NewsImporter::createImageFolder($account->name);
 
                 // get account picture and save it
-                $responsePage = $this->getFbAccountPicture($fb, $accessToken, $account->pdir_sf_fb_account);
+                $responsePage = $this->getFbAccountPicture($fb, $accessToken, $account->name);
                 $accountId = $responsePage->getDecodedBody()['id'];
                 $imageSrc = $responsePage->getDecodedBody()['picture']['data']['url'];
 
@@ -179,7 +179,7 @@ class FacebookImportCron
                         $objNews->date = $timestamp;
                         $objNews->time = $timestamp;
                         $objNews->published = 1;
-                        $objNews->social_feed_type = $account->socialFeedType;
+                        $objNews->social_feed_type = $account->type;
                         $objNews->social_feed_id = $post['id'];
                         $objNews->social_feed_account = $post['from']['name'];
                         $objNews->social_feed_account_picture = $objFileAccount->uuid;

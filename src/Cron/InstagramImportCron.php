@@ -52,9 +52,9 @@ class InstagramImportCron
         $logger = System::getContainer()->get('monolog.logger.contao');
 
         if ($this->poorManCron) {
-            $objSocialFeed = SocialFeedModel::findBy(['socialFeedType = ?', 'pdir_sf_fb_news_cronjob != ?'], ['Instagram', 'no_cronjob']);
+            $objSocialFeed = SocialFeedModel::findBy(['type = ?', 'pdir_sf_fb_news_cronjob != ?'], ['Instagram', 'no_cronjob']);
         } else {
-            $objSocialFeed = SocialFeedModel::findBy(['socialFeedType = ?', 'pdir_sf_fb_news_cronjob = ?'], ['Instagram', 'no_cronjob']);
+            $objSocialFeed = SocialFeedModel::findBy(['type = ?', 'pdir_sf_fb_news_cronjob = ?'], ['Instagram', 'no_cronjob']);
         }
 
         if (null === $objSocialFeed) {
@@ -144,7 +144,7 @@ class InstagramImportCron
         $objNews->date = strtotime($media['timestamp']);
         $objNews->time = strtotime($media['timestamp']);
         $objNews->published = 1;
-        $objNews->social_feed_type = $obj->socialFeedType;
+        $objNews->social_feed_type = $obj->type;
         $objNews->social_feed_id = $media['id'];
         $objNews->social_feed_config = $obj->id;
         //$objNews->social_feed_account = $account;

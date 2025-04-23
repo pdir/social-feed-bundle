@@ -10,50 +10,21 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
-> [!Tip]
-> Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
-
-## [2.14.0](https://github.com/pdir/social-feed-bundle/tree/2.14.0) - 2025-01-15
-
-- [Added] Add compatibility for Contao 5.4+
-- [Fixed] Instagram import (You need a business app, see [docs](https://pdir.de/docs/de/contao/extensions/socialfeed/configuration/instagram/))
-
-## [2.13.7](https://github.com/pdir/social-feed-bundle/tree/2.13.6) - 2025-01-15
-
-- [Fixed] Instagram import (You need a business app, see [docs](https://pdir.de/docs/de/contao/extensions/socialfeed/configuration/instagram/))
-
-## [2.13.6](https://github.com/pdir/social-feed-bundle/tree/2.13.6) - 2024-11-21
-
--[Fixed] Update kevinrob/guzzle-cache-middleware fix #150 🤗 [contaoacademy](https://github.com/contaoacademy)
-
-## [2.12.7](https://github.com/pdir/social-feed-bundle/tree/2.12.7) - 2024-11-15
-
--[Fixed] issue with array_insert in Contao <4.13 🤗 [koertho](https://github.com/koertho)
-
-## [2.13.5](https://github.com/pdir/social-feed-bundle/tree/2.13.5) - 2024-11-15
-
-- [Fixed] Fix linkedin access token generation
-
-## [2.13.4](https://github.com/pdir/social-feed-bundle/tree/2.13.4) - 2024-08-20
-
-- [Fixed] Fix newslist module (remove void)
-- [Fixed] Missing images in moderated instagram import
-
-## [2.13.3](https://github.com/pdir/social-feed-bundle/tree/2.13.3) - 2024-08-07
-
-- [Fixed] missing templates in newslist module
-
-## [2.13.2](https://github.com/pdir/social-feed-bundle/tree/2.13.2) - 2024-08-01
-
-- [Fixed] fix LinkedIn import
-
 ## [2.13.1](https://github.com/pdir/social-feed-bundle/tree/2.13.1) - 2024-06-21
+
+This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
+
+Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügbar. Mehr erfährst du unter [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
 
 - [Added] Activate submit on change for Instagram request token (usability)
 - [Fixed] Enable request token in moderate controller
 - [Fixed] some import problems
 
 ## [2.13.0](https://github.com/pdir/social-feed-bundle/tree/2.13.0) - 2024-05-20
+
+This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
+
+Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügbar. Mehr erfährst du unter [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
 
 - [Added] Add Contao 5.3 support
 - [Changed] Requires Contao 4.13 and PHP 8.0 as minimum requirements

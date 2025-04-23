@@ -25,7 +25,14 @@ use Contao\LayoutModel;
 
 class NewsCategoriesModule extends NewsListModule
 {
-    protected function compile()
+    /**
+     * Template.
+     *
+     * @var string
+     */
+    protected $strTemplate = 'mod_newslist_social_feed';
+
+    protected function compile(): void
     {
         parent::compile();
 

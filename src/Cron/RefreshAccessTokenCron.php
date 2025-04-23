@@ -55,12 +55,12 @@ class RefreshAccessTokenCron
 
         foreach ($objSocialFeed as $account) {
             // LinkedIn
-            if ('LinkedIn' === $account->socialFeedType && '' !== $account->linkedin_access_token && '' !== $account->linkedin_refresh_token) {
+            if ('LinkedIn' === $account->type && '' !== $account->linkedin_access_token && '' !== $account->linkedin_refresh_token) {
                 $this->refreshLinkedInAccessToken($account);
             }
 
             // Instagram
-            if ('Instagram' === $account->socialFeedType && '' !== $account->psf_instagramAccessToken) {
+            if ('Instagram' === $account->type && '' !== $account->psf_instagramAccessToken) {
                 $this->refreshInstagramAccessToken($account);
             }
         }
@@ -94,7 +94,7 @@ class RefreshAccessTokenCron
                 // Store the access token
                 $db = Database::getInstance();
                 $set = ['linkedin_access_token' => $token->access_token, 'access_token_expires' => time() + $token->expires_in, 'linkedin_refresh_token' => $token->refresh_token, 'linkedin_refresh_token_expires' => time() + $token->refresh_token_expires_in];
-                $db->prepare('UPDATE tl_social_feed %s WHERE id = ?')->set($set)->execute($socialFeedModel->id);
+                $db->prepare('UPDATE tl_sf_service %s WHERE id = ?')->set($set)->execute($socialFeedModel->id);
             } catch (\Exception $e) {
                 $this->logger->log(LogLevel::ERROR, $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
@@ -118,7 +118,7 @@ class RefreshAccessTokenCron
                 // Store the access token
                 $db = Database::getInstance();
                 $set = ['psf_instagramAccessToken' => $data['access_token'], 'access_token_expires' => time() + $data['expires_in']];
-                $db->prepare('UPDATE tl_social_feed %s WHERE id = ?')->set($set)->execute($socialFeedModel->id);
+                $db->prepare('UPDATE tl_sf_service %s WHERE id = ?')->set($set)->execute($socialFeedModel->id);
             } catch (\Exception $e) {
                 $this->logger->log(LogLevel::ERROR, $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }

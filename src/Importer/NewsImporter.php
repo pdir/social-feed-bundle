@@ -46,7 +46,7 @@ class NewsImporter
         $objNews->pid = $newsArchiveId;
 
         // social feed
-        $objNews->social_feed_type = $socialFeedAccount->socialFeedType;
+        $objNews->social_feed_type = $socialFeedAccount->type;
         $objNews->social_feed_id = $this->arrNews['id'];
         $objNews->social_feed_config = $socialFeedAccount->id;
 

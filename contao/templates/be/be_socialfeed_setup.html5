@@ -1,17 +1,17 @@
 <div class="tl_listing_container">
   <div id="pdir" class="be_socialfeed_setup clr">
     <hr>
-    <h1 id="tl_welcome"><?= $GLOBALS['TL_LANG']['tl_social_feed']['setupWelcome'] ?> (Version: <?= $this->version ?>)</h1>
+    <h1 id="tl_welcome"><?= $GLOBALS['TL_LANG']['tl_sf_service']['setupWelcome'] ?> (Version: <?= $this->version ?>)</h1>
     <div class="intro">
       <div class="right">
-        <?= $GLOBALS['TL_LANG']['tl_social_feed']['setupLinks'] ?>
+        <?= $GLOBALS['TL_LANG']['tl_sf_service']['setupLinks'] ?>
       </div>
       <div class="left">
-        <h2><?= $GLOBALS['TL_LANG']['tl_social_feed']['setupHeadline'] ?></h2>
-        <p><?= $GLOBALS['TL_LANG']['tl_social_feed']['setupDesc'] ?></p>
+        <h2><?= $GLOBALS['TL_LANG']['tl_sf_service']['setupHeadline'] ?></h2>
+        <p><?= $GLOBALS['TL_LANG']['tl_sf_service']['setupDesc'] ?></p>
         <img src="/bundles/pdirsocialfeed/img/pdir_icon_socialfeed_plus.svg" width="70" alt="Social Feed+ Logo" class="plus-logo" />
-        <?= $GLOBALS['TL_LANG']['tl_social_feed']['setupPlus']; ?>
-        <p><?= $GLOBALS['TL_LANG']['tl_social_feed']['setupFooter'] ?></p>
+        <?= $GLOBALS['TL_LANG']['tl_sf_service']['setupPlus']; ?>
+        <p><?= $GLOBALS['TL_LANG']['tl_sf_service']['setupFooter'] ?></p>
       </div>
       <div class="clr"></div>
     </div>

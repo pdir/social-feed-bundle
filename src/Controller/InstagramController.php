@@ -33,7 +33,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-#[Route('_instagram', defaults: ['_scope' => 'backend', '_token_check' => false])]
+/**
+ * @Route("/_instagram", defaults={"_scope" = "backend", "_token_check" = false})
+ */
 class InstagramController
 {
     /**
@@ -73,7 +75,9 @@ class InstagramController
         $this->tokenStorage = $tokenStorage;
     }
 
-    #[Route('/auth', name: 'instagram_auth', methods: ['GET'])]
+    /**
+     * @Route("/auth", name="instagram_auth", methods={"GET"})
+     */
     public function authAction(Request $request): Response
     {
         // Missing code query parameter
@@ -89,12 +93,12 @@ class InstagramController
         $sessionData = $this->session->get(SocialFeedListener::SESSION_KEY);
 
         // Social feed ID not found in session
-        if (null === $sessionData || !isset($sessionData['socialFeedId'])) {
+        if (null === $sessionData || !isset($sessionData['sfServiceId'])) {
             return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
         }
 
         // Social feed account not found
-        if (false === ($module = $this->db->fetchAssociative('SELECT * FROM tl_social_feed WHERE id=?', [$sessionData['socialFeedId']]))) {
+        if (false === ($module = $this->db->fetchAssociative('SELECT * FROM tl_sf_service WHERE id=?', [$sessionData['sfServiceId']]))) {
             return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
         }
 
@@ -114,7 +118,7 @@ class InstagramController
         // $mediaData = $this->client->getMediaData($accessToken, (int) $module['id'], false);
 
         // Store the access token and remove temporary session key
-        $this->db->update('tl_social_feed', ['psf_instagramAccessToken' => $longLivedAccessToken['access_token'], 'access_token_expires' => time() + $longLivedAccessToken['expires_in']], ['id' => $sessionData['socialFeedId']]);
+        $this->db->update('tl_sf_service', ['psf_instagramAccessToken' => $longLivedAccessToken['access_token'], 'access_token_expires' => time() + $longLivedAccessToken['expires_in']], ['id' => $sessionData['sfServiceId']]);
         $this->session->remove(SocialFeedListener::SESSION_KEY);
 
         return new RedirectResponse($sessionData['backUrl']);

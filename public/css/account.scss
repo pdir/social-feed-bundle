@@ -1,0 +1,14 @@
+.sf-flex-container {
+  display: flex;
+
+  .sf-account-tile {
+    border: 2px solid black;
+    margin: 0 12px 24px;
+    width: 250px;
+    height: 220px;
+
+    img {
+      width: 100%;
+    }
+  }
+}

@@ -38,9 +38,8 @@ class PdirSocialFeedExtension extends ConfigurableExtension
             new FileLocator(__DIR__.'/../../config')
         );
 
-        $loader->load('commands.yaml');
-        $loader->load('controller.yaml');
-        $loader->load('services.yaml');
+        $loader->load('commands.yml');
+        $loader->load('services.yml');
 
         $container->getDefinition(InstagramRequestCache::class)->setArgument(1, (int) $mergedConfig['cache_ttl']);
     }

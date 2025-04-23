@@ -83,27 +83,27 @@ class ModerateController
         $options = [];
 
         if ($filter) {
-            $objFeedModel = SocialFeedModel::findBy('socialFeedType', $filter);
+            $objFeedModel = SocialFeedModel::findBy('type', $filter);
         } else {
             $objFeedModel = SocialFeedModel::findAll();
         }
 
         foreach ($objFeedModel as $feed) {
-            $options[$feed->id] = $feed->socialFeedType.' ';
+            $options[$feed->id] = $feed->type.' ';
 
-            if ('Facebook' === $feed->socialFeedType) {
-                $options[$feed->id] .= $feed->pdir_sf_fb_account;
+            if ('Facebook' === $feed->type) {
+                $options[$feed->id] .= $feed->name;
             }
 
-            if ('Instagram' === $feed->socialFeedType) {
+            if ('Instagram' === $feed->type) {
                 $options[$feed->id] .= $feed->instagram_account;
             }
 
-            if ('Twitter' === $feed->socialFeedType) {
+            if ('Twitter' === $feed->type) {
                 $options[$feed->id] .= $feed->twitter_account;
             }
 
-            if ('LinkedIn' === $feed->socialFeedType) {
+            if ('LinkedIn' === $feed->type) {
                 $options[$feed->id] .= $feed->linkedin_account;
             }
 
@@ -125,7 +125,7 @@ class ModerateController
         $item['headline'] = mb_substr($message, 0, 50).$more;
     }
 
-    public function getPostImage(SocialFeedModel $socialFeedAccount, $item)
+    public function getPostImage(SocialFeedModel $socialFeedAccount, $item): void
     {
         $imgPath = NewsImporter::createImageFolder($socialFeedAccount->id); // create image folder
 
@@ -141,8 +141,9 @@ class ModerateController
             }
 
             $picturePath = $imgPath.$item['id'].'.jpg';
+            $pictureUuid = NewsImporter::saveImage($picturePath, $imgSrc);
 
-            return NewsImporter::saveImage($picturePath, $imgSrc);
+            $item['singleSRC'] = $pictureUuid;
         }
     }
 

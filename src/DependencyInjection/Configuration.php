@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @inheritDoc
      */
-    public function getConfigTreeBuilder(): TreeBuilder
+    public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('pdir_socialfeed');
 

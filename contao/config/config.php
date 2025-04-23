@@ -34,8 +34,10 @@ $GLOBALS['TL_HOOKS']['parseArticles'][] = ['Pdir\SocialFeedBundle\SocialFeed\Soc
 
 $assetsDir = 'bundles/pdirsocialfeed';
 
-$GLOBALS['BE_MOD']['pdir']['socialFeed'] = [
-    'tables' => ['tl_social_feed'],
+$GLOBALS['BE_MOD']['pdir'] = [
+    'sfService' => [
+        'tables' => ['tl_sf_service'],
+    ],
 ];
 
 $GLOBALS['BE_MOD']['content']['news']['moderate'] = ['pdir_social_feed_moderate.controller', 'run'];
@@ -43,8 +45,8 @@ $GLOBALS['BE_MOD']['content']['news']['moderate'] = ['pdir_social_feed_moderate.
 /*
  * Models
  */
-
-$GLOBALS['TL_MODELS']['tl_social_feed'] = 'Pdir\SocialFeedBundle\Model\SocialFeedModel';
+$GLOBALS['TL_MODELS']['tl_sf_account'] = 'Pdir\SocialFeedBundle\Model\SocialFeedAccountModel';
+$GLOBALS['TL_MODELS']['tl_sf_service'] = 'Pdir\SocialFeedBundle\Model\SocialFeedServiceModel';
 
 /*
  * Frontend modules
@@ -62,6 +64,6 @@ $request = System::getContainer()->get('request_stack')->getCurrentRequest();
 $scopeMatcher = System::getContainer()->get('contao.routing.scope_matcher');
 
 if ($request && $scopeMatcher->isBackendRequest($request)) {
-    $GLOBALS['TL_CSS'][] = $assetsDir.'/css/sf_moderation.min.css|static';
-    $GLOBALS['TL_CSS'][] = $assetsDir.'/css/backend.min.css|static';
+    $GLOBALS['TL_CSS'][] = $assetsDir.'/css/sf_moderation.scss|static';
+    $GLOBALS['TL_CSS'][] = $assetsDir.'/css/backend.css|static';
 }

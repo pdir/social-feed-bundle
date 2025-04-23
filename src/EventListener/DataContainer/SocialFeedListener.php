@@ -44,11 +44,7 @@ class SocialFeedListener
     /**
      * ModuleListener constructor.
      */
-    public function __construct(
-        private readonly RouterInterface $router,
-        private readonly TokenStorageInterface $tokenStorage,
-        private readonly ImageSizes $imageSizes
-    )
+    public function __construct(RouterInterface $router, private TokenStorageInterface $tokenStorage, ImageSizes $imageSizes)
     {
         $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
     }
@@ -58,15 +54,15 @@ class SocialFeedListener
      */
     public function onSubmitCallback(DataContainer $dc): void
     {
-        if ('Instagram' === $dc->activeRecord->socialFeedType && $dc->activeRecord->psf_instagramAppId && Input::post('psf_instagramRequestToken')) {
+        if ('Instagram' === $dc->activeRecord->type && $dc->activeRecord->psf_instagramAppId && Input::post('psf_instagramRequestToken')) {
             $this->requestAccessToken($dc->activeRecord->psf_instagramAppId);
         }
 
-        if ('Facebook' === $dc->activeRecord->socialFeedType && $dc->activeRecord->pdir_sf_fb_app_id && $dc->activeRecord->pdir_sf_fb_app_secret && Input::post('psf_facebookRequestToken')) {
-            $this->requestFbAccessToken($dc->activeRecord->pdir_sf_fb_app_id, $dc->activeRecord->pdir_sf_fb_app_secret, $dc->activeRecord->pdir_sf_fb_account);
+        if ('Facebook' === $dc->activeRecord->type && $dc->activeRecord->pdir_sf_fb_app_id && $dc->activeRecord->pdir_sf_fb_app_secret && Input::post('psf_facebookRequestToken')) {
+            $this->requestFbAccessToken($dc->activeRecord->pdir_sf_fb_app_id, $dc->activeRecord->pdir_sf_fb_app_secret, $dc->activeRecord->name);
         }
 
-        if ('LinkedIn' === $dc->activeRecord->socialFeedType && $dc->activeRecord->linkedin_client_id && $dc->activeRecord->linkedin_client_secret && Input::post('linkedin_request_token')) {
+        if ('LinkedIn' === $dc->activeRecord->type && $dc->activeRecord->linkedin_client_id && $dc->activeRecord->linkedin_client_secret && Input::post('linkedin_request_token')) {
             $this->requestLinkedinAccessToken($dc->activeRecord->linkedin_client_id, $dc->activeRecord->linkedin_client_secret);
         }
     }
@@ -128,7 +124,7 @@ class SocialFeedListener
     private function requestAccessToken($clientId): void
     {
         $this->session->set(self::SESSION_KEY, [
-            'socialFeedId' => Input::get('id'),
+            'sfServiceId' => Input::get('id'),
             'backUrl' => Environment::get('uri'),
         ]);
 
@@ -138,7 +134,7 @@ class SocialFeedListener
             'app_id' => $clientId,
             'redirect_uri' => $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL),
             'response_type' => 'code',
-            'scope' => 'instagram_business_basic',
+            'scope' => 'user_profile,user_media',
         ];
 
         throw new RedirectResponseException('https://api.instagram.com/oauth/authorize/?'.http_build_query($data));
@@ -152,7 +148,7 @@ class SocialFeedListener
     private function requestFbAccessToken($appId, $appSecret, $page): void
     {
         $this->session->set(self::SESSION_KEY, [
-            'socialFeedId' => Input::get('id'),
+            'sfServiceId' => Input::get('id'),
             'backUrl' => Environment::get('uri'),
             'clientId' => $appId,
             'clientSecret' => $appSecret,
@@ -179,7 +175,7 @@ class SocialFeedListener
     private function requestLinkedinAccessToken($clientId, $clientSecret): void
     {
         $this->session->set(self::SESSION_KEY, [
-            'socialFeedId' => Input::get('id'),
+            'sfServiceId' => Input::get('id'),
             'backUrl' => Environment::get('uri'),
             'clientId' => $clientId,
             'clientSecret' => $clientSecret,

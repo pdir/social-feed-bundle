@@ -54,7 +54,7 @@ class SocialFeedNewsClass
             $objTemplate->sfElementWidth = $objModule->pdir_sf_columns;
             $objTemplate->sfImages = $objModule->pdir_sf_enableImages;
             $objTemplate->teaser = $teaser;
-            $objTemplate->socialFeedType = $arrRow['social_feed_type'];
+            $objTemplate->type = $arrRow['social_feed_type'];
 
             $pictureFactory = System::getContainer()->get('contao.image.picture_factory');
 

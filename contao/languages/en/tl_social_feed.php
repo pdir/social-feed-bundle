@@ -23,7 +23,7 @@ $GLOBALS['TL_LANG']['tl_social_feed']['delete'] = ['', 'Delete'];
 $GLOBALS['TL_LANG']['tl_social_feed']['show'] = ['', 'Show details'];
 $GLOBALS['TL_LANG']['tl_social_feed']['new'] = ['Create new social feed account', ''];
 
-$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_type_legend'] = 'Social Feed Configuration';
+$GLOBALS['TL_LANG']['tl_social_feed']['type_legend'] = 'Social Feed Configuration';
 $GLOBALS['TL_LANG']['tl_social_feed']['socialFeedAccountLegend'] = 'Account and authentication';
 $GLOBALS['TL_LANG']['tl_social_feed']['socialFeedImportLegend'] = 'Import settings';
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_account_image_legend'] = 'Account Picture Configuration';
@@ -45,7 +45,7 @@ $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppSecret'] = ['Instagram Ap
 $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAccessToken'] = ['Instagram access token', 'This is an auto-generated value that will be filled in when you submit the form.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramRequestToken'] = ['Request access token and update feed', 'Check this box and save the record to request the access token and update the feed.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramImportMentions'] = ['Import mentions', 'Enable this option to import mentions.'];
-$GLOBALS['TL_LANG']['tl_social_feed']['socialFeedType'] = ['Type', 'Please choose here the typ of the social feed.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['type'] = ['Type', 'Please choose here the typ of the social feed.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['no_cronjob'] = 'no cronjob';
 $GLOBALS['TL_LANG']['tl_social_feed']['minutely'] = 'minutely';
 $GLOBALS['TL_LANG']['tl_social_feed']['hourly'] = 'hourly';

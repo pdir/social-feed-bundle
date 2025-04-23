@@ -9,11 +9,11 @@
 
         <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished">
             <?= $this->date ?></time>
-            <?php if($this->socialFeedType == "Facebook" || $this->socialFeedType == ""): ?>
+            <?php if($this->type == "Facebook" || $this->type == ""): ?>
                 <img src="bundles/pdirsocialfeed/img/icon_facebook.svg" alt="Facebook Icon">
-            <?php elseif($this->socialFeedType == "Instagram"): ?>
+            <?php elseif($this->type == "Instagram"): ?>
                 <img src="bundles/pdirsocialfeed/img/icon_instagram.svg" alt="Instagram Icon">
-            <?php elseif($this->socialFeedType == "Twitter"): ?>
+            <?php elseif($this->type == "Twitter"): ?>
                 <img src="bundles/pdirsocialfeed/img/icon_twitter.svg" alt="Twitter Icon">
             <?php endif; ?>
         </p>

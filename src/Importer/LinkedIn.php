@@ -48,10 +48,10 @@ class LinkedIn
         $logger = System::getContainer()->get('monolog.logger.contao');
 
         if (!$this->poorManCron) {
-            $objSocialFeed = SocialFeedModel::findBy('socialFeedType', 'LinkedIn');
+            $objSocialFeed = SocialFeedModel::findBy('type', 'LinkedIn');
         } else {
             $objSocialFeed = SocialFeedModel::findBy(
-                ['socialFeedType = ?', 'pdir_sf_fb_news_cronjob != ?'],
+                ['type = ?', 'pdir_sf_fb_news_cronjob != ?'],
                 ['LinkedIn', 'no_cronjob']
             );
         }

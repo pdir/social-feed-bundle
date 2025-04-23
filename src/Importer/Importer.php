@@ -20,7 +20,9 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Importer;
 
+use Contao\Controller;
 use Contao\Date;
+use Contao\Environment;
 use Contao\Message;
 use Contao\System;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
@@ -47,13 +49,17 @@ class Importer
     public function getInstagramPosts($accessToken, $socialFeedId, $numberPosts = 30)
     {
         if (null === $accessToken) {
-            Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported']);
+            # Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported']);
 
             return [];
         }
 
         $client = System::getContainer()->get(InstagramClient::class);
         $items = $client->getMediaData($accessToken, (int) $socialFeedId, (int) $numberPosts);
+
+        if(null === $items) {
+            return null;
+        }
 
         return $items['data'];
     }
@@ -122,7 +128,7 @@ class Importer
             return;
         }
 
-        switch ($objSocialFeed->socialFeedType) {
+        switch ($objSocialFeed->type) {
             case 'Facebook':
                 Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported']);
                 break;

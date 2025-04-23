@@ -53,9 +53,9 @@ class TwitterImportCron
         $logger = System::getContainer()->get('monolog.logger.contao');
 
         if ($this->poorManCron) {
-            $objSocialFeed = SocialFeedModel::findBy(['socialFeedType = ?', 'pdir_sf_fb_news_cronjob != ?'], ['Twitter', 'no_cronjob']);
+            $objSocialFeed = SocialFeedModel::findBy(['type = ?', 'pdir_sf_fb_news_cronjob != ?'], ['Twitter', 'no_cronjob']);
         } else {
-            $objSocialFeed = SocialFeedModel::findBy(['socialFeedType = ?', 'pdir_sf_fb_news_cronjob = ?'], ['Twitter', 'no_cronjob']);
+            $objSocialFeed = SocialFeedModel::findBy(['type = ?', 'pdir_sf_fb_news_cronjob = ?'], ['Twitter', 'no_cronjob']);
         }
 
         if (null === $objSocialFeed) {
@@ -193,7 +193,7 @@ class TwitterImportCron
                         $objNews->date = strtotime($post->created_at);
                         $objNews->time = strtotime($post->created_at);
                         $objNews->published = 1;
-                        $objNews->social_feed_type = $account->socialFeedType;
+                        $objNews->social_feed_type = $account->type;
                         $objNews->social_feed_id = $post->id;
                         $objNews->social_feed_account = $post->user->name;
                         $objNews->social_feed_account_picture = Dbafs::addResource($accountPicture)->uuid;

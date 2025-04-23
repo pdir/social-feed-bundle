@@ -23,7 +23,7 @@ $GLOBALS['TL_LANG']['tl_social_feed']['delete'] = ['', 'Löschen'];
 $GLOBALS['TL_LANG']['tl_social_feed']['show'] = ['', 'Informationen anzeigen'];
 $GLOBALS['TL_LANG']['tl_social_feed']['new'] = ['Neues Konto', 'Neues Konto anlegen.'];
 
-$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_type_legend'] = 'Social Feed Konfiguration';
+$GLOBALS['TL_LANG']['tl_social_feed']['type_legend'] = 'Social Feed Konfiguration';
 $GLOBALS['TL_LANG']['tl_social_feed']['socialFeedAccountLegend'] = 'Konto und Authentifizierung';
 $GLOBALS['TL_LANG']['tl_social_feed']['socialFeedImportLegend'] = 'Import-Einstellungen';
 $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_account_image_legend'] = 'Profilbild Konfiguration';
@@ -45,7 +45,7 @@ $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppSecret'] = ['Instagram Ap
 $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAccessToken'] = ['Instagram Access Token', 'Dies ist ein automatich erzeugter Wert, welcher beim Abschicken des Formulars generiert wird.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramRequestToken'] = ['Access Token anfordern', 'Aktivieren Sie diese Option um einen neuen Instagram Access Token anzufordern.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramImportMentions'] = ['Erwähnungen importieren', 'Aktivieren Sie diese Option um Erwähnungen zu importieren.'];
-$GLOBALS['TL_LANG']['tl_social_feed']['socialFeedType'] = ['Typ', 'Wählen Sie hier zuerst den Typ aus.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['type'] = ['Typ', 'Wählen Sie hier zuerst den Typ aus.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['no_cronjob'] = 'Kein Cronjob';
 $GLOBALS['TL_LANG']['tl_social_feed']['minutely'] = 'Minütlich';
 $GLOBALS['TL_LANG']['tl_social_feed']['hourly'] = 'Stündlich';

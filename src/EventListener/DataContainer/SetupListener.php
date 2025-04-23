@@ -29,7 +29,7 @@ class SetupListener
     /**
      * social-feed-bundle version.
      */
-    public const VERSION = '2.13.5';
+    public const VERSION = '2.13.2';
 
     /**
      * Template.
@@ -46,9 +46,9 @@ class SetupListener
         $account = '';
 
         // set account type
-        switch ($row['socialFeedType']) {
+        switch ($row['type']) {
             case 'Facebook':
-                $account = $row['pdir_sf_fb_account'];
+                $account = $row['name'];
                 break;
 
             case 'Instagram':
@@ -66,18 +66,17 @@ class SetupListener
 
         // no account is selected
         if (empty($account)) {
-            $account = $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoAccount'];
+            $account = $GLOBALS['TL_LANG']['tl_sf_service']['psfLabelNoService'];
         }
 
         if (!empty($row['search'])) {
-            $row['search'] = sprintf($GLOBALS['TL_LANG']['tl_social_feed']['psfLabelSearchTerm'], $row['search']);
+            $row['search'] = sprintf($GLOBALS['TL_LANG']['tl_sf_service']['psfLabelSearchTerm'], $row['search']);
         }
 
         return sprintf(
-            '%s &rarr; %s %s',
-            $row['socialFeedType'] ?: $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoType'],
+            '%s &rarr; %s',
+            $row['type'] ?: $GLOBALS['TL_LANG']['tl_sf_service']['psfLabelNoType'],
             $account,
-            $row['search']
         );
     }
 
