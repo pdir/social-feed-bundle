@@ -13,6 +13,10 @@ Types of changes
 > [!Tip]
 > Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
 
+## [2.14.1](https://github.com/pdir/social-feed-bundle/tree/2.14.1) - 2025-04-25
+
+- [Fixed] Small fixes to instagram client 🤗 [bytehead](https://github.com/bytehead)
+
 ## [2.14.0](https://github.com/pdir/social-feed-bundle/tree/2.14.0) - 2025-01-15
 
 - [Added] Add compatibility for Contao 5.4+
