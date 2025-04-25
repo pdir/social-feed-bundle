@@ -13,7 +13,11 @@ Types of changes
 > [!Tip]
 > Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
 
-## [2.13.7](https://github.com/pdir/social-feed-bundle/tree/2.13.6) - 2025-01-15
+## [2.13.8](https://github.com/pdir/social-feed-bundle/tree/2.13.8) - 2025-04-25
+
+- [Fixed] Small fixes to instagram client 🤗 [bytehead](https://github.com/bytehead)
+
+## [2.13.7](https://github.com/pdir/social-feed-bundle/tree/2.13.7) - 2025-01-15
 
 - [Fixed] Instagram import (You need a business app, see [docs](https://pdir.de/docs/de/contao/extensions/socialfeed/configuration/instagram/))
 
