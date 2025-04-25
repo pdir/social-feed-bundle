@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2025 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -135,13 +135,13 @@ class SocialFeedListener
         $this->session->save();
 
         $data = [
-            'app_id' => $clientId,
+            'client_id' => $clientId,
             'redirect_uri' => $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL),
             'response_type' => 'code',
             'scope' => 'instagram_business_basic',
         ];
 
-        throw new RedirectResponseException('https://api.instagram.com/oauth/authorize/?'.http_build_query($data));
+        throw new RedirectResponseException('https://www.instagram.com/oauth/authorize/?'.http_build_query($data));
     }
 
     /**
