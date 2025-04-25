@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2025 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -206,13 +206,13 @@ class InstagramClient
     /**
      * Get the access token.
      */
-    public function getAccessToken(string $appId, string $appSecret, string $code, string $redirectUri): ?array
+    public function getAccessToken(string $clientId, string $clientSecret, string $code, string $redirectUri): ?array
     {
-        if (($token = $this->getShortLivedAccessToken($appId, $appSecret, $code, $redirectUri)) === null) {
+        if (($token = $this->getShortLivedAccessToken($clientId, $clientSecret, $code, $redirectUri)) === null) {
             return null;
         }
 
-        return $this->getLongLivedAccessToken($token, $appSecret);
+        return $this->getLongLivedAccessToken($token, $clientSecret);
     }
 
     /**
@@ -220,13 +220,13 @@ class InstagramClient
      *
      * @return string
      */
-    private function getShortLivedAccessToken(string $appId, string $appSecret, string $code, string $redirectUri): ?string
+    private function getShortLivedAccessToken(string $clientId, string $clientSecret, string $code, string $redirectUri): ?string
     {
         try {
             $response = $this->getClient()->post('https://api.instagram.com/oauth/access_token', [
                 'form_params' => [
-                    'app_id' => $appId,
-                    'app_secret' => $appSecret,
+                    'client_id' => $clientId,
+                    'client_secret' => $clientSecret,
                     'grant_type' => 'authorization_code',
                     'redirect_uri' => $redirectUri,
                     'code' => $code,
@@ -256,13 +256,13 @@ class InstagramClient
     /**
      * Get the long-lived access token.
      */
-    private function getLongLivedAccessToken(string $token, string $appSecret): ?array
+    private function getLongLivedAccessToken(string $token, string $clientSecret): ?array
     {
         try {
             $response = $this->getClient()->get('https://graph.instagram.com/access_token', [
                 'query' => [
                     'grant_type' => 'ig_exchange_token',
-                    'client_secret' => $appSecret,
+                    'client_secret' => $clientSecret,
                     'access_token' => $token,
                 ],
             ]);
