@@ -52,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'label' => [
-            'fields' => ['socialFeedType, pdir_sf_fb_account', 'instagram_account', 'twitter_account', 'search', 'linkedin_company_id'],
+            'fields' => ['socialFeedType', 'pdir_sf_fb_account', 'instagram_account', 'twitter_account', 'search', 'linkedin_company_id'],
             'label_callback' => [SetupListener::class, 'onGenerateLabel'],
         ],
 
@@ -96,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 
     'palettes' => [
         '__selector__' => ['socialFeedType'],
-        'default' => '{pdir_sf_type_legend},socialFeedType,psf_setup;',
+        'default' => '{pdir_sf_type_legend},socialFeedType,psf_setup',
     ],
 
     'subpalettes' => [
