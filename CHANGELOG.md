@@ -13,6 +13,11 @@ Types of changes
 > [!Tip]
 > Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
 
+## [2.14.2](https://github.com/pdir/social-feed-bundle/tree/2.14.2) - 2026-02-25
+
+- [Fixed] Reworked access token generation for Contao 5.4+.
+  The OAuth flow in the Social Feed account configuration is now initiated via a button instead of a checkbox to prevent AJAX-related redirect issues.
+
 ## [2.14.1](https://github.com/pdir/social-feed-bundle/tree/2.14.1) - 2025-04-25
 
 - [Fixed] Small fixes to instagram client 🤗 [bytehead](https://github.com/bytehead)

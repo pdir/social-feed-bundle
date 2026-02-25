@@ -58,10 +58,6 @@ class SocialFeedListener
      */
     public function onSubmitCallback(DataContainer $dc): void
     {
-        if ('Instagram' === $dc->activeRecord->socialFeedType && $dc->activeRecord->psf_instagramAppId && Input::post('psf_instagramRequestToken')) {
-            $this->requestAccessToken($dc->activeRecord->psf_instagramAppId);
-        }
-
         if ('Facebook' === $dc->activeRecord->socialFeedType && $dc->activeRecord->pdir_sf_fb_app_id && $dc->activeRecord->pdir_sf_fb_app_secret && Input::post('psf_facebookRequestToken')) {
             $this->requestFbAccessToken($dc->activeRecord->pdir_sf_fb_app_id, $dc->activeRecord->pdir_sf_fb_app_secret, $dc->activeRecord->pdir_sf_fb_account);
         }
@@ -77,6 +73,156 @@ class SocialFeedListener
     public function onRequestTokenSave()
     {
         return null;
+    }
+
+    public function instagramAuthWizard(DataContainer $dc): string
+    {
+        if (!$dc->activeRecord) {
+            return '';
+        }
+
+        // Nur bei Instagram anzeigen (sonst stört’s in anderen Typen)
+        if ('Instagram' !== $dc->activeRecord->socialFeedType) {
+            return '';
+        }
+
+        $appId = (string) ($dc->activeRecord->psf_instagramAppId ?? '');
+        $appSecret = (string) ($dc->activeRecord->psf_instagramAppSecret ?? '');
+
+        $label = $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramRequestToken'][0] ?? 'Token anfordern';
+
+        // Wenn etwas fehlt: "disabled" Link + Hinweis
+        if ('' === trim($appId) || '' === trim($appSecret)) {
+            return sprintf(
+                ' <a href="#" class="tl_submit disabled" style="margin-top:5px; opacity:.5; pointer-events:none;" aria-disabled="true">%s</a>',
+                htmlspecialchars($label, ENT_QUOTES)
+            );
+        }
+
+        // OK: echte OAuth-URL
+        $this->session->set(self::SESSION_KEY, [
+            'socialFeedId' => Input::get('id'),
+            'backUrl' => Environment::get('uri'),
+        ]);
+
+        $this->session->save();
+
+        $data = [
+            'client_id' => $appId,
+            'redirect_uri' => $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL),
+            'response_type' => 'code',
+            'scope' => 'instagram_business_basic',
+        ];
+
+        $url = 'https://www.instagram.com/oauth/authorize/?'.http_build_query($data);
+
+        return sprintf(
+            ' <a href="%s" class="tl_submit" style="margin-top:5px" target="_blank" rel="noopener noreferrer">%s</a>',
+            htmlspecialchars($url, ENT_QUOTES),
+            htmlspecialchars($label, ENT_QUOTES)
+        );
+    }
+
+    public function facebookAuthWizard(DataContainer $dc): string
+    {
+        if (!$dc->activeRecord) {
+            return '';
+        }
+
+        // Nur bei Facebook anzeigen (sonst stört’s in anderen Typen)
+        if ('Facebook' !== $dc->activeRecord->socialFeedType) {
+            return '';
+        }
+
+        $appId = (string) ($dc->activeRecord->pdir_sf_fb_app_id ?? '');
+        $appSecret = (string) ($dc->activeRecord->pdir_sf_fb_app_secret ?? '');
+        $page = (string) ($dc->activeRecord->pdir_sf_fb_account ?? '');
+
+        $label = $GLOBALS['TL_LANG']['tl_social_feed']['psf_facebookRequestToken'][0] ?? 'Token anfordern';
+
+        // Wenn etwas fehlt: "disabled" Link + Hinweis
+        if ('' === trim($appId) || '' === trim($appSecret) || '' === trim($page)) {
+            return sprintf(
+                ' <a href="#" class="tl_submit disabled" style="margin-top:5px; opacity:.5; pointer-events:none;" aria-disabled="true">%s</a>',
+                htmlspecialchars($label, ENT_QUOTES)
+            );
+        }
+
+        // OK: echte OAuth-URL
+        $this->session->set(self::SESSION_KEY, [
+            'socialFeedId' => Input::get('id'),
+            'backUrl' => Environment::get('uri'),
+            'clientId' => $appId,
+            'clientSecret' => $appSecret,
+            'page' => $page,
+        ]);
+
+        $this->session->save();
+
+        $data = [
+            'client_id' => $appId,
+            'redirect_uri' => $this->router->generate('facebook_auth', [], RouterInterface::ABSOLUTE_URL),
+            'scope' => 'pages_read_engagement',
+        ];
+
+        $url = 'https://www.facebook.com/v11.0/dialog/oauth?'.http_build_query($data);
+
+        return sprintf(
+            ' <a href="%s" class="tl_submit" style="margin-top:5px" target="_blank" rel="noopener noreferrer">%s</a>',
+            htmlspecialchars($url, ENT_QUOTES),
+            htmlspecialchars($label, ENT_QUOTES)
+        );
+    }
+
+    public function linkedinAuthWizard(DataContainer $dc): string
+    {
+        if (!$dc->activeRecord) {
+            return '';
+        }
+
+        // Nur bei Facebook anzeigen (sonst stört’s in anderen Typen)
+        if ('LinkedIn' !== $dc->activeRecord->socialFeedType) {
+            return '';
+        }
+
+        $appId = (string) ($dc->activeRecord->linkedin_client_id ?? '');
+        $appSecret = (string) ($dc->activeRecord->linkedin_client_secret ?? '');
+        $page = (string) ($dc->activeRecord->linkedin_company_id ?? '');
+
+        $label = $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_request_token'][0] ?? 'Token anfordern';
+
+        // Wenn etwas fehlt: "disabled" Link + Hinweis
+        if ('' === trim($appId) || '' === trim($appSecret) || '' === trim($page)) {
+            return sprintf(
+                ' <a href="#" class="tl_submit disabled" style="margin-top:5px; opacity:.5; pointer-events:none;" aria-disabled="true">%s</a>',
+                htmlspecialchars($label, ENT_QUOTES)
+            );
+        }
+
+        // OK: echte OAuth-URL
+        $this->session->set(self::SESSION_KEY, [
+            'socialFeedId' => Input::get('id'),
+            'backUrl' => Environment::get('uri'),
+            'clientId' => $appId,
+            'clientSecret' => $appSecret,
+        ]);
+
+        $this->session->save();
+
+        $data = [
+            'response_type' => 'code',
+            'client_id' => $appId,
+            'redirect_uri' => $this->router->generate('auth_linkedin', [], RouterInterface::ABSOLUTE_URL),
+            'scope' => 'r_organization_social,rw_organization_admin',
+        ];
+
+        $url = 'https://www.linkedin.com/oauth/v2/authorization?'.http_build_query($data);
+
+        return sprintf(
+            ' <a href="%s" class="tl_submit" style="margin-top:5px" target="_blank" rel="noopener noreferrer">%s</a>',
+            htmlspecialchars($url, ENT_QUOTES),
+            htmlspecialchars($label, ENT_QUOTES)
+        );
     }
 
     /**
@@ -118,82 +264,5 @@ class SocialFeedListener
         }
 
         return $varValue;
-    }
-
-    /**
-     * Request the Instagram access token.
-     *
-     * @param string $clientId
-     */
-    private function requestAccessToken($clientId): void
-    {
-        $this->session->set(self::SESSION_KEY, [
-            'socialFeedId' => Input::get('id'),
-            'backUrl' => Environment::get('uri'),
-        ]);
-
-        $this->session->save();
-
-        $data = [
-            'client_id' => $clientId,
-            'redirect_uri' => $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL),
-            'response_type' => 'code',
-            'scope' => 'instagram_business_basic',
-        ];
-
-        throw new RedirectResponseException('https://www.instagram.com/oauth/authorize/?'.http_build_query($data));
-    }
-
-    /**
-     * Request the Facebook access token.
-     *
-     * @param string $appId
-     */
-    private function requestFbAccessToken($appId, $appSecret, $page): void
-    {
-        $this->session->set(self::SESSION_KEY, [
-            'socialFeedId' => Input::get('id'),
-            'backUrl' => Environment::get('uri'),
-            'clientId' => $appId,
-            'clientSecret' => $appSecret,
-            'page' => $page,
-        ]);
-
-        $this->session->save();
-
-        $data = [
-            'client_id' => $appId,
-            'redirect_uri' => $this->router->generate('facebook_auth', [], RouterInterface::ABSOLUTE_URL),
-            'scope' => 'pages_read_engagement',
-        ];
-
-        throw new RedirectResponseException('https://www.facebook.com/v11.0/dialog/oauth?'.http_build_query($data));
-    }
-
-    /**
-     * Request the LinkedIn access token.
-     *
-     * @param string $clientId
-     * @param string $clientSecret
-     */
-    private function requestLinkedinAccessToken($clientId, $clientSecret): void
-    {
-        $this->session->set(self::SESSION_KEY, [
-            'socialFeedId' => Input::get('id'),
-            'backUrl' => Environment::get('uri'),
-            'clientId' => $clientId,
-            'clientSecret' => $clientSecret,
-        ]);
-
-        $this->session->save();
-
-        $data = [
-            'response_type' => 'code',
-            'client_id' => $clientId,
-            'redirect_uri' => $this->router->generate('auth_linkedin', [], RouterInterface::ABSOLUTE_URL),
-            'scope' => 'r_organization_social,rw_organization_admin',
-        ];
-
-        throw new RedirectResponseException('https://www.linkedin.com/oauth/v2/authorization?'.http_build_query($data));
     }
 }
