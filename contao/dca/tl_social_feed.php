@@ -96,14 +96,14 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 
     'palettes' => [
         '__selector__' => ['socialFeedType'],
-        'default' => '{pdir_sf_type_legend},socialFeedType,psf_setup',
+        'default' => '{pdir_sf_type_legend},socialFeedType;psf_setup',
     ],
 
     'subpalettes' => [
-        'socialFeedType_Facebook' => ';{socialFeedAccountLegend},pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token;{socialFeedImportLegend},pdir_sf_fb_news_archive,user,pdir_sf_fb_posts,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date',
-        'socialFeedType_Instagram' => ';{socialFeedAccountLegend},psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,noteForRefreshTokenMail,access_token_expires;{socialFeedImportLegend},instagram_account,number_posts,pdir_sf_fb_news_archive,user,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,psf_instagramImportMentions;{pdir_sf_account_image_legend},instagram_account_picture,instagram_account_picture_size',
-        'socialFeedType_Twitter' => ';{socialFeedAccountLegend},twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account;{socialFeedImportLegend},search,number_posts,pdir_sf_fb_news_archive,user,show_retweets,hashtags_link,show_reply,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date',
-        'socialFeedType_LinkedIn' => ';{socialFeedAccountLegend},linkedin_client_id,linkedin_client_secret,linkedin_company_id,linkedin_access_token,access_token_expires,linkedin_refresh_token_expires,noteForRefreshTokenMail;{socialFeedImportLegend},pdir_sf_fb_news_archive,user,linkedinImportSharedContent,number_posts,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date;{pdir_sf_account_image_legend},linkedin_account_picture,linkedin_account_picture_size',
+        'socialFeedType_Facebook' => ';{socialFeedAccountLegend},pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token;{socialFeedImportLegend},pdir_sf_fb_news_archive,user,pdir_sf_fb_posts,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date;',
+        'socialFeedType_Instagram' => ';{socialFeedAccountLegend},psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,noteForRefreshTokenMail,access_token_expires;{socialFeedImportLegend},instagram_account,number_posts,pdir_sf_fb_news_archive,user,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,psf_instagramImportMentions;{pdir_sf_account_image_legend},instagram_account_picture,instagram_account_picture_size;',
+        'socialFeedType_Twitter' => ';{socialFeedAccountLegend},twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account;{socialFeedImportLegend},search,number_posts,pdir_sf_fb_news_archive,user,show_retweets,hashtags_link,show_reply,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date;',
+        'socialFeedType_LinkedIn' => ';{socialFeedAccountLegend},linkedin_client_id,linkedin_client_secret,linkedin_company_id,linkedin_access_token,access_token_expires,linkedin_refresh_token_expires,noteForRefreshTokenMail;{socialFeedImportLegend},pdir_sf_fb_news_archive,user,linkedinImportSharedContent,number_posts,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date;{pdir_sf_account_image_legend},linkedin_account_picture,linkedin_account_picture_size;',
     ],
 
     'fields' => [
