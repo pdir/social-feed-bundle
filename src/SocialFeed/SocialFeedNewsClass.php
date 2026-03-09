@@ -23,6 +23,7 @@ namespace Pdir\SocialFeedBundle\SocialFeed;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
+use Imagine\Exception\RuntimeException;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 
 class SocialFeedNewsClass
@@ -66,7 +67,11 @@ class SocialFeedNewsClass
                 }
 
                 if (null !== $imagePath) {
-                    $pictureObj = $pictureFactory->create($this->projectDir.DIRECTORY_SEPARATOR.$imagePath);
+                    try {
+                        $pictureObj = $pictureFactory->create($this->projectDir.DIRECTORY_SEPARATOR.$imagePath);
+                    } catch (RuntimeException) {
+                        $pictureObj = null;
+                    }
 
                     if (null !== $pictureObj) {
                         $objTemplate->accountPicture = $this->getTemplateData($pictureObj);
