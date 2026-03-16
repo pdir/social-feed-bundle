@@ -93,7 +93,8 @@ class FacebookImportCron
                 $fb = new Facebook([
                     'app_id' => $appId,
                     'app_secret' => $appSecret,
-                    'default_graph_version' => 'v2.10',
+                    'default_graph_version' => 'v25.0',
+                    'default_access_token' => $accessToken
                 ]);
 
                 if (1 === $account->pdir_sf_fb_posts) {
@@ -222,7 +223,7 @@ class FacebookImportCron
     {
         try {
             return $fb->get(
-                $account . '/feed?access_token=' . $accessToken . '&fields=id,from,created_time,message,permalink_url'
+                $account . '/feed?fields=id,from,created_time,message,permalink_url'
             );
         } catch (FacebookResponseException $e) {
             $this->logger->log(LogLevel::ERROR, 'Graph returned an error: ' . $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);

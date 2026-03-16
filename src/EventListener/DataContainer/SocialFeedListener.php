@@ -113,7 +113,7 @@ class SocialFeedListener
             fn ($r) => [
                 'client_id' => (string) $r->pdir_sf_fb_app_id,
                 'redirect_uri' => $this->router->generate('facebook_auth', [], RouterInterface::ABSOLUTE_URL),
-                'scope' => 'pages_read_engagement',
+                'scope' => 'pages_read_engagement,pages_read_user_content',
             ],
             fn ($r) => 'https://www.facebook.com/v11.0/dialog/oauth?',
             fn ($r) => [
