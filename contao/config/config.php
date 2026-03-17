@@ -49,8 +49,6 @@ $GLOBALS['TL_MODELS']['tl_social_feed'] = 'Pdir\SocialFeedBundle\Model\SocialFee
 /*
  * Frontend modules
  */
-$GLOBALS['FE_MOD']['news']['newslist'] = ModuleCustomNewslist::class;
-
 if (\str_contains($GLOBALS['FE_MOD']['news']['newslist'], 'Codefog\NewsCategoriesBundle')) {
     $GLOBALS['FE_MOD']['news']['newslist'] = NewsCategoriesModule::class; // @phpstan-ignore-line
 }

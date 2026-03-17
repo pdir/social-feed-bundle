@@ -1,30 +1,25 @@
 <?php
 
-declare(strict_types=1);
+namespace Pdir\SocialFeedBundle\Controller\FrontendModule;
 
-/*
- * social feed bundle for Contao Open Source CMS
- *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
- *
- * @package    social-feed-bundle
- * @link       https://github.com/pdir/social-feed-bundle
- * @license    http://www.gnu.org/licences/lgpl-3.0.html LGPL
- * @author     Mathias Arzberger <develop@pdir.de>
- * @author     Philipp Seibt <develop@pdir.de>
- * @author     pdir GmbH <https://pdir.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Pdir\SocialFeedBundle\Module;
-
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\LayoutModel;
+use Contao\ModuleModel;
 use Contao\ModuleNewsList;
+use Symfony\Component\HttpFoundation\Response;
 
-class ModuleCustomNewslist extends ModuleNewsList
+#[AsFrontendModule('newslist', category: 'news', template: 'mod_newslist', priority: 1)]
+class ModuleCustomNewslistController extends ModuleNewsList
 {
+    public function __construct() {}
+
+    public function __invoke(ModuleModel $model, string $section): Response
+    {
+        parent::__construct($model, $section);
+
+        return new Response($this->generate());
+    }
+
     protected function compile()
     {
         parent::compile();

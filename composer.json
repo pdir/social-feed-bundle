@@ -47,7 +47,7 @@
     "ext-json": "*",
     "contao/core-bundle": "^5.3",
     "contao/news-bundle": "^5.3",
-    "nickdnk/graph-sdk": "^7.0",
+    "nickdnk/graph-sdk": "^8.0",
     "abraham/twitteroauth": "~4.0",
     "guzzlehttp/guzzle": "6.0 | ~7.7",
     "kevinrob/guzzle-cache-middleware": "^5.1",

@@ -93,3 +93,6 @@ services:
 
     Pdir\SocialFeedBundle\SocialFeed\SocialFeedNewsClass:
         public: true
+
+    Pdir\SocialFeedBundle\Controller\FrontendModule\ModuleCustomNewslistController:
+        public: true

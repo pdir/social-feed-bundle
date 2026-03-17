@@ -13,6 +13,18 @@ Types of changes
 > [!Tip]
 > Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
 
+## [2.14.2](https://github.com/pdir/social-feed-bundle/tree/2.14.2) - 2026-03-17
+
+- [Changed] Updated `nickdnk/graph-sdk` to `^8.0` and adjusted Facebook import.
+  Access tokens must now include the additional permission `pages_read_user_content` (in addition to `pages_read_engagement`) and may need to be regenerated.
+- [Changed] Reworked access token generation for Contao 5.4+.
+  The OAuth flow in the Social Feed account configuration is now initiated via a button instead of a checkbox to prevent AJAX-related redirect issues.
+- [Fixed] Resolved "Cannot go up - already at root level." error when editing a Social Feed account in Contao 5.7.
+  Fixed DCA palette and subpalette definitions (missing semicolons).
+- [Fixed] Fix a runtime exception when a broken image is loaded 🤗 [koertho](https://github.com/koertho)
+- [Fixed] Restored news list override for Contao 5.7+ by switching to a fragment controller (`AsFrontendModule`).
+  The previous `$GLOBALS['FE_MOD']`-based override no longer worked reliably with modern frontend module handling.
+
 ## [2.14.1](https://github.com/pdir/social-feed-bundle/tree/2.14.1) - 2025-04-25
 
 - [Fixed] Small fixes to instagram client 🤗 [bytehead](https://github.com/bytehead)
