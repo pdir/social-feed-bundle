@@ -22,6 +22,8 @@ Types of changes
 - [Fixed] Resolved "Cannot go up - already at root level." error when editing a Social Feed account in Contao 5.7.
   Fixed DCA palette and subpalette definitions (missing semicolons).
 - [Fixed] Fix a runtime exception when a broken image is loaded 🤗 [koertho](https://github.com/koertho)
+- [Fixed] Restored news list override for Contao 5.7+ by switching to a fragment controller (`AsFrontendModule`).
+  The previous `$GLOBALS['FE_MOD']`-based override no longer worked reliably with modern frontend module handling.
 
 ## [2.14.1](https://github.com/pdir/social-feed-bundle/tree/2.14.1) - 2025-04-25
 
