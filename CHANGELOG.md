@@ -13,6 +13,10 @@ Types of changes
 > [!Tip]
 > Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
 
+## [2.14.3](https://github.com/pdir/social-feed-bundle/tree/2.14.3) - 2026-03-20
+
+- [Fixed] Fix unintended CSS class leakage (`slider`) between news list modules by disabling shared service instances for the custom module controller.
+
 ## [2.14.2](https://github.com/pdir/social-feed-bundle/tree/2.14.2) - 2026-03-17
 
 - [Changed] Updated `nickdnk/graph-sdk` to `^8.0` and adjusted Facebook import.

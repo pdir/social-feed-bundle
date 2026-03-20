@@ -95,4 +95,4 @@ services:
         public: true
 
     Pdir\SocialFeedBundle\Controller\FrontendModule\ModuleCustomNewslistController:
-        public: true
+        shared: false
