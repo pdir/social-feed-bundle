@@ -13,6 +13,10 @@ Types of changes
 > [!Tip]
 > Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
 
+## [2.14.4](https://github.com/pdir/social-feed-bundle/tree/2.14.4) - 2026-07-22
+
+- [Fixed] Ignore Instagram trial reels during synchronization to prevent duplicate posts. [#186](https://github.com/pdir/social-feed-bundle/pull/186) 🤗 [fritzmg](https://github.com/fritzmg)
+
 ## [2.14.3](https://github.com/pdir/social-feed-bundle/tree/2.14.3) - 2026-03-20
 
 - [Fixed] Fix unintended CSS class leakage (`slider`) between news list modules by disabling shared service instances for the custom module controller.
