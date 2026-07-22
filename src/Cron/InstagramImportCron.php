@@ -87,6 +87,11 @@ class InstagramImportCron
                 }
 
                 foreach ($medias as $media) {
+                    // Ignore trial reels
+                    if (false === ($media['is_shared_to_feed'] ?? null)) {
+                        continue;
+                    }
+
                     $objNews = new NewsModel();
 
                     if (null !== $objNews->findBy('social_feed_id', $media['id'])) {

@@ -113,7 +113,7 @@ class InstagramClient
     {
         return $this->getData('https://graph.instagram.com/me/media', [
             'access_token' => $accessToken,
-            'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,children{media_url}',
+            'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,children{media_url},is_shared_to_feed',
             'limit' => $numberPosts,
         ], $socialFeedId, $cache);
     }
