@@ -116,11 +116,9 @@ class InstagramImportCron
 
                 if (0 < $this->counter) {
                     $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): Instagram - imported ' . $this->counter . ' items.', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
+                } else {
+                    $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): Instagram Import - nothing to import', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
                 }
-            }
-
-            if (0 === $this->counter) {
-                $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): Instagram Import - nothing to import', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
             }
         }
     }
