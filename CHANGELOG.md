@@ -13,6 +13,10 @@ Types of changes
 > [!Tip]
 > Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
 
+## [2.14.5](https://github.com/pdir/social-feed-bundle/tree/2.14.5) - 2026-09-21
+
+- [Fixed] Instagram import log messages are now only logged when the configured import interval is reached.
+
 ## [2.14.4](https://github.com/pdir/social-feed-bundle/tree/2.14.4) - 2026-07-22
 
 - [Fixed] Ignore Instagram trial reels during synchronization to prevent duplicate posts. [#186](https://github.com/pdir/social-feed-bundle/pull/186) 🤗 [fritzmg](https://github.com/fritzmg)
