@@ -113,10 +113,29 @@ class NewsImporter
         return $imgPath;
     }
 
+    /**
+     * Get the image url of an Instagram media item.
+     *
+     * media_url is omitted by the API e.g. for videos containing copyrighted material.
+     */
+    public static function getInstagramImageUrl(array $media): ?string
+    {
+        $mediaUrl = $media['media_url'] ?? null;
+
+        if (null !== $mediaUrl && false !== strpos($mediaUrl, 'jpg')) {
+            return $mediaUrl;
+        }
+
+        return $media['thumbnail_url'] ?? $media['children']['data'][0]['media_url'] ?? $mediaUrl;
+    }
+
     public static function saveImage($strPath, $strUrl): ?string
     {
         if (!file_exists($strPath)) {
-            $strImage = file_get_contents($strUrl);
+            if (empty($strUrl) || false === ($strImage = file_get_contents($strUrl))) {
+                return null;
+            }
+
             $file = new File($strPath);
             $file->write($strImage);
             $file->close();
@@ -130,7 +149,7 @@ class NewsImporter
         // use existing file
         $objFile = FilesModel::findByPath($strPath);
 
-        return $objFile->uuid;
+        return $objFile?->uuid;
     }
 
     public function generateAlias($headline, $newsArchiveId)
