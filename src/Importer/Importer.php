@@ -104,7 +104,7 @@ class Importer
 
             $listItems[] = [
                 'id' => $item['id'],
-                'title' => $item['caption'],
+                'title' => $item['caption'] ?? '',
                 'time' => Date::parse($GLOBALS['TL_CONFIG']['datimFormat'], strtotime($item['timestamp'])),
                 'image' => $image,
                 'link' => $item['permalink'],

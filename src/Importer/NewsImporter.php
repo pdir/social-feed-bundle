@@ -140,7 +140,7 @@ class NewsImporter
 
     public static function shortenHeadline($str): string
     {
-        $arr = explode("\n", $str);
+        $arr = explode("\n", (string) $str);
 
         $message = $arr[0] ?? $str;
         $more = '';
