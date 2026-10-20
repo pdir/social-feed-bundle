@@ -93,14 +93,15 @@ class InstagramClient
             return null;
         }
 
-        $data = $json_data['data'];
+        // Single object endpoints (e.g. /me) return the fields directly instead of a data list
+        $data = $json_data['data'] ?? $json_data;
 
-        if ($query['limit'] > 100 && isset($json_data['paging']['next'])) {
+        if (($query['limit'] ?? 0) > 100 && isset($json_data['paging']['next'])) {
             $query['limit'] -= 100;
             $json_data['paging']['next'] = str_replace('limit=100', 'limit='.$query['limit'], $json_data['paging']['next']);
             parse_str(parse_url($json_data['paging']['next'], PHP_URL_QUERY), $query);
             $next_page = $this->getData($url, $query, $socialFeedId, $cache);
-            $data = array_merge($data, $next_page['data']);
+            $data = array_merge($data, $next_page['data'] ?? []);
         }
 
         return ['data' => $data];
