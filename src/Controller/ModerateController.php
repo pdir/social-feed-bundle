@@ -174,10 +174,10 @@ class ModerateController
                     $importer = new NewsImporter();
 
                     // set headline
-                    $item['headline'] = NewsImporter::shortenHeadline($item['caption']);
+                    $item['headline'] = NewsImporter::shortenHeadline($item['caption'] ?? '');
 
                     // set teaser
-                    $item['teaser'] = str_replace("\n", '<br>', $item['caption']);
+                    $item['teaser'] = str_replace("\n", '<br>', $item['caption'] ?? '');
 
                     // add image
                     $item['singleSRC'] = $this->getPostImage($objSocialFeedModel, $item);
