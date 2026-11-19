@@ -20,6 +20,8 @@ Types of changes
 - [Changed] Instagram: removed the unused field "Note for refresh token e-mail" from the Instagram palette (it is only used for LinkedIn). The token expiry date is hidden for the unified login if the token never expires.
 - [Fixed] Instagram: a failing access token refresh no longer aborts the refresh cron job, access tokens are no longer written to the system log on API errors, and access tokens longer than 255 characters can be saved.
 - [Fixed] Missing backend labels for the account picture fields (Instagram and LinkedIn).
+- [Fixed] Instagram: posts without `media_url` (e.g. videos with copyrighted music) no longer break the import and moderation, the news is created without an image. [#188](https://github.com/pdir/social-feed-bundle/pull/188) 🤗 [rabauss](https://github.com/rabauss)
+- [Fixed] Instagram: moderation import of posts without caption. [#190](https://github.com/pdir/social-feed-bundle/pull/190) 🤗 [rabauss](https://github.com/rabauss)
 
 ## [2.14.5](https://github.com/pdir/social-feed-bundle/tree/2.14.5) - 2026-09-21
 
