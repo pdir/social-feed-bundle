@@ -22,6 +22,7 @@ namespace Pdir\SocialFeedBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\Database;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\DataContainer;
 use Contao\Environment;
@@ -52,6 +53,37 @@ class SocialFeedListener
     )
     {
         $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
+    }
+
+    /**
+     * Hide the access token expiry date for the unified login, if the token never expires (system user access token).
+     */
+    public function adjustInstagramPalette(?DataContainer $dc = null): void
+    {
+        if (null === $dc || !$dc->id || 'edit' !== Input::get('act')) {
+            return;
+        }
+
+        $record = Database::getInstance()
+            ->prepare('SELECT socialFeedType, psf_instagramLoginType, access_token_expires FROM tl_social_feed WHERE id=?')
+            ->limit(1)
+            ->execute($dc->id)
+        ;
+
+        if (
+            !$record->numRows
+            || 'Instagram' !== $record->socialFeedType
+            || !InstagramClient::isUnifiedLogin($record->psf_instagramLoginType)
+            || '' !== (string) $record->access_token_expires
+        ) {
+            return;
+        }
+
+        $GLOBALS['TL_DCA']['tl_social_feed']['subpalettes']['socialFeedType_Instagram'] = str_replace(
+            ',access_token_expires;',
+            ';',
+            $GLOBALS['TL_DCA']['tl_social_feed']['subpalettes']['socialFeedType_Instagram']
+        );
     }
 
     /**

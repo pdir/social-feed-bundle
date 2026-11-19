@@ -17,6 +17,7 @@ Types of changes
 
 - [Added] Instagram: support for Meta's "Instagram API with Unified Login" (Facebook Login for Business with configuration ID). Meta apps created after 30.10.2026 no longer offer the Instagram login and fail with "Invalid platform app". Select the login method and enter the configuration ID in the social feed account.
 - [Changed] Instagram: the OAuth flow now uses a `state` parameter (CSRF protection).
+- [Changed] Instagram: removed the unused field "Note for refresh token e-mail" from the Instagram palette (it is only used for LinkedIn). The token expiry date is hidden for the unified login if the token never expires.
 - [Fixed] Instagram: a failing access token refresh no longer aborts the refresh cron job, access tokens are no longer written to the system log on API errors, and access tokens longer than 255 characters can be saved.
 
 ## [2.14.5](https://github.com/pdir/social-feed-bundle/tree/2.14.5) - 2026-09-21
