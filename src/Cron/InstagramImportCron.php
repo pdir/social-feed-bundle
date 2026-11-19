@@ -80,7 +80,16 @@ class InstagramImportCron
                 // $picture = $objImporter->getInstagramAccountImage($account->psf_instagramAccessToken, $account->id);
 
                 // get instagram posts for account
-                $medias = $objImporter->getInstagramPosts($account->psf_instagramAccessToken, $account->id, $account->number_posts);
+                $instagramUserId = Importer::getInstagramUserId($account);
+
+                // Unified login requires the Instagram user ID, which is stored when requesting the access token
+                if ('' === $instagramUserId) {
+                    $logger->log(LogLevel::ERROR, 'Social Feed (ID '.$account->id.'): Instagram - missing Instagram user ID, please request a new access token.', ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+
+                    continue;
+                }
+
+                $medias = $objImporter->getInstagramPosts($account->psf_instagramAccessToken, $account->id, $account->number_posts, $instagramUserId);
 
                 if (!\is_array($medias)) {
                     continue;

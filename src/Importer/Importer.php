@@ -44,7 +44,7 @@ class Importer
      *
      * @return void|array
      */
-    public function getInstagramPosts($accessToken, $socialFeedId, $numberPosts = 30)
+    public function getInstagramPosts($accessToken, $socialFeedId, $numberPosts = 30, ?string $instagramUserId = null)
     {
         if (null === $accessToken) {
             Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported']);
@@ -53,9 +53,21 @@ class Importer
         }
 
         $client = System::getContainer()->get(InstagramClient::class);
-        $items = $client->getMediaData($accessToken, (int) $socialFeedId, (int) $numberPosts);
+        $items = $client->getMediaData($accessToken, (int) $socialFeedId, (int) $numberPosts, true, $instagramUserId);
 
-        return $items['data'];
+        return $items['data'] ?? null;
+    }
+
+    /**
+     * Get the Instagram user ID for the unified login, null for the legacy Instagram login.
+     */
+    public static function getInstagramUserId(object $socialFeed): ?string
+    {
+        if (!InstagramClient::isUnifiedLogin($socialFeed->psf_instagramLoginType)) {
+            return null;
+        }
+
+        return (string) $socialFeed->psf_instagramUserId;
     }
 
     public function getAccountImage()
@@ -128,7 +140,7 @@ class Importer
                 break;
 
             case 'Instagram':
-                return $this->getInstagramPosts($objSocialFeed->psf_instagramAccessToken, $objSocialFeed->id, $numberPosts);
+                return $this->getInstagramPosts($objSocialFeed->psf_instagramAccessToken, $objSocialFeed->id, $numberPosts, self::getInstagramUserId($objSocialFeed));
                 break;
 
             case 'Twitter':

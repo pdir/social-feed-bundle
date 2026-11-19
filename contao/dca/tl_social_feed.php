@@ -95,14 +95,15 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
     ],
 
     'palettes' => [
-        '__selector__' => ['socialFeedType'],
+        '__selector__' => ['socialFeedType', 'psf_instagramLoginType'],
         'default' => '{pdir_sf_type_legend},socialFeedType;psf_setup',
     ],
 
     'subpalettes' => [
         'socialFeedType_Facebook' => ';{socialFeedAccountLegend},pdir_sf_fb_account,pdir_sf_fb_app_id,pdir_sf_fb_app_secret,pdir_sf_fb_access_token;{socialFeedImportLegend},pdir_sf_fb_news_archive,user,pdir_sf_fb_posts,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date;',
-        'socialFeedType_Instagram' => ';{socialFeedAccountLegend},psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,noteForRefreshTokenMail,access_token_expires;{socialFeedImportLegend},instagram_account,number_posts,pdir_sf_fb_news_archive,user,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,psf_instagramImportMentions;{pdir_sf_account_image_legend},instagram_account_picture,instagram_account_picture_size;',
+        'socialFeedType_Instagram' => ';{socialFeedAccountLegend},psf_instagramLoginType,psf_instagramAppId,psf_instagramAppSecret,psf_instagramAccessToken,noteForRefreshTokenMail,access_token_expires;{socialFeedImportLegend},instagram_account,number_posts,pdir_sf_fb_news_archive,user,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date,psf_instagramImportMentions;{pdir_sf_account_image_legend},instagram_account_picture,instagram_account_picture_size;',
         'socialFeedType_Twitter' => ';{socialFeedAccountLegend},twitter_api_key,twitter_api_secret_key,twitter_access_token,twitter_access_token_secret,twitter_account;{socialFeedImportLegend},search,number_posts,pdir_sf_fb_news_archive,user,show_retweets,hashtags_link,show_reply,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date;',
+        'psf_instagramLoginType_unified_login' => 'psf_instagramConfigId,psf_instagramUserId',
         'socialFeedType_LinkedIn' => ';{socialFeedAccountLegend},linkedin_client_id,linkedin_client_secret,linkedin_company_id,linkedin_access_token,access_token_expires,linkedin_refresh_token_expires,noteForRefreshTokenMail;{socialFeedImportLegend},pdir_sf_fb_news_archive,user,linkedinImportSharedContent,number_posts,pdir_sf_fb_news_cronjob,pdir_sf_fb_news_last_import_date;{pdir_sf_account_image_legend},linkedin_account_picture,linkedin_account_picture_size;',
     ],
 
@@ -252,6 +253,44 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'sql' => "varchar(64) NOT NULL default ''",
         ],
 
+        'psf_instagramLoginType' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramLoginType'],
+            'exclude' => true,
+            'inputType' => 'select',
+            'options' => ['instagram_login', 'unified_login'],
+            'reference' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramLoginTypes'],
+            'default' => 'instagram_login',
+            'eval' => [
+                'submitOnChange' => true,
+                'tl_class' => 'w50',
+            ],
+            'sql' => "varchar(32) NOT NULL default 'instagram_login'",
+        ],
+
+        'psf_instagramConfigId' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramConfigId'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 64,
+                'tl_class' => 'w50',
+            ],
+            'sql' => "varchar(64) NOT NULL default ''",
+        ],
+
+        'psf_instagramUserId' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramUserId'],
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'readonly' => true,
+                'maxlength' => 64,
+                'tl_class' => 'w50',
+            ],
+            'sql' => "varchar(64) NOT NULL default ''",
+        ],
+
         'psf_instagramAppId' => [
             'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppId'],
             'exclude' => true,
@@ -259,7 +298,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'w50',
+                'tl_class' => 'w50 clr',
             ],
             'sql' => 'text NULL',
         ],
@@ -281,7 +320,8 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
-                'maxlength' => 255,
+                // Meta access tokens (e.g. system user tokens of the unified login) can exceed 255 characters
+                'maxlength' => 2048,
                 'tl_class' => 'w50',
             ],
             'wizard' => [
