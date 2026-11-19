@@ -27,6 +27,7 @@ use Contao\Database;
 use Contao\Email;
 use Contao\System;
 use GuzzleHttp\Client;
+use Pdir\SocialFeedBundle\Importer\InstagramClient;
 use Pdir\SocialFeedBundle\Model\SocialFeedModel;
 use Psr\Log\LogLevel;
 
@@ -103,16 +104,25 @@ class RefreshAccessTokenCron
 
     private function refreshInstagramAccessToken(SocialFeedModel $socialFeedModel): void
     {
-        if (\strtotime('+1 week', \time()) >= $socialFeedModel->access_token_expires || '' === $socialFeedModel->access_token_expires) {
-            $client = new Client();
-            $response = $client->get('https://graph.instagram.com/refresh_access_token', [
-                'query' => [
-                    'grant_type' => 'ig_refresh_token',
-                    'access_token' => $socialFeedModel->psf_instagramAccessToken,
-                ],
-            ]);
+        // Unified login: system user access tokens never expire and cannot be refreshed via graph.instagram.com
+        if (InstagramClient::isUnifiedLogin($socialFeedModel->psf_instagramLoginType)) {
+            if ('' !== (string) $socialFeedModel->access_token_expires && \strtotime('+1 week', \time()) >= (int) $socialFeedModel->access_token_expires) {
+                $this->logger->log(LogLevel::WARNING, 'Social Feed (ID '.$socialFeedModel->id.'): The Instagram access token (unified login) expires soon and cannot be renewed automatically. Please request a new access token in the backend.', ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+            }
 
+            return;
+        }
+
+        if (\strtotime('+1 week', \time()) >= $socialFeedModel->access_token_expires || '' === $socialFeedModel->access_token_expires) {
             try {
+                $client = new Client();
+                $response = $client->get('https://graph.instagram.com/refresh_access_token', [
+                    'query' => [
+                        'grant_type' => 'ig_refresh_token',
+                        'access_token' => $socialFeedModel->psf_instagramAccessToken,
+                    ],
+                ]);
+
                 $data = json_decode((string) $response->getBody(), true);
 
                 // Store the access token
@@ -120,7 +130,8 @@ class RefreshAccessTokenCron
                 $set = ['psf_instagramAccessToken' => $data['access_token'], 'access_token_expires' => time() + $data['expires_in']];
                 $db->prepare('UPDATE tl_social_feed %s WHERE id = ?')->set($set)->execute($socialFeedModel->id);
             } catch (\Exception $e) {
-                $this->logger->log(LogLevel::ERROR, $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+                // Do not log the exception message, as it contains the request URI including the access token
+                $this->logger->log(LogLevel::ERROR, sprintf('Social Feed (ID %s): Unable to refresh the Instagram access token (%s, code %s).', $socialFeedModel->id, $e::class, $e->getCode()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
         }
     }

@@ -22,12 +22,14 @@ namespace Pdir\SocialFeedBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\Database;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\DataContainer;
 use Contao\Environment;
 use Contao\Input;
 use Contao\System;
 use Pdir\SocialFeedBundle\EventListener\Config;
+use Pdir\SocialFeedBundle\Importer\InstagramClient;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -54,6 +56,37 @@ class SocialFeedListener
     }
 
     /**
+     * Hide the access token expiry date for the unified login, if the token never expires (system user access token).
+     */
+    public function adjustInstagramPalette(?DataContainer $dc = null): void
+    {
+        if (null === $dc || !$dc->id || 'edit' !== Input::get('act')) {
+            return;
+        }
+
+        $record = Database::getInstance()
+            ->prepare('SELECT socialFeedType, psf_instagramLoginType, access_token_expires FROM tl_social_feed WHERE id=?')
+            ->limit(1)
+            ->execute($dc->id)
+        ;
+
+        if (
+            !$record->numRows
+            || 'Instagram' !== $record->socialFeedType
+            || !InstagramClient::isUnifiedLogin($record->psf_instagramLoginType)
+            || '' !== (string) $record->access_token_expires
+        ) {
+            return;
+        }
+
+        $GLOBALS['TL_DCA']['tl_social_feed']['subpalettes']['socialFeedType_Instagram'] = str_replace(
+            ',access_token_expires;',
+            ';',
+            $GLOBALS['TL_DCA']['tl_social_feed']['subpalettes']['socialFeedType_Instagram']
+        );
+    }
+
+    /**
      * On submit callback.
      */
     public function onSubmitCallback(DataContainer $dc): void
@@ -77,6 +110,38 @@ class SocialFeedListener
 
     public function instagramAuthWizard(DataContainer $dc): string
     {
+        $unified = InstagramClient::isUnifiedLogin($dc->activeRecord->psf_instagramLoginType ?? null);
+        $state = bin2hex(random_bytes(16));
+
+        // Unified login: Facebook Login for Business, permissions are defined by the configuration (config_id)
+        if ($unified) {
+            return $this->renderAuthWizard(
+                $dc,
+                'Instagram',
+                $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramRequestToken'][0] ?? 'Request token',
+                [
+                    'psf_instagramAppId',
+                    'psf_instagramAppSecret',
+                    'psf_instagramConfigId',
+                ],
+                fn ($r) => [
+                    'client_id' => (string) $r->psf_instagramAppId,
+                    'config_id' => (string) $r->psf_instagramConfigId,
+                    'redirect_uri' => $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL),
+                    'response_type' => 'code',
+                    'override_default_response_type' => 'true',
+                    'state' => $state,
+                ],
+                fn ($r) => 'https://www.facebook.com/'.InstagramClient::GRAPH_VERSION.'/dialog/oauth?',
+                fn ($r) => [
+                    'socialFeedId' => Input::get('id'),
+                    'backUrl' => Environment::get('uri'),
+                    'state' => $state,
+                ]
+            );
+        }
+
+        // Legacy: API setup with Instagram login
         return $this->renderAuthWizard(
             $dc,
             'Instagram',
@@ -90,11 +155,13 @@ class SocialFeedListener
                 'redirect_uri' => $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL),
                 'response_type' => 'code',
                 'scope' => 'instagram_business_basic',
+                'state' => $state,
             ],
             fn ($r) => 'https://www.instagram.com/oauth/authorize/?',
             fn ($r) => [
                 'socialFeedId' => Input::get('id'),
                 'backUrl' => Environment::get('uri'),
+                'state' => $state,
             ]
         );
     }
