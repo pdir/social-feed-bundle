@@ -13,7 +13,7 @@ Types of changes
 > [!Tip]
 > Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
 
-## [2.15.0](https://github.com/pdir/social-feed-bundle/tree/2.14.5) - 2026-09-21
+## [2.15.0](https://github.com/pdir/social-feed-bundle/tree/2.15.0) - 2026-11-19
 
 - [Added] Instagram: support for Meta's "Instagram API with Unified Login" (Facebook Login for Business with configuration ID). Meta apps created after 30.10.2026 no longer offer the Instagram login and fail with "Invalid platform app". Select the login method and enter the configuration ID in the social feed account.
 - [Changed] Instagram: the OAuth flow now uses a `state` parameter (CSRF protection).
