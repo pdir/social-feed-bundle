@@ -237,7 +237,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'instagram_account_picture' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news']['instagram_account_picture'],
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['instagram_account_picture'],
             'exclude' => true,
             'inputType' => 'fileTree',
             'eval' => ['filesOnly' => true, 'fieldType' => 'radio', 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => 'w50 autoheight'],
@@ -245,7 +245,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'instagram_account_picture_size' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news']['instagram_account_picture_size'],
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['instagram_account_picture_size'],
             'exclude' => true,
             'inputType' => 'imageSize',
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
@@ -511,7 +511,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'linkedin_account_picture' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news']['linkedin_account_picture'],
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture'],
             'exclude' => true,
             'inputType' => 'fileTree',
             'eval' => ['filesOnly' => true, 'fieldType' => 'radio', 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => 'clr w50 autoheight'],
@@ -519,7 +519,7 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'linkedin_account_picture_size' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_news']['linkedin_account_picture_size'],
+            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture_size'],
             'exclude' => true,
             'inputType' => 'imageSize',
             'reference' => &$GLOBALS['TL_LANG']['MSC'],

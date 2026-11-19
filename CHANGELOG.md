@@ -19,6 +19,7 @@ Types of changes
 - [Changed] Instagram: the OAuth flow now uses a `state` parameter (CSRF protection).
 - [Changed] Instagram: removed the unused field "Note for refresh token e-mail" from the Instagram palette (it is only used for LinkedIn). The token expiry date is hidden for the unified login if the token never expires.
 - [Fixed] Instagram: a failing access token refresh no longer aborts the refresh cron job, access tokens are no longer written to the system log on API errors, and access tokens longer than 255 characters can be saved.
+- [Fixed] Missing backend labels for the account picture fields (Instagram and LinkedIn).
 
 ## [2.14.5](https://github.com/pdir/social-feed-bundle/tree/2.14.5) - 2026-09-21
 
