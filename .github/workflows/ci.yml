@@ -42,7 +42,7 @@ jobs:
                     coverage: none
 
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@v5
 
             -   name: Require Contao ${{ matrix.contao }}
                 run: composer require contao/core-bundle:~${{ matrix.contao }}.0 contao/news-bundle:~${{ matrix.contao }}.0 --no-update --no-interaction
@@ -68,7 +68,7 @@ jobs:
                     coverage: none
 
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@v5
 
             # The baseline (phpstan-baseline.neon) has been generated with Contao 5.7
             -   name: Require Contao 5.7
@@ -92,7 +92,7 @@ jobs:
                     coverage: none
 
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@v5
 
             -   name: Install the dependencies
                 run: composer update --no-interaction --no-progress
@@ -111,7 +111,7 @@ jobs:
                     coverage: none
 
             -   name: Checkout
-                uses: actions/checkout@v4
+                uses: actions/checkout@v5
 
             -   name: Validate composer.json
                 run: composer validate --no-check-lock --no-check-publish
