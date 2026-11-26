@@ -36,13 +36,13 @@ $GLOBALS['TL_LANG']['tl_sf_service']['configId'] = ['Konfigurations-ID', 'Die Ko
 $GLOBALS['TL_LANG']['tl_sf_service']['instagramTokenError'] = 'Der Instagram Access Token konnte nicht angefordert werden. Details finden Sie im System-Log.';
 $GLOBALS['TL_LANG']['tl_sf_service']['instagramAccountError'] = 'Beim Login wurde kein Instagram-Konto freigegeben. Bitte wählen Sie ein professionelles Instagram-Konto aus und versuchen Sie es erneut.';
 
-$GLOBALS['TL_LANG']['tl_sf_service']['requestToken'] = ['Access Token generieren', 'Wenn Sie speichern wird der Access Token automatisch generiert.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['requestToken'] = ['Access Token generieren', 'Speichern Sie zuerst die Zugangsdaten. Die Anmeldung öffnet sich in einem neuen Tab, danach wird der Access Token automatisch hinterlegt.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['apiKey'] = ['API Key', 'Geben Sie hier den API Key ein.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['apiKeySecret'] = ['API Key Secret', 'Geben Sie hier den API Key Secret ein.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['accessTokenSecret'] = ['Access Token Secret', 'Geben Sie hier den Access Token Secret ein.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['clientId'] = ['Client ID', 'Geben Sie hier die Client ID aus der App ein.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['clientSecret'] = ['Client Secret', 'Geben Sie hier den Client Secret aus der App ein.'];
-$GLOBALS['TL_LANG']['tl_sf_service']['accessToken'] = ['Access Token', 'Wird automatisch hinterlegt, wenn Sie „Access Token generieren“ auswählen und speichern.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['accessToken'] = ['Access Token', 'Wird automatisch hinterlegt, nachdem Sie über „Access Token generieren“ die Anmeldung abgeschlossen haben.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['apiVersion'] = ['API-Version', 'Version der Facebook Graph API.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['tokenExpires'] = ['Access Token läuft ab am', 'Der Access Token wird automatisch vor Ablauf erneuert. Beim Instagram Unified Login mit Systemnutzer-Token bleibt das Feld leer, da der Token nicht abläuft.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['refreshToken'] = ['Refresh Token', 'Wird automatisch hinterlegt, wenn der Access Token generiert wird.'];

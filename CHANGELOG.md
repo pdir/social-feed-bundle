@@ -10,39 +10,106 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+> [!Tip]
+> Thank you to all [EAP](https://pdir.de/crowdfunding/social-feed-bundle.html) supporters!
+
 ## [3.0.0](https://github.com/pdir/social-feed-bundle/tree/3.0.0) - unreleased
 
-[Added] Add compatibility for [Social Feed+](https://pdir.de/socialfeed+).
-[Changed] Split the social feed configuration into services (app credentials, `tl_sf_service`) and accounts (import settings, `tl_sf_account`). Existing `tl_social_feed` records are migrated automatically, the old table is kept.
-[Changed] The import commands (`social-feed:*:import`) now import all accounts of a type, not only accounts without cronjob.
-[Fixed] Facebook: exchange the user access token for a long-lived token, so the page access tokens do not expire.
-[Changed] Instagram unified login (see 2.15.0): login method and configuration ID are stored in the service, the Instagram account ID in the account. All Instagram accounts shared during the login are created as social feed accounts.
-[Changed] Instagram login: the scope `instagram_business_basic` is requested.
-[Removed] Support for Contao 4.13 and PHP 8.0, the minimum requirements are now Contao 5.3 and PHP 8.1.
-[Added] Compatibility with `doctrine/dbal` 4 (Contao 5.7). [#191](https://github.com/pdir/social-feed-bundle/issues/191)
-[Added] Instagram: option "Link hashtags and mentions" for Instagram accounts (cron and moderated import). [#179](https://github.com/pdir/social-feed-bundle/issues/179)
-[Fixed] LinkedIn: posts without `firstPublishedAt` no longer get the date 01.01.1970, the creation or modification date is used instead. [#185](https://github.com/pdir/social-feed-bundle/issues/185)
-[Fixed] Instagram: the moderation and the import load further pages until the number of posts is reached (previously max. 20–25 posts). [#131](https://github.com/pdir/social-feed-bundle/issues/131)
-[Fixed] Existing images are detected correctly when the import runs via the web cron, images are no longer downloaded and the `.public` file is no longer written on every import. [#141](https://github.com/pdir/social-feed-bundle/issues/141)
-[Fixed] Instagram: images of moderated imports were not assigned to the news, posts without image no longer break the import.
-[Removed] `Pdir\SocialFeedBundle\Model\SocialFeedModel` and the DCA `tl_social_feed` (BC break). Use `SocialFeedServiceModel` (credentials) and `SocialFeedAccountModel` (import settings) instead.
-[Removed] `Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener` (BC break), replaced by `SocialFeedServiceCallbackListener`.
+- [Added] Compatibility with [Social Feed+](https://pdir.de/socialfeed+).
+- [Added] Compatibility with `doctrine/dbal` 4 (Contao 5.7). [#191](https://github.com/pdir/social-feed-bundle/issues/191)
+- [Added] Instagram: option "Link hashtags and mentions" (cron and moderated import). [#179](https://github.com/pdir/social-feed-bundle/issues/179)
+- [Changed] The configuration is split into services (app credentials, `tl_sf_service`) and accounts (import settings, `tl_sf_account`). Existing `tl_social_feed` records are migrated automatically, the old table is kept. See "Upgrade to version 3.0" in the README.
+- [Changed] Instagram unified login (see 2.15.0): login method and configuration ID are stored in the service, the Instagram account ID in the account. All Instagram accounts shared during the login are created as social feed accounts.
+- [Changed] The access token is requested via the button next to the access token field of the service (Facebook, Instagram, LinkedIn), the login opens in a new tab.
+- [Changed] Facebook: the Graph API version is selected in the service (default `v25.0`), the login requests the permissions `pages_show_list`, `pages_read_engagement` and `pages_read_user_content`.
+- [Changed] The import commands (`social-feed:*:import`) import all accounts of a type, also accounts with a cron job.
+- [Fixed] Facebook: the user access token is exchanged for a long-lived token, so the page access tokens do not expire.
+- [Fixed] LinkedIn: posts without `firstPublishedAt` no longer get the date 01.01.1970, the creation or modification date is used instead. [#185](https://github.com/pdir/social-feed-bundle/issues/185)
+- [Fixed] Instagram: the moderation and the import load further pages until the number of posts is reached (previously max. 20–25 posts). [#131](https://github.com/pdir/social-feed-bundle/issues/131)
+- [Fixed] Instagram: images of moderated imports were not assigned to the news.
+- [Fixed] Existing images are detected correctly when the import runs via the web cron, images are no longer downloaded and the `.public` file is no longer written on every import. [#141](https://github.com/pdir/social-feed-bundle/issues/141)
+- [Fixed] The default value of the option `--max-posts` of `social-feed:linkedin:import` was ignored.
+- [Removed] `Pdir\SocialFeedBundle\Model\SocialFeedModel`, `Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener` and the DCA `tl_social_feed` (BC break). Use `SocialFeedServiceModel` (credentials) and `SocialFeedAccountModel` (import settings) instead.
+
+## [2.15.0](https://github.com/pdir/social-feed-bundle/tree/2.15.0) - 2026-11-26
+
+- [Added] Instagram: support for Meta's "Instagram API with Unified Login" (Facebook Login for Business with configuration ID). Meta apps created after 30.10.2026 no longer offer the Instagram login and fail with "Invalid platform app". New Instagram accounts use the unified login by default, existing accounts keep the Instagram login. Enter the configuration ID in the social feed account.
+- [Changed] Instagram: the OAuth flow now uses a `state` parameter (CSRF protection).
+- [Changed] Instagram: removed the unused field "Note for refresh token e-mail" from the Instagram palette (it is only used for LinkedIn). The token expiry date is hidden for the unified login if the token never expires.
+- [Fixed] Instagram: a failing access token refresh no longer aborts the refresh cron job, access tokens are no longer written to the system log on API errors, and access tokens longer than 255 characters can be saved.
+- [Fixed] Missing backend labels for the account picture fields (Instagram and LinkedIn).
+- [Fixed] Instagram: posts without `media_url` (e.g. videos with copyrighted music) no longer break the import and moderation, the news is created without an image. [#188](https://github.com/pdir/social-feed-bundle/pull/188) 🤗 [rabauss](https://github.com/rabauss)
+- [Fixed] Instagram: moderation import of posts without caption. [#190](https://github.com/pdir/social-feed-bundle/pull/190) 🤗 [rabauss](https://github.com/rabauss)
+
+## [2.14.5](https://github.com/pdir/social-feed-bundle/tree/2.14.5) - 2026-09-21
+
+- [Fixed] Instagram import log messages are now only logged when the configured import interval is reached.
+
+## [2.14.4](https://github.com/pdir/social-feed-bundle/tree/2.14.4) - 2026-07-22
+
+- [Fixed] Ignore Instagram trial reels during synchronization to prevent duplicate posts. [#186](https://github.com/pdir/social-feed-bundle/pull/186) 🤗 [fritzmg](https://github.com/fritzmg)
+
+## [2.14.3](https://github.com/pdir/social-feed-bundle/tree/2.14.3) - 2026-03-20
+
+- [Fixed] Fix unintended CSS class leakage (`slider`) between news list modules by disabling shared service instances for the custom module controller.
+
+## [2.14.2](https://github.com/pdir/social-feed-bundle/tree/2.14.2) - 2026-03-17
+
+- [Changed] Updated `nickdnk/graph-sdk` to `^8.0` and adjusted Facebook import.
+  Access tokens must now include the additional permission `pages_read_user_content` (in addition to `pages_read_engagement`) and may need to be regenerated.
+- [Changed] Reworked access token generation for Contao 5.4+.
+  The OAuth flow in the Social Feed account configuration is now initiated via a button instead of a checkbox to prevent AJAX-related redirect issues.
+- [Fixed] Resolved "Cannot go up - already at root level." error when editing a Social Feed account in Contao 5.7.
+  Fixed DCA palette and subpalette definitions (missing semicolons).
+- [Fixed] Fix a runtime exception when a broken image is loaded 🤗 [koertho](https://github.com/koertho)
+- [Fixed] Restored news list override for Contao 5.7+ by switching to a fragment controller (`AsFrontendModule`).
+  The previous `$GLOBALS['FE_MOD']`-based override no longer worked reliably with modern frontend module handling.
+
+## [2.14.1](https://github.com/pdir/social-feed-bundle/tree/2.14.1) - 2025-04-25
+
+- [Fixed] Small fixes to instagram client 🤗 [bytehead](https://github.com/bytehead)
+
+## [2.14.0](https://github.com/pdir/social-feed-bundle/tree/2.14.0) - 2025-01-15
+
+- [Added] Add compatibility for Contao 5.4+
+- [Fixed] Instagram import (You need a business app, see [docs](https://pdir.de/docs/de/contao/extensions/socialfeed/configuration/instagram/))
+
+## [2.13.7](https://github.com/pdir/social-feed-bundle/tree/2.13.6) - 2025-01-15
+
+- [Fixed] Instagram import (You need a business app, see [docs](https://pdir.de/docs/de/contao/extensions/socialfeed/configuration/instagram/))
+
+## [2.13.6](https://github.com/pdir/social-feed-bundle/tree/2.13.6) - 2024-11-21
+
+-[Fixed] Update kevinrob/guzzle-cache-middleware fix #150 🤗 [contaoacademy](https://github.com/contaoacademy)
+
+## [2.12.7](https://github.com/pdir/social-feed-bundle/tree/2.12.7) - 2024-11-15
+
+-[Fixed] issue with array_insert in Contao <4.13 🤗 [koertho](https://github.com/koertho)
+
+## [2.13.5](https://github.com/pdir/social-feed-bundle/tree/2.13.5) - 2024-11-15
+
+- [Fixed] Fix linkedin access token generation
+
+## [2.13.4](https://github.com/pdir/social-feed-bundle/tree/2.13.4) - 2024-08-20
+
+- [Fixed] Fix newslist module (remove void)
+- [Fixed] Missing images in moderated instagram import
+
+## [2.13.3](https://github.com/pdir/social-feed-bundle/tree/2.13.3) - 2024-08-07
+
+- [Fixed] missing templates in newslist module
+
+## [2.13.2](https://github.com/pdir/social-feed-bundle/tree/2.13.2) - 2024-08-01
+
+- [Fixed] fix LinkedIn import
 
 ## [2.13.1](https://github.com/pdir/social-feed-bundle/tree/2.13.1) - 2024-06-21
-
-This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
-
-Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügbar. Mehr erfährst du unter [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
 
 - [Added] Activate submit on change for Instagram request token (usability)
 - [Fixed] Enable request token in moderate controller
 - [Fixed] some import problems
 
 ## [2.13.0](https://github.com/pdir/social-feed-bundle/tree/2.13.0) - 2024-05-20
-
-This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
-
-Diese Version ist aktuell nur über das "early adopter"-Programm (EAP) verfügbar. Mehr erfährst du unter [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).
 
 - [Added] Add Contao 5.3 support
 - [Changed] Requires Contao 4.13 and PHP 8.0 as minimum requirements

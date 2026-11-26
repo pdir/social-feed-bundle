@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\DataContainer;
 use Contao\Environment;
 use Contao\Input;
@@ -43,36 +42,6 @@ class SocialFeedServiceCallbackListener
     public function __construct(private RouterInterface $router)
     {
         $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
-    }
-
-    #[AsCallback(table: 'tl_sf_service', target: 'fields.requestToken.save')]
-    public function onRequestTokenSave()
-    {
-        return null;
-    }
-
-    #[AsCallback(table: 'tl_sf_service', target: 'config.onsubmit')]
-    public function onsubmitCallback(DataContainer $dc): void
-    {
-        if (!$dc->id) {
-            return;
-        }
-
-        if (!Input::post('requestToken')) {
-            return;
-        }
-
-        if ('Instagram' === $dc->activeRecord->type && $dc->activeRecord->appId) {
-            $this->requestInstagramAccessToken($dc->activeRecord->appId, (string) $dc->activeRecord->loginType, (string) $dc->activeRecord->configId);
-        }
-
-        if ('Facebook' === $dc->activeRecord->type && $dc->activeRecord->appId && $dc->activeRecord->appSecret) {
-            $this->requestFacebookAccessToken($dc->activeRecord->appId, $dc->activeRecord->appSecret, $dc->activeRecord->apiVersion ?: 'v20.0');
-        }
-
-        if ('LinkedIn' === $dc->activeRecord->type && $dc->activeRecord->clientId && $dc->activeRecord->clientSecret) {
-            $this->requestLinkedinAccessToken($dc->activeRecord->clientId, $dc->activeRecord->clientSecret);
-        }
     }
 
     /**
@@ -104,93 +73,143 @@ class SocialFeedServiceCallbackListener
     }
 
     /**
-     * Request the Instagram access token (legacy Instagram login or unified login).
+     * Renders the "request access token" button next to the access token field.
+     *
+     * The OAuth flow is started via a link instead of a redirect on submit, which does not work reliably with the
+     * AJAX requests of the back end in Contao 5.4+.
      */
-    private function requestInstagramAccessToken(string $clientId, string $loginType, string $configId): void
+    public function accessTokenWizard(DataContainer $dc): string
+    {
+        $record = $dc->activeRecord;
+
+        if (!$record) {
+            return '';
+        }
+
+        return match ((string) $record->type) {
+            'Instagram' => $this->instagramAuthWizard($record),
+            'Facebook' => $this->facebookAuthWizard($record),
+            'LinkedIn' => $this->linkedinAuthWizard($record),
+            default => '',
+        };
+    }
+
+    private function instagramAuthWizard(object $record): string
     {
         $state = bin2hex(random_bytes(16));
-
-        $this->session->set(self::SESSION_KEY, [
+        $redirectUri = $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL);
+        $session = [
             'sfServiceId' => Input::get('id'),
             'backUrl' => Environment::get('uri'),
             'state' => $state,
-        ]);
-
-        $this->session->save();
-
-        $redirectUri = $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL);
+        ];
 
         // Unified login: Facebook Login for Business, permissions are defined by the configuration (config_id)
-        if (InstagramClient::isUnifiedLogin($loginType)) {
-            $data = [
-                'client_id' => $clientId,
-                'config_id' => $configId,
-                'redirect_uri' => $redirectUri,
-                'response_type' => 'code',
-                'override_default_response_type' => 'true',
-                'state' => $state,
-            ];
-
-            throw new RedirectResponseException('https://www.facebook.com/'.InstagramClient::GRAPH_VERSION.'/dialog/oauth?'.http_build_query($data));
+        if (InstagramClient::isUnifiedLogin((string) $record->loginType)) {
+            return $this->renderAuthWizard(
+                $record,
+                ['appId', 'appSecret', 'configId'],
+                'https://www.facebook.com/'.InstagramClient::GRAPH_VERSION.'/dialog/oauth?',
+                [
+                    'client_id' => (string) $record->appId,
+                    'config_id' => (string) $record->configId,
+                    'redirect_uri' => $redirectUri,
+                    'response_type' => 'code',
+                    'override_default_response_type' => 'true',
+                    'state' => $state,
+                ],
+                $session,
+            );
         }
 
         // Legacy: API setup with Instagram login
-        $data = [
-            'client_id' => $clientId,
-            'redirect_uri' => $redirectUri,
-            'response_type' => 'code',
-            'scope' => 'instagram_business_basic',
-            'state' => $state,
-        ];
+        return $this->renderAuthWizard(
+            $record,
+            ['appId', 'appSecret'],
+            'https://www.instagram.com/oauth/authorize/?',
+            [
+                'client_id' => (string) $record->appId,
+                'redirect_uri' => $redirectUri,
+                'response_type' => 'code',
+                'scope' => 'instagram_business_basic',
+                'state' => $state,
+            ],
+            $session,
+        );
+    }
 
-        throw new RedirectResponseException('https://www.instagram.com/oauth/authorize/?'.http_build_query($data));
+    private function facebookAuthWizard(object $record): string
+    {
+        $apiVersion = (string) $record->apiVersion ?: 'v25.0';
+
+        return $this->renderAuthWizard(
+            $record,
+            ['appId', 'appSecret'],
+            'https://www.facebook.com/'.$apiVersion.'/dialog/oauth?',
+            [
+                'client_id' => (string) $record->appId,
+                'redirect_uri' => $this->router->generate('facebook_auth', [], RouterInterface::ABSOLUTE_URL),
+                'scope' => 'pages_show_list,pages_read_engagement,pages_read_user_content',
+            ],
+            [
+                'sfServiceId' => Input::get('id'),
+                'backUrl' => Environment::get('uri'),
+                'clientId' => (string) $record->appId,
+                'clientSecret' => (string) $record->appSecret,
+                'apiVersion' => $apiVersion,
+            ],
+        );
+    }
+
+    private function linkedinAuthWizard(object $record): string
+    {
+        return $this->renderAuthWizard(
+            $record,
+            ['clientId', 'clientSecret'],
+            'https://www.linkedin.com/oauth/v2/authorization?',
+            [
+                'response_type' => 'code',
+                'client_id' => (string) $record->clientId,
+                'redirect_uri' => $this->router->generate('auth_linkedin', [], RouterInterface::ABSOLUTE_URL),
+                'scope' => 'r_organization_social,rw_organization_admin',
+            ],
+            [
+                'sfServiceId' => Input::get('id'),
+                'backUrl' => Environment::get('uri'),
+                'clientId' => (string) $record->clientId,
+                'clientSecret' => (string) $record->clientSecret,
+            ],
+        );
     }
 
     /**
-     * Request the Facebook access token.
+     * @param list<string>          $requiredFields
+     * @param array<string, string> $query
+     * @param array<string, mixed>  $sessionData
      */
-    private function requestFacebookAccessToken(string $appId, string $appSecret, string $apiVersion): void
+    private function renderAuthWizard(object $record, array $requiredFields, string $baseUrl, array $query, array $sessionData): string
     {
-        $this->session->set(self::SESSION_KEY, [
-            'sfServiceId' => Input::get('id'),
-            'backUrl' => Environment::get('uri'),
-            'clientId' => $appId,
-            'clientSecret' => $appSecret,
-            'apiVersion' => $apiVersion,
-        ]);
+        $label = $GLOBALS['TL_LANG']['tl_sf_service']['requestToken'][0] ?? 'Request access token';
 
+        // The required fields must be saved before the token can be requested
+        foreach ($requiredFields as $field) {
+            if ('' === trim((string) ($record->{$field} ?? ''))) {
+                return sprintf(
+                    ' <a href="#" class="tl_submit disabled" style="margin-top:5px; opacity:.5; pointer-events:none;" aria-disabled="true" title="%s">%s</a>',
+                    htmlspecialchars($GLOBALS['TL_LANG']['tl_sf_service']['requestToken'][1] ?? '', ENT_QUOTES),
+                    htmlspecialchars($label, ENT_QUOTES)
+                );
+            }
+        }
+
+        // Session context for the callback controller
+        $this->session->set(self::SESSION_KEY, $sessionData);
         $this->session->save();
 
-        $data = [
-            'client_id' => $appId,
-            'redirect_uri' => $this->router->generate('facebook_auth', [], RouterInterface::ABSOLUTE_URL),
-            'scope' => 'pages_read_engagement',
-        ];
-
-        throw new RedirectResponseException('https://www.facebook.com/'.$apiVersion.'/dialog/oauth?'.http_build_query($data));
-    }
-
-    /**
-     * Request the LinkedIn access token.
-     */
-    private function requestLinkedinAccessToken(string $clientId, string $clientSecret): void
-    {
-        $this->session->set(self::SESSION_KEY, [
-            'sfServiceId' => Input::get('id'),
-            'backUrl' => Environment::get('uri'),
-            'clientId' => $clientId,
-            'clientSecret' => $clientSecret,
-        ]);
-
-        $this->session->save();
-
-        $data = [
-            'response_type' => 'code',
-            'client_id' => $clientId,
-            'redirect_uri' => $this->router->generate('auth_linkedin', [], RouterInterface::ABSOLUTE_URL),
-            'scope' => 'r_organization_social,rw_organization_admin',
-        ];
-
-        throw new RedirectResponseException('https://www.linkedin.com/oauth/v2/authorization?'.http_build_query($data));
+        return sprintf(
+            ' <a href="%s" class="tl_submit" style="margin-top:5px" target="_blank" rel="noopener noreferrer">%s</a>',
+            htmlspecialchars($baseUrl.http_build_query($query), ENT_QUOTES),
+            htmlspecialchars($label, ENT_QUOTES)
+        );
     }
 }

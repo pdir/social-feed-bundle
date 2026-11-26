@@ -36,13 +36,13 @@ $GLOBALS['TL_LANG']['tl_sf_service']['configId'] = ['ID configurazione', 'L\'ID 
 $GLOBALS['TL_LANG']['tl_sf_service']['instagramTokenError'] = 'Impossibile richiedere il token di accesso Instagram. Controlla il log di sistema per i dettagli.';
 $GLOBALS['TL_LANG']['tl_sf_service']['instagramAccountError'] = 'Durante il login non è stato condiviso alcun account Instagram. Seleziona un account Instagram professionale e riprova.';
 
-$GLOBALS['TL_LANG']['tl_sf_service']['requestToken'] = ['Genera token di accesso', 'Il token di accesso viene generato automaticamente al salvataggio.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['requestToken'] = ['Genera token di accesso', 'Salva prima le credenziali. Il login si apre in una nuova scheda, dopodiché il token di accesso viene salvato automaticamente.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['apiKey'] = ['API key', 'Inserisci l\'API key.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['apiKeySecret'] = ['API key secret', 'Inserisci l\'API key secret.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['accessTokenSecret'] = ['Access token secret', 'Inserisci l\'access token secret.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['clientId'] = ['Client ID', 'Inserisci il client ID dell\'app.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['clientSecret'] = ['Client secret', 'Inserisci il client secret dell\'app.'];
-$GLOBALS['TL_LANG']['tl_sf_service']['accessToken'] = ['Token di accesso', 'Viene salvato automaticamente quando selezioni "Genera token di accesso" e salvi.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['accessToken'] = ['Token di accesso', 'Viene salvato automaticamente dopo aver completato il login tramite "Genera token di accesso".'];
 $GLOBALS['TL_LANG']['tl_sf_service']['apiVersion'] = ['Versione API', 'Versione della Facebook Graph API.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['tokenExpires'] = ['Il token di accesso scade il', 'Il token di accesso viene rinnovato automaticamente prima della scadenza. Con l\'Unified Login di Instagram e un token utente di sistema il campo resta vuoto, perché il token non scade.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['refreshToken'] = ['Refresh token', 'Viene salvato automaticamente quando viene generato il token di accesso.'];

@@ -36,13 +36,13 @@ $GLOBALS['TL_LANG']['tl_sf_service']['configId'] = ['Configuration ID', 'The con
 $GLOBALS['TL_LANG']['tl_sf_service']['instagramTokenError'] = 'The Instagram access token could not be requested. Please check the system log for details.';
 $GLOBALS['TL_LANG']['tl_sf_service']['instagramAccountError'] = 'No Instagram account was shared during login. Please select an Instagram professional account and try again.';
 
-$GLOBALS['TL_LANG']['tl_sf_service']['requestToken'] = ['Generate access token', 'The access token is generated automatically when you save.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['requestToken'] = ['Generate access token', 'Save the credentials first. The login opens in a new tab, afterwards the access token is stored automatically.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['apiKey'] = ['API key', 'Enter the API key.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['apiKeySecret'] = ['API key secret', 'Enter the API key secret.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['accessTokenSecret'] = ['Access token secret', 'Enter the access token secret.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['clientId'] = ['Client ID', 'Enter the client ID of the app.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['clientSecret'] = ['Client secret', 'Enter the client secret of the app.'];
-$GLOBALS['TL_LANG']['tl_sf_service']['accessToken'] = ['Access token', 'Is stored automatically when you select "Generate access token" and save.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['accessToken'] = ['Access token', 'Is stored automatically after you have completed the login via "Generate access token".'];
 $GLOBALS['TL_LANG']['tl_sf_service']['apiVersion'] = ['API version', 'Version of the Facebook Graph API.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['tokenExpires'] = ['Access token expires on', 'The access token is renewed automatically before it expires. For the Instagram unified login with a system user token this field stays empty, as the token does not expire.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['refreshToken'] = ['Refresh token', 'Is stored automatically when the access token is generated.'];

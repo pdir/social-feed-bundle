@@ -6,6 +6,13 @@ services:
     Pdir\SocialFeedBundle\:
         resource: ../src/*
 
+    Pdir\SocialFeedBundle\EventListener\BackendMenuListener:
+        public: true
+
+    # public, because the wizard callback of tl_sf_service.accessToken is resolved via System::importStatic()
+    Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedServiceCallbackListener:
+        public: true
+
     Pdir\SocialFeedBundle\EventListener\DataContainer\SetupListener:
         public: true
 
@@ -44,9 +51,6 @@ services:
         arguments:
             - "@database_connection"
             - "@router"
-
-    Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener:
-        public: true
 
     pdir_social_feed_moderate.controller:
         class: Pdir\SocialFeedBundle\Controller\ModerateController
@@ -93,3 +97,11 @@ services:
 
     Pdir\SocialFeedBundle\SocialFeed\SocialFeedNewsClass:
         public: true
+
+    # Migrations
+    Pdir\SocialFeedBundle\Migration\SocialFeedServiceMigration:
+        tags:
+            - { name: contao.migration, priority: 0 }
+
+    Pdir\SocialFeedBundle\Controller\FrontendModule\ModuleCustomNewslistController:
+        shared: false

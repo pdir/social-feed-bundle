@@ -18,12 +18,16 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Pdir\SocialFeedBundle\Module;
+namespace Pdir\SocialFeedBundle\Controller\FrontendModule;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\LayoutModel;
+use Contao\ModuleModel;
 use Contao\ModuleNewsList;
+use Symfony\Component\HttpFoundation\Response;
 
-class ModuleCustomNewslist extends ModuleNewsList
+#[AsFrontendModule('newslist', category: 'news', template: 'mod_newslist', priority: 1)]
+class ModuleCustomNewslistController extends ModuleNewsList
 {
     /**
      * Template.
@@ -31,6 +35,17 @@ class ModuleCustomNewslist extends ModuleNewsList
      * @var string
      */
     protected $strTemplate = 'mod_newslist_social_feed';
+
+    public function __construct()
+    {
+    }
+
+    public function __invoke(ModuleModel $model, string $section): Response
+    {
+        parent::__construct($model, $section);
+
+        return new Response($this->generate());
+    }
 
     protected function compile(): void
     {

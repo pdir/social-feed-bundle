@@ -21,6 +21,7 @@ declare(strict_types=1);
 use Contao\DC_Table;
 use Contao\System;
 use Pdir\SocialFeedBundle\EventListener\DataContainer\SetupListener;
+use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedServiceCallbackListener;
 
 System::loadLanguageFile('tl_sf_service');
 
@@ -86,15 +87,15 @@ $GLOBALS['TL_DCA']['tl_sf_service'] = [
 
     'palettes' => [
         '__selector__' => ['type', 'loginType'],
-        'default' => '{type_legend},name,type,psf_setup;',
+        'default' => '{type_legend},name,type;psf_setup;',
     ],
 
     'subpalettes' => [
-        'type_Facebook' => ';{credentials_legend},appId,appSecret,accessToken,requestToken,apiVersion;',
-        'type_Instagram' => ';{credentials_legend},loginType,appId,appSecret,accessToken,requestToken,tokenExpires;',
+        'type_Facebook' => ';{credentials_legend},appId,appSecret,accessToken,apiVersion;',
+        'type_Instagram' => ';{credentials_legend},loginType,appId,appSecret,accessToken,tokenExpires;',
         'loginType_unified_login' => 'configId',
         'type_X' => ';{credentials_legend},apiKey,apiKeySecret,accessToken,accessTokenSecret;',
-        'type_LinkedIn' => ';{credentials_legend},clientId,clientSecret,accessToken,requestToken,noteForRefreshTokenMail,tokenExpires,refreshToken,refreshTokenExpires',
+        'type_LinkedIn' => ';{credentials_legend},clientId,clientSecret,accessToken,noteForRefreshTokenMail,tokenExpires,refreshToken,refreshTokenExpires;',
     ],
 
     'fields' => [
@@ -130,9 +131,11 @@ $GLOBALS['TL_DCA']['tl_sf_service'] = [
         'loginType' => [
             'exclude' => true,
             'inputType' => 'select',
-            'options' => ['instagram_login', 'unified_login'],
+            'options' => ['unified_login', 'instagram_login'],
             'reference' => &$GLOBALS['TL_LANG']['tl_sf_service']['loginTypes'],
-            'default' => 'instagram_login',
+            // New services use the unified login (Meta apps created after 30.10.2026 no longer offer the Instagram
+            // login). The SQL default stays "instagram_login", so existing services keep the legacy login.
+            'default' => 'unified_login',
             'eval' => [
                 'submitOnChange' => true,
                 'tl_class' => 'w50',
@@ -177,7 +180,11 @@ $GLOBALS['TL_DCA']['tl_sf_service'] = [
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
-                'tl_class' => 'w50',
+                'tl_class' => 'w50 wizard',
+            ],
+            // Button to request the access token (Facebook, Instagram, LinkedIn)
+            'wizard' => [
+                [SocialFeedServiceCallbackListener::class, 'accessTokenWizard'],
             ],
             'sql' => 'text NULL',
         ],
@@ -212,22 +219,12 @@ $GLOBALS['TL_DCA']['tl_sf_service'] = [
             'sql' => 'text NULL',
         ],
 
-        'requestToken' => [
-            'exclude' => true,
-            'inputType' => 'checkbox',
-            'eval' => [
-                'doNotSaveEmpty' => true,
-                'tl_class' => 'w50 m12',
-                'submitOnChange'=> true
-            ],
-        ],
-
         'apiVersion' => [
             'exclude' => true,
             'filter' => true,
             'sorting' => true,
             'inputType' => 'select',
-            'options' => ['v20.0', 'v19.0', 'v18.0', 'v17.0', 'v16.0'],
+            'options' => ['v25.0', 'v24.0', 'v23.0', 'v22.0', 'v21.0', 'v20.0'],
             'eval' => ['includeBlankOption' => false, 'tl_class' => 'w50'],
             'sql' => "varchar(10) NOT NULL default ''",
         ],

@@ -23,6 +23,7 @@ namespace Pdir\SocialFeedBundle\SocialFeed;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
+use Imagine\Exception\RuntimeException;
 use Pdir\SocialFeedBundle\Model\SocialFeedAccountModel;
 
 class SocialFeedNewsClass
@@ -65,7 +66,11 @@ class SocialFeedNewsClass
                 }
 
                 if (null !== $imagePath) {
-                    $pictureObj = $pictureFactory->create($this->projectDir.\DIRECTORY_SEPARATOR.$imagePath);
+                    try {
+                        $pictureObj = $pictureFactory->create($this->projectDir.\DIRECTORY_SEPARATOR.$imagePath);
+                    } catch (RuntimeException) {
+                        $pictureObj = null;
+                    }
 
                     if (null !== $pictureObj) {
                         $objTemplate->accountPicture = $this->getTemplateData($pictureObj);
@@ -76,7 +81,12 @@ class SocialFeedNewsClass
 
                 if (null !== $image) {
                     $size = StringUtil::deserialize($socialFeedAccount->avatarSize);
-                    $objTemplate->accountPicture = $this->getTemplateData($pictureFactory->create($this->projectDir.\DIRECTORY_SEPARATOR.$image->path, $size ?: null));
+
+                    try {
+                        $objTemplate->accountPicture = $this->getTemplateData($pictureFactory->create($this->projectDir.\DIRECTORY_SEPARATOR.$image->path, $size ?: null));
+                    } catch (RuntimeException) {
+                        // broken image
+                    }
                 }
             }
 

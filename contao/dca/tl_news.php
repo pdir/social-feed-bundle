@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -29,7 +29,6 @@ use Contao\DataContainer;
  */
 ArrayUtil::arrayInsert($GLOBALS['TL_DCA']['tl_news']['list']['global_operations'], 0, [
     'sf_moderate' => [
-        'label' => &$GLOBALS['TL_LANG']['tl_news']['sf_moderate'],
         'href' => 'key=moderate',
         'class' => 'header_sf_moderate',
         'attributes' => 'onclick="Backend.getScrollOffset()"',
@@ -41,7 +40,6 @@ ArrayUtil::arrayInsert($GLOBALS['TL_DCA']['tl_news']['list']['global_operations'
  */
 
 $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_id'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_id'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => [
@@ -53,7 +51,6 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_id'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_type'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_type'],
     'exclude' => true,
     'filter' => true,
     'sorting' => true,
@@ -64,7 +61,6 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_type'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_account'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_account'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => [
@@ -76,7 +72,6 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_account'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_account_picture'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_account_picture'],
     'exclude' => true,
     'inputType' => 'fileTree',
     'eval' => ['filesOnly' => true, 'fieldType' => 'radio', 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => 'w50 autoheight'],
@@ -87,7 +82,6 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_account_picture'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_news']['fields']['social_feed_config'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_news']['social_feed_config'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => [

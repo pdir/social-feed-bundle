@@ -216,7 +216,7 @@ class SocialFeedServiceMigration extends AbstractMigration
                 'appId' => (string) ($row['pdir_sf_fb_app_id'] ?? ''),
                 'appSecret' => (string) ($row['pdir_sf_fb_app_secret'] ?? ''),
                 'accessToken' => (string) ($row['pdir_sf_fb_access_token'] ?? ''),
-                'apiVersion' => 'v20.0',
+                'apiVersion' => 'v25.0',
             ],
             'Instagram' => [
                 'appId' => (string) ($row['psf_instagramAppId'] ?? ''),

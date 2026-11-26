@@ -66,7 +66,7 @@ class FacebookController
             return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
         }
 
-        $graphUrl = 'https://graph.facebook.com/'.($sessionData['apiVersion'] ?? 'v20.0');
+        $graphUrl = 'https://graph.facebook.com/'.($sessionData['apiVersion'] ?? 'v25.0');
 
         // Exchange the code for a short-lived user access token
         $json = @file_get_contents($graphUrl.'/oauth/access_token?'.http_build_query([

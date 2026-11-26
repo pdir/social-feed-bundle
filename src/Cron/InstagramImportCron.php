@@ -96,6 +96,11 @@ class InstagramImportCron
                         continue;
                     }
 
+                    // Ignore trial reels
+                    if (false === ($media['is_shared_to_feed'] ?? null)) {
+                        continue;
+                    }
+
                     $imgPath = NewsImporter::createImageFolder($account->id);
 
                     // save pictures
@@ -114,11 +119,9 @@ class InstagramImportCron
 
                 if (0 < $this->counter) {
                     $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): Instagram - imported '.$this->counter.' items.', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
+                } else {
+                    $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): Instagram Import - nothing to import', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
                 }
-            }
-
-            if (0 === $this->counter) {
-                $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): Instagram Import - nothing to import', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
             }
         }
     }
@@ -173,14 +176,10 @@ class InstagramImportCron
             return true;
         }
 
-        $url = $media['media_url'] ?? '';
-
-        if ('' === $url || false === strpos($url, 'jpg')) {
-            $url = $media['thumbnail_url'] ?? $media['children']['data'][0]['media_url'] ?? $url;
-        }
+        $url = NewsImporter::getInstagramImageUrl($media);
 
         // posts without media_url (e.g. videos with copyrighted music) are imported without image
-        $strImage = '' !== $url ? @file_get_contents($url) : false;
+        $strImage = null !== $url && '' !== $url ? @file_get_contents($url) : false;
 
         if (false === $strImage || '' === $strImage) {
             return false;

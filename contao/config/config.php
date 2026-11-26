@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -19,7 +19,6 @@ declare(strict_types=1);
  */
 
 use Contao\System;
-use Pdir\SocialFeedBundle\Module\ModuleCustomNewslist;
 use Pdir\SocialFeedBundle\Module\NewsCategoriesModule; // @phpstan-ignore-line
 use Symfony\Component\HttpFoundation\Request;
 
@@ -51,8 +50,6 @@ $GLOBALS['TL_MODELS']['tl_sf_service'] = 'Pdir\SocialFeedBundle\Model\SocialFeed
 /*
  * Frontend modules
  */
-$GLOBALS['FE_MOD']['news']['newslist'] = ModuleCustomNewslist::class;
-
 if (\str_contains($GLOBALS['FE_MOD']['news']['newslist'], 'Codefog\NewsCategoriesBundle')) {
     $GLOBALS['FE_MOD']['news']['newslist'] = NewsCategoriesModule::class; // @phpstan-ignore-line
 }
