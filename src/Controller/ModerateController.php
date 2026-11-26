@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -42,7 +42,7 @@ class ModerateController
     private BackendTemplate $template;
 
     private string $message;
-    private ContaoCsrfTokenManager  $csrfTokenManager;
+    private ContaoCsrfTokenManager $csrfTokenManager;
 
     /**
      * ExportController constructor.
@@ -184,7 +184,7 @@ class ModerateController
 
         // set import message
         if (\is_array($items) && isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
-            $this->message = \sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($allValues['importItems']));
+            $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($allValues['importItems']));
         }
 
         if (null === $items) {

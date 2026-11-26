@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -20,8 +20,8 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Cron;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Pdir\SocialFeedBundle\Importer\LinkedIn;
 
 #[AsCronJob('minutely')]
@@ -30,6 +30,7 @@ class LinkedInImportCron
     public function __construct(private ContaoFramework $framework)
     {
     }
+
     public function __invoke(): void
     {
         $this->framework->initialize();

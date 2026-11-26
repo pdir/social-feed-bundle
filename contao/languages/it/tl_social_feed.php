@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -40,11 +40,17 @@ $GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_posts'] = ['Importa solo i pos
 $GLOBALS['TL_LANG']['tl_social_feed']['instagram_account'] = ['Nome Profilo', "Immettere il nome dell'account che dovrebbe essere visualizzato sul sito Web. Il nome dell'account non è richiesto per l'importazione"];
 $GLOBALS['TL_LANG']['tl_social_feed']['instagram_account_picture'] = ['Foto del profilo', "Seleziona qui un'immagine del profilo, che verrà visualizzata sul sito web."];
 $GLOBALS['TL_LANG']['tl_social_feed']['instagram_account_picture_size'] = ["Dimensione dell'immagine", "Qui puoi impostare le dimensioni dell'immagine e la modalità di ridimensionamento."];
-$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppId'] = ['Instagram App ID', 'Inserisci l\'ID app di Instagram.'];
-$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppSecret'] = ['Instagram App Secret', 'Inserisci la chiave segreta dell\'app Instagram.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppId'] = ['App ID', 'Inserisci l\'ID app. Con l\'Unified Login è l\'ID app di Meta (Impostazioni app > Di base), con il login Instagram precedente l\'ID app di Instagram.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppSecret'] = ['App Secret', 'Inserisci la chiave segreta dell\'app. Con l\'Unified Login è la chiave segreta dell\'app Meta, con il login Instagram precedente quella dell\'app Instagram.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAccessToken'] = ['Instagram Access Token', 'Compila l’App ID e l’App Secret e salva il record prima di richiedere il token.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramRequestToken'] = ['Richiedi token di accesso', 'Attiva questa opzione per richiedere un nuovo token di accesso Instagram.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramImportMentions'] = ['Importa menzioni', 'Abilita questa opzione per importare le menzioni.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramLoginType'] = ['Metodo di login', 'Le nuove app Meta supportano solo l\'Unified Login. Il login Instagram è disponibile solo per le app esistenti.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramLoginTypes'] = ['instagram_login' => 'Login Instagram (app esistenti)', 'unified_login' => 'Unified Login (Facebook Login for Business)'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramConfigId'] = ['ID configurazione', 'L\'ID configurazione della tua app Meta in Instagram > Configurazione API con Unified Login.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramUserId'] = ['ID account Instagram', 'Impostato automaticamente alla richiesta del token di accesso.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramUnifiedTokenError'] = 'Impossibile richiedere il token di accesso Instagram. Controlla il log di sistema per i dettagli.';
+$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramUnifiedAccountError'] = 'Durante il login non è stato condiviso alcun account Instagram. Seleziona un account Instagram professionale e riprova.';
 $GLOBALS['TL_LANG']['tl_social_feed']['socialFeedType'] = ['Tipologia Account', 'Selezionare il tipo di account.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['no_cronjob'] = 'Nessun Cronjob';
 $GLOBALS['TL_LANG']['tl_social_feed']['minutely'] = 'Ogni minuto';
@@ -70,7 +76,7 @@ $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_request_token'] = ['Genera acces
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture'] = ['Immagine del profilo', "Seleziona qui un'immagine del profilo, che verrà visualizzata sul sito web."];
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture_size'] = ["Dimensione dell'immagine", "
 Qui puoi impostare le dimensioni dell'immagine e la modalità di ridimensionamento."];
-$GLOBALS['TL_LANG']['tl_social_feed']['access_token_expires'] = ['Access Token scade il', 'Il gettone di accesso viene rinnovato automaticamente.'];
+$GLOBALS['TL_LANG']['tl_social_feed']['access_token_expires'] = ['Access Token scade il', 'Il gettone di accesso viene rinnovato automaticamente. Con l\'Unified Login e un token utente di sistema il campo resta vuoto, perché il token non scade.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['linkedin_refresh_token_expires'] = ['Refresh Token scade il', 'Se il token di aggiornamento è scaduto, il token di accesso deve essere rigenerato manualmente.'];
 $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelSearchTerm'] = '(Termine di ricerca <span style="color:#999;">%s</span>)';
 $GLOBALS['TL_LANG']['tl_social_feed']['psfLabelNoAccount'] = 'Nessun account specificato';

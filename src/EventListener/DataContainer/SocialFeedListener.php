@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2025 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -21,13 +21,14 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Image\ImageSizes;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Environment;
 use Contao\Input;
 use Contao\System;
 use Pdir\SocialFeedBundle\EventListener\Config;
+use Pdir\SocialFeedBundle\Importer\InstagramClient;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -44,13 +45,40 @@ class SocialFeedListener
     /**
      * ModuleListener constructor.
      */
-    public function __construct(
-        private readonly RouterInterface $router,
-        private readonly TokenStorageInterface $tokenStorage,
-        private readonly ImageSizes $imageSizes
-    )
+    public function __construct(private readonly RouterInterface $router, private readonly TokenStorageInterface $tokenStorage, private readonly ImageSizes $imageSizes)
     {
         $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
+    }
+
+    /**
+     * Hide the access token expiry date for the unified login, if the token never expires (system user access token).
+     */
+    public function adjustInstagramPalette(?DataContainer $dc = null): void
+    {
+        if (null === $dc || !$dc->id || 'edit' !== Input::get('act')) {
+            return;
+        }
+
+        $record = Database::getInstance()
+            ->prepare('SELECT socialFeedType, psf_instagramLoginType, access_token_expires FROM tl_social_feed WHERE id=?')
+            ->limit(1)
+            ->execute($dc->id)
+        ;
+
+        if (
+            !$record->numRows
+            || 'Instagram' !== $record->socialFeedType
+            || !InstagramClient::isUnifiedLogin($record->psf_instagramLoginType)
+            || '' !== (string) $record->access_token_expires
+        ) {
+            return;
+        }
+
+        $GLOBALS['TL_DCA']['tl_social_feed']['subpalettes']['socialFeedType_Instagram'] = str_replace(
+            ',access_token_expires;',
+            ';',
+            $GLOBALS['TL_DCA']['tl_social_feed']['subpalettes']['socialFeedType_Instagram']
+        );
     }
 
     /**
@@ -77,6 +105,38 @@ class SocialFeedListener
 
     public function instagramAuthWizard(DataContainer $dc): string
     {
+        $unified = InstagramClient::isUnifiedLogin($dc->activeRecord->psf_instagramLoginType ?? null);
+        $state = bin2hex(random_bytes(16));
+
+        // Unified login: Facebook Login for Business, permissions are defined by the configuration (config_id)
+        if ($unified) {
+            return $this->renderAuthWizard(
+                $dc,
+                'Instagram',
+                $GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramRequestToken'][0] ?? 'Request token',
+                [
+                    'psf_instagramAppId',
+                    'psf_instagramAppSecret',
+                    'psf_instagramConfigId',
+                ],
+                fn ($r) => [
+                    'client_id' => (string) $r->psf_instagramAppId,
+                    'config_id' => (string) $r->psf_instagramConfigId,
+                    'redirect_uri' => $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL),
+                    'response_type' => 'code',
+                    'override_default_response_type' => 'true',
+                    'state' => $state,
+                ],
+                static fn ($r) => 'https://www.facebook.com/'.InstagramClient::GRAPH_VERSION.'/dialog/oauth?',
+                static fn ($r) => [
+                    'socialFeedId' => Input::get('id'),
+                    'backUrl' => Environment::get('uri'),
+                    'state' => $state,
+                ]
+            );
+        }
+
+        // Legacy: API setup with Instagram login
         return $this->renderAuthWizard(
             $dc,
             'Instagram',
@@ -90,11 +150,13 @@ class SocialFeedListener
                 'redirect_uri' => $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL),
                 'response_type' => 'code',
                 'scope' => 'instagram_business_basic',
+                'state' => $state,
             ],
-            fn ($r) => 'https://www.instagram.com/oauth/authorize/?',
-            fn ($r) => [
+            static fn ($r) => 'https://www.instagram.com/oauth/authorize/?',
+            static fn ($r) => [
                 'socialFeedId' => Input::get('id'),
                 'backUrl' => Environment::get('uri'),
+                'state' => $state,
             ]
         );
     }
@@ -115,8 +177,8 @@ class SocialFeedListener
                 'redirect_uri' => $this->router->generate('facebook_auth', [], RouterInterface::ABSOLUTE_URL),
                 'scope' => 'pages_read_engagement,pages_read_user_content',
             ],
-            fn ($r) => 'https://www.facebook.com/v11.0/dialog/oauth?',
-            fn ($r) => [
+            static fn ($r) => 'https://www.facebook.com/v11.0/dialog/oauth?',
+            static fn ($r) => [
                 'socialFeedId' => Input::get('id'),
                 'backUrl' => Environment::get('uri'),
                 'clientId' => (string) $r->pdir_sf_fb_app_id,
@@ -143,63 +205,13 @@ class SocialFeedListener
                 'redirect_uri' => $this->router->generate('auth_linkedin', [], RouterInterface::ABSOLUTE_URL),
                 'scope' => 'r_organization_social,rw_organization_admin',
             ],
-            fn ($r) => 'https://www.linkedin.com/oauth/v2/authorization?',
-            fn ($r) => [
+            static fn ($r) => 'https://www.linkedin.com/oauth/v2/authorization?',
+            static fn ($r) => [
                 'socialFeedId' => Input::get('id'),
                 'backUrl' => Environment::get('uri'),
                 'clientId' => (string) $r->linkedin_client_id,
                 'clientSecret' => (string) $r->linkedin_client_secret,
             ]
-        );
-    }
-
-    /**
-     * @param list<string> $requiredFields
-     * @param \Closure(object):array<string,string> $queryBuilder
-     * @param \Closure(object):string $baseUrlBuilder
-     * @param \Closure(object):array<string,mixed> $sessionBuilder
-     */
-    private function renderAuthWizard(
-        DataContainer $dc,
-        string $type,
-        string $label,
-        array $requiredFields,
-        \Closure $queryBuilder,
-        \Closure $baseUrlBuilder,
-        \Closure $sessionBuilder
-    ): string {
-        if (!$dc->activeRecord) {
-            return '';
-        }
-
-        if ($type !== ($dc->activeRecord->socialFeedType ?? null)) {
-            return '';
-        }
-
-        // Required fields check
-        foreach ($requiredFields as $field) {
-            $val = (string) ($dc->activeRecord->{$field} ?? '');
-            if ('' === trim($val)) {
-                return sprintf(
-                    ' <a href="#" class="tl_submit disabled" style="margin-top:5px; opacity:.5; pointer-events:none;" aria-disabled="true">%s</a>',
-                    htmlspecialchars($label, ENT_QUOTES)
-                );
-            }
-        }
-
-        // Session context (needed for callback)
-        $this->session->set(self::SESSION_KEY, $sessionBuilder($dc->activeRecord));
-        $this->session->save();
-
-        $baseUrl = $baseUrlBuilder($dc->activeRecord);
-        $query = $queryBuilder($dc->activeRecord);
-
-        $url = $baseUrl.http_build_query($query);
-
-        return sprintf(
-            ' <a href="%s" class="tl_submit" style="margin-top:5px" target="_blank" rel="noopener noreferrer">%s</a>',
-            htmlspecialchars($url, ENT_QUOTES),
-            htmlspecialchars($label, ENT_QUOTES)
         );
     }
 
@@ -242,5 +254,49 @@ class SocialFeedListener
         }
 
         return $varValue;
+    }
+
+    /**
+     * @param list<string> $requiredFields
+     * @param \Closure(object):array<string,string> $queryBuilder
+     * @param \Closure(object):string $baseUrlBuilder
+     * @param \Closure(object):array<string,mixed> $sessionBuilder
+     */
+    private function renderAuthWizard(DataContainer $dc, string $type, string $label, array $requiredFields, \Closure $queryBuilder, \Closure $baseUrlBuilder, \Closure $sessionBuilder): string
+    {
+        if (!$dc->activeRecord) {
+            return '';
+        }
+
+        if ($type !== ($dc->activeRecord->socialFeedType ?? null)) {
+            return '';
+        }
+
+        // Required fields check
+        foreach ($requiredFields as $field) {
+            $val = (string) ($dc->activeRecord->{$field} ?? '');
+
+            if ('' === trim($val)) {
+                return sprintf(
+                    ' <a href="#" class="tl_submit disabled" style="margin-top:5px; opacity:.5; pointer-events:none;" aria-disabled="true">%s</a>',
+                    htmlspecialchars($label, ENT_QUOTES)
+                );
+            }
+        }
+
+        // Session context (needed for callback)
+        $this->session->set(self::SESSION_KEY, $sessionBuilder($dc->activeRecord));
+        $this->session->save();
+
+        $baseUrl = $baseUrlBuilder($dc->activeRecord);
+        $query = $queryBuilder($dc->activeRecord);
+
+        $url = $baseUrl.http_build_query($query);
+
+        return sprintf(
+            ' <a href="%s" class="tl_submit" style="margin-top:5px" target="_blank" rel="noopener noreferrer">%s</a>',
+            htmlspecialchars($url, ENT_QUOTES),
+            htmlspecialchars($label, ENT_QUOTES)
+        );
     }
 }

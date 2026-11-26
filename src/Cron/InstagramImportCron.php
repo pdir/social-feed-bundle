@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -20,8 +20,8 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Cron;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Dbafs;
 use Contao\File;
@@ -38,6 +38,7 @@ class InstagramImportCron
     use ImportCronHelperTrait;
 
     public int $counter = 0;
+
     public function __construct(private ContaoFramework $framework)
     {
     }
@@ -69,7 +70,7 @@ class InstagramImportCron
             if ('' === $lastImport) {
                 $lastImport = 0;
             }
-            $interval = \time() - $lastImport;
+            $interval = time() - $lastImport;
 
             if ($interval >= $cron || 0 === $lastImport || false === $this->poorManCron) {
                 NewsImporter::setLastImportDate($account);
@@ -80,7 +81,16 @@ class InstagramImportCron
                 // $picture = $objImporter->getInstagramAccountImage($account->psf_instagramAccessToken, $account->id);
 
                 // get instagram posts for account
-                $medias = $objImporter->getInstagramPosts($account->psf_instagramAccessToken, $account->id, $account->number_posts);
+                $instagramUserId = Importer::getInstagramUserId($account);
+
+                // Unified login requires the Instagram user ID, which is stored when requesting the access token
+                if ('' === $instagramUserId) {
+                    $logger->log(LogLevel::ERROR, 'Social Feed (ID '.$account->id.'): Instagram - missing Instagram user ID, please request a new access token.', ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+
+                    continue;
+                }
+
+                $medias = $objImporter->getInstagramPosts($account->psf_instagramAccessToken, $account->id, $account->number_posts, $instagramUserId);
 
                 if (!\is_array($medias)) {
                     continue;
@@ -105,17 +115,17 @@ class InstagramImportCron
                     $hasPicture = $this->savePostPictures($picturePath, $media);
 
                     // Write in Database
-                    $message = $media['caption']?? '';
+                    $message = $media['caption'] ?? '';
 
                     // add/fetch file from DBAFS
                     $objFile = $hasPicture ? Dbafs::addResource($picturePath) : null;
                     $this->saveInstagramNews($objNews, $account, $objFile, $message, $media);
 
-                    $this->counter++;
+                    ++$this->counter;
                 }
 
                 if (0 < $this->counter) {
-                    $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): Instagram - imported ' . $this->counter . ' items.', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
+                    $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): Instagram - imported '.$this->counter.' items.', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
                 } else {
                     $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): Instagram Import - nothing to import', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
                 }
@@ -136,6 +146,7 @@ class InstagramImportCron
         }
 
         $more = '';
+
         if (null !== $message && \strlen($message) > 50) {
             $more = ' ...';
         }

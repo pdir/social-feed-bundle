@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -64,7 +64,7 @@ class LinkedinController
             'grant_type' => 'authorization_code',
             'code' => $request->query->get('code'),
             'client_id' => $sessionData['clientId'],
-            'client_secret' => \str_replace('&#61;', '=', $sessionData['clientSecret']),
+            'client_secret' => str_replace('&#61;', '=', $sessionData['clientSecret']),
             'redirect_uri' => $this->router->generate('auth_linkedin', [], RouterInterface::ABSOLUTE_URL),
         ];
 

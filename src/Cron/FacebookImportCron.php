@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -20,8 +20,8 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Cron;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Dbafs;
 use Contao\File;
@@ -81,7 +81,7 @@ class FacebookImportCron
             if ('' === $lastImport) {
                 $lastImport = 0;
             }
-            $interval = \time() - $lastImport;
+            $interval = time() - $lastImport;
 
             if ($interval >= $cron || 0 === $lastImport || false === $this->poorManCron) {
                 NewsImporter::setLastImportDate($account);
@@ -94,7 +94,7 @@ class FacebookImportCron
                     'app_id' => $appId,
                     'app_secret' => $appSecret,
                     'default_graph_version' => 'v25.0',
-                    'default_access_token' => $accessToken
+                    'default_access_token' => $accessToken,
                 ]);
 
                 if (1 === $account->pdir_sf_fb_posts) {
@@ -112,7 +112,7 @@ class FacebookImportCron
 
                 if (null !== $imageSrc) {
                     $strImage = file_get_contents($imageSrc);
-                    $file = new File($imgPath . $accountId . '.jpg');
+                    $file = new File($imgPath.$accountId.'.jpg');
                     $file->write($strImage);
                     $file->close();
                 }
@@ -131,26 +131,26 @@ class FacebookImportCron
 
                         if (!empty($image)) {
                             $imageSrc = $image['src'];
-                            $imageTitle = $image['title']?? '';
+                            $imageTitle = $image['title'] ?? '';
                         }
                         // set variables
-                        if (null !== $post['message'] && \strpos($post['message'], "\n")) {
-                            $title = \mb_substr($post['message'], 0, \strpos($post['message'], "\n"));
+                        if (null !== $post['message'] && strpos($post['message'], "\n")) {
+                            $title = mb_substr($post['message'], 0, strpos($post['message'], "\n"));
                         } elseif (empty($post['message'])) {
                             $title = $GLOBALS['TL_LANG']['MSC']['pdirSocialFeedNoTitel'];
                         } else {
-                            $title = \mb_substr($post['message'], 0);
+                            $title = mb_substr($post['message'], 0);
                         }
 
-                        $message = $post['message']?? '';
-                        $message = \str_replace("\n", '<br>', $message);
-                        $timestamp = \strtotime($post['created_time']);
+                        $message = $post['message'] ?? '';
+                        $message = str_replace("\n", '<br>', $message);
+                        $timestamp = strtotime($post['created_time']);
 
                         if (!empty($imageSrc) && !empty($image)) {
-                            $img = $imgPath . $post['id'] . '.jpg';
+                            $img = $imgPath.$post['id'].'.jpg';
                         }
 
-                        $accountImg = $imgPath . $accountId . '.jpg';
+                        $accountImg = $imgPath.$accountId.'.jpg';
                         // add/fetch file from DBAFS
                         if (null !== $img) {
                             $objFile = Dbafs::addResource($img);
@@ -168,8 +168,8 @@ class FacebookImportCron
                             $objNews->singleSRC = $objFile->uuid;
                             $objNews->addImage = 1;
                         }
-                        $objNews->tstamp = \time();
-                        $objNews->headline = \mb_substr($title?? '', 0, 255);
+                        $objNews->tstamp = time();
+                        $objNews->headline = mb_substr($title ?? '', 0, 255);
 
                         if ('' === $message && !empty($imageTitle)) {
                             $objNews->teaser = $imageTitle;
@@ -189,11 +189,11 @@ class FacebookImportCron
                         $objNews->target = 1;
                         $objNews->save();
 
-                        $this->counter++;
+                        ++$this->counter;
                     }
 
                     if (0 < $this->counter) {
-                        $this->logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): Facebook  - imported ' . $this->counter . ' items.', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
+                        $this->logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): Facebook  - imported '.$this->counter.' items.', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
                     }
                 }
 
@@ -208,13 +208,13 @@ class FacebookImportCron
     {
         try {
             return $fb->get(
-                $account . '/posts?access_token=' . $accessToken . '&fields=id,from,created_time,message,permalink_url'
+                $account.'/posts?access_token='.$accessToken.'&fields=id,from,created_time,message,permalink_url'
             );
         } catch (FacebookResponseException $e) {
-            $this->logger->log(LogLevel::ERROR, 'Graph returned an error: ' . $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+            $this->logger->log(LogLevel::ERROR, 'Graph returned an error: '.$e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             exit;
         } catch (FacebookSDKException $e) {
-            $this->logger->log(LogLevel::ERROR, 'Facebook SDK returned an error: ' . $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+            $this->logger->log(LogLevel::ERROR, 'Facebook SDK returned an error: '.$e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             exit;
         }
     }
@@ -223,13 +223,13 @@ class FacebookImportCron
     {
         try {
             return $fb->get(
-                $account . '/feed?fields=id,from,created_time,message,permalink_url'
+                $account.'/feed?fields=id,from,created_time,message,permalink_url'
             );
         } catch (FacebookResponseException $e) {
-            $this->logger->log(LogLevel::ERROR, 'Graph returned an error: ' . $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+            $this->logger->log(LogLevel::ERROR, 'Graph returned an error: '.$e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             exit;
         } catch (FacebookSDKException $e) {
-            $this->logger->log(LogLevel::ERROR, 'Facebook SDK returned an error: ' . $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+            $this->logger->log(LogLevel::ERROR, 'Facebook SDK returned an error: '.$e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             exit;
         }
     }
@@ -237,7 +237,7 @@ class FacebookImportCron
     private function getFbAttachments($fb, $id, $accessToken, $imgPath)
     {
         try {
-            $resMedia = $fb->get('/' . $id . '/attachments', $accessToken);
+            $resMedia = $fb->get('/'.$id.'/attachments', $accessToken);
 
             if (isset($resMedia->getDecodedBody()['data']['0']['subattachments']) && $resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0']['media']) {
                 $arrMedia = $resMedia->getDecodedBody()['data']['0']['subattachments']['data']['0'];
@@ -248,7 +248,7 @@ class FacebookImportCron
             if (\is_array($arrMedia)) {
                 $imageSrc = $arrMedia['media']['image']['src'];
                 $strImage = file_get_contents($imageSrc);
-                $file = new File($imgPath . $id . '.jpg');
+                $file = new File($imgPath.$id.'.jpg');
                 $file->write($strImage);
                 $file->close();
             }
@@ -256,16 +256,16 @@ class FacebookImportCron
             if (null !== $arrMedia['media']['image']['src']) {
                 return [
                     'src' => $arrMedia['media']['image']['src'],
-                    'title' => $arrMedia['title']?? '',
+                    'title' => $arrMedia['title'] ?? '',
                 ];
             }
 
             return '';
         } catch (FacebookResponseException $e) {
-            $this->logger->log(LogLevel::ERROR, 'Graph returned an error: ' . $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+            $this->logger->log(LogLevel::ERROR, 'Graph returned an error: '.$e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             exit;
         } catch (FacebookSDKException $e) {
-            $this->logger->log(LogLevel::ERROR, 'Facebook SDK returned an error: ' . $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+            $this->logger->log(LogLevel::ERROR, 'Facebook SDK returned an error: '.$e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             exit;
         }
     }
@@ -274,13 +274,13 @@ class FacebookImportCron
     {
         try {
             return $fb->get(
-                $account . '?access_token=' . $accessToken . '&fields=picture'
+                $account.'?access_token='.$accessToken.'&fields=picture'
             );
         } catch (FacebookResponseException $e) {
-            $this->logger->log(LogLevel::ERROR, 'Graph returned an error: ' . $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+            $this->logger->log(LogLevel::ERROR, 'Graph returned an error: '.$e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             exit;
         } catch (FacebookSDKException $e) {
-            $this->logger->log(LogLevel::ERROR, 'Facebook SDK returned an error: ' . $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+            $this->logger->log(LogLevel::ERROR, 'Facebook SDK returned an error: '.$e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             exit;
         }
     }
