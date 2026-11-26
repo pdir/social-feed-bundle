@@ -45,7 +45,7 @@ System requirements
 -------------------
 
 * PHP 8.1 or higher
-* [Contao](https://github.com/contao/contao-bundle) 5.3 or higher (Contao 4.13 is supported up to version 2.13)
+* [Contao](https://github.com/contao/contao-bundle) 5.3, 5.7 or 6.0 (Contao 4.13 is supported up to version 2.13)
 
 Installation & Configuration
 ----------------------------

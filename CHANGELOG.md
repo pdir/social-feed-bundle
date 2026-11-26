@@ -17,12 +17,14 @@ Types of changes
 
 - [Added] Compatibility with [Social Feed+](https://pdir.de/socialfeed+).
 - [Added] Compatibility with `doctrine/dbal` 4 (Contao 5.7). [#191](https://github.com/pdir/social-feed-bundle/issues/191)
+- [Added] Compatibility with Contao 6 (Symfony 8).
 - [Added] Instagram: option "Link hashtags and mentions" (cron and moderated import). [#179](https://github.com/pdir/social-feed-bundle/issues/179)
 - [Changed] The configuration is split into services (app credentials, `tl_sf_service`) and accounts (import settings, `tl_sf_account`). Existing `tl_social_feed` records are migrated automatically, the old table is kept. See "Upgrade to version 3.0" in the README.
 - [Changed] Instagram unified login (see 2.15.0): login method and configuration ID are stored in the service, the Instagram account ID in the account. All Instagram accounts shared during the login are created as social feed accounts.
 - [Changed] The access token is requested via the button next to the access token field of the service (Facebook, Instagram, LinkedIn), the login opens in a new tab.
 - [Changed] Facebook: the Graph API version is selected in the service (default `v25.0`), the login requests the permissions `pages_show_list`, `pages_read_engagement` and `pages_read_user_content`.
 - [Changed] The import commands (`social-feed:*:import`) import all accounts of a type, also accounts with a cron job.
+- [Fixed] The routes of the OAuth callbacks (Facebook, Instagram, LinkedIn) are defined as PHP attributes, the annotation routes could not be loaded with Symfony 7 and 8 (Contao 5.7).
 - [Fixed] Facebook: the user access token is exchanged for a long-lived token, so the page access tokens do not expire.
 - [Fixed] LinkedIn: posts without `firstPublishedAt` no longer get the date 01.01.1970, the creation or modification date is used instead. [#185](https://github.com/pdir/social-feed-bundle/issues/185)
 - [Fixed] Instagram: the moderation and the import load further pages until the number of posts is reached (previously max. 20–25 posts). [#131](https://github.com/pdir/social-feed-bundle/issues/131)

@@ -25,11 +25,14 @@ jobs:
                     # lowest supported versions (Doctrine DBAL 3)
                     -   php: '8.1'
                         contao: '5.3'
-                    # Contao 5.7 uses Doctrine DBAL 4
-                    -   php: '8.2'
+                    # Contao 5.7 requires PHP 8.3+ and uses Doctrine DBAL 4
+                    -   php: '8.3'
                         contao: '5.7'
                     -   php: '8.4'
                         contao: '5.7'
+                    # Contao 6 requires PHP 8.4+ and uses Symfony 8
+                    -   php: '8.4'
+                        contao: '6.0'
         steps:
             -   name: Setup PHP
                 uses: shivammathur/setup-php@v2
@@ -48,7 +51,7 @@ jobs:
                 run: composer update --no-interaction --no-progress
 
             -   name: Show the installed versions
-                run: composer show contao/core-bundle doctrine/dbal | grep -E '^(name|versions)'
+                run: composer show | grep -E '^(contao/core-bundle|doctrine/dbal|nickdnk/graph-sdk) '
 
             -   name: Run the unit tests
                 run: vendor/bin/phpunit --colors=always

@@ -85,7 +85,6 @@ class FacebookImportCronTest extends TestCase
         $cron = new FacebookImportCron($this->createMock(ContaoFramework::class));
 
         $property = new \ReflectionProperty(FacebookImportCron::class, 'logger');
-        $property->setAccessible(true);
         $property->setValue($cron, $logger);
 
         return $cron;
@@ -125,7 +124,6 @@ class FacebookImportCronTest extends TestCase
     private function call(object $object, string $method, mixed ...$arguments): mixed
     {
         $reflection = new \ReflectionMethod($object, $method);
-        $reflection->setAccessible(true);
 
         return $reflection->invoke($object, ...$arguments);
     }

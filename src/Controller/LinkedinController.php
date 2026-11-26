@@ -28,12 +28,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @Route("/auth", defaults={"_scope" = "backend", "_token_check" = false})
- */
+#[Route('/auth', defaults: ['_scope' => 'backend', '_token_check' => false])]
 class LinkedinController
 {
     private Connection $db;
@@ -52,9 +50,7 @@ class LinkedinController
         $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
     }
 
-    /**
-     * @Route("/linkedin", name="auth_linkedin", methods={"GET"})
-     */
+    #[Route('/linkedin', name: 'auth_linkedin', methods: ['GET'])]
     public function authAction(Request $request): Response
     {
         $sessionData = $this->session->get(SocialFeedServiceCallbackListener::SESSION_KEY);
