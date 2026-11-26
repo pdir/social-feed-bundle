@@ -74,6 +74,7 @@ class SetupListener
     {
         $template = new BackendTemplate($this->strTemplate);
         $template->version = self::VERSION;
+        $template->lang = $GLOBALS['TL_LANG']['tl_sf_service'] ?? [];
 
         return $template->parse();
     }

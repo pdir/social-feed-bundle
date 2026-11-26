@@ -1,0 +1,32 @@
+<div class="social_feed_element arc_{{ archive.id }} block{{ class }}" itemscope itemtype="http://schema.org/Article">
+    <div class="inner">
+
+        <a href="{{ url }}" target="_blank">
+            {% if accountPicture|default %}
+                <div class="icon">
+                    {{ include('@Contao/picture_default', accountPicture, false) }}
+                </div>
+            {% endif %}
+
+            {% block info %}
+                <p class="info">
+                    <time datetime="{{ datetime }}" itemprop="datePublished">{{ date }}</time>
+                    {{ include('@Contao/social_feed_type_icon.html.twig') }}
+                </p>
+            {% endblock %}
+
+            <div class="title">{{ sfFbAccount|default }}</div>
+        </a>
+
+        {% if addImage and sfImages|default %}
+            {{ include('@Contao/image') }}
+        {% endif %}
+
+        <a href="{{ url }}" target="_blank">
+            <div class="ce_text block" itemprop="description">
+                {{ sfTeaser|default('<p>' ~ teaser|default ~ '</p>')|raw }}
+            </div>
+        </a>
+
+    </div>
+</div>

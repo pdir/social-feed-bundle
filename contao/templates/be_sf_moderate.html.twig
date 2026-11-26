@@ -1,0 +1,56 @@
+<div class="mod_sf_moderate">
+  <form action="{{ action }}" id="tl_news_moderate" class="tl_form" method="post">
+
+    <div class="tl_formbody_edit">
+
+      <div id="tl_buttons">
+        <a href="{{ backUrl }}" class="header_back" title="{{ backTitle }}" accesskey="b">{{ backLabel }}</a>
+      </div>
+
+      {% block headline %}
+        {% if headline %}
+          <h1 id="main_headline">{{ headline }}</h1>
+        {% endif %}
+      {% endblock %}
+
+      <h2 class="sub_headline">{{ lang.moderate[1] }}</h2>
+
+      <div class="tl_message">
+        <p class="tl_info">{{ lang.moderateHint|raw }}</p>
+        {{ message|default|raw }}
+      </div>
+
+      <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
+      <input type="hidden" name="REQUEST_TOKEN" value="{{ requestToken }}">
+
+      <fieldset class="tl_tbox nolegend">
+
+        <div class="widget w50">
+          <h3><label for="account">{{ lang.account[0] }}</label></h3>
+          <select name="account" id="account" class="tl_select">
+            {% for value, label in options %}
+              <option value="{{ value }}"{{ activeAccount|default == value ? ' selected' }}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <p class="tl_help tl_tip">{{ lang.account[1] }}</p>
+        </div>
+
+        <div class="widget w50">
+          <h3><label for="number_posts">{{ lang.number_posts[0] }}</label></h3>
+          <input class="tl_text" type="text" name="number_posts" id="number_posts" value="{{ numberPosts|default(20) }}">
+          <p class="tl_help tl_tip">{{ lang.number_posts[1] }}</p>
+        </div>
+
+      </fieldset>
+    </div>
+
+    <div class="tl_formbody_submit">
+      <div class="tl_submit_container">
+        <input type="submit" name="moderate" id="moderate" class="tl_submit" accesskey="e" value="{{ lang.moderate[0] }}">
+      </div>
+    </div>
+
+    {{ moderationList|default|raw }}
+
+  </form>
+</div>

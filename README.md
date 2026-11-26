@@ -64,6 +64,8 @@ Version 3.0 splits the configuration into **services** (app credentials such as 
 
 Breaking changes for developers: `SocialFeedModel` and `SocialFeedListener` have been removed. Use `SocialFeedServiceModel` and `SocialFeedAccountModel` (`$account->getService()`, `$account->getAccessToken()`) instead. The import commands now import all accounts of a type, also accounts with a cron job.
 
+Templates: all templates are Twig templates now (`news_social_feed.html.twig`, `news_social_feed_extended.html.twig`, `mod_newslist_social_feed.html.twig`, `be_sf_moderate.html.twig`, `be_sf_moderation_list.html.twig`, `be_socialfeed_setup.html.twig`). Customized `.html5` templates still take precedence in Contao 5, but Contao 6 only renders Twig templates, so convert them before upgrading to Contao 6. The teaser with paragraphs is available as `sfTeaser`, the backend texts as `lang`.
+
 **Deutsch**
 
 Ab Version 3.0 ist die Konfiguration aufgeteilt in **Dienste** (Zugangsdaten wie App-ID, App-Secret und Access Token, Tabelle `tl_sf_service`) und **Konten** (Importeinstellungen wie Nachrichtenarchiv, Cronjob und Anzahl der Beiträge, Tabelle `tl_sf_account`). Beides verwaltest du im Backend unter *pdir Apps → Social Feed Dienste*.
@@ -75,6 +77,8 @@ Ab Version 3.0 ist die Konfiguration aufgeteilt in **Dienste** (Zugangsdaten wie
 5. Instagram: Konten, die durch einen neuen Login angelegt werden (z. B. beim Unified Login, der alle freigegebenen Instagram-Konten anlegt), haben noch kein Nachrichtenarchiv. Wähle eines aus, sonst wird nichts importiert.
 
 Änderungen für Entwickler: `SocialFeedModel` und `SocialFeedListener` wurden entfernt. Verwende stattdessen `SocialFeedServiceModel` und `SocialFeedAccountModel` (`$account->getService()`, `$account->getAccessToken()`). Die Import-Befehle importieren jetzt alle Konten eines Typs, auch Konten mit Cronjob.
+
+Templates: Alle Templates sind jetzt Twig-Templates (`news_social_feed.html.twig`, `news_social_feed_extended.html.twig`, `mod_newslist_social_feed.html.twig`, `be_sf_moderate.html.twig`, `be_sf_moderation_list.html.twig`, `be_socialfeed_setup.html.twig`). Angepasste `.html5`-Templates haben in Contao 5 weiterhin Vorrang, Contao 6 rendert aber nur noch Twig-Templates. Stelle sie deshalb vor dem Update auf Contao 6 um. Der Teaser mit Absätzen steht als `sfTeaser` zur Verfügung, die Backend-Texte als `lang`.
 
 Commands
 ----------------------------

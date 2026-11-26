@@ -1,0 +1,53 @@
+<div class="be_sf_morderation_list">
+  <div class="selectAll">
+    <label class="checkbox">
+      <input type="checkbox" name="selectAll" class="checkbox" value="selectAll"> {{ lang.selectAll }}
+    </label>
+  </div>
+
+  <ul class="list">
+    {% for key, item in arr %}
+      <li class="list-item first even">
+        <div class="list-content">
+          <img src="{{ item.image }}" width="100" alt="">
+          <p class="info">
+            <time>{{ item.time }}</time>
+          </p>
+          <div class="title" onclick="document.getElementById('opt_items_{{ key }}').click();"><b>{{ item.title }}</b></div>
+          <div class="actions">
+            <p><a href="{{ item.link }}" class="btn tl_submit" target="_blank" rel="noreferrer noopener">{{ lang.open }}</a></p>
+            <label for="opt_items_{{ key }}" class="checkbox-container">
+              <input type="checkbox" name="importItems[]" id="opt_items_{{ key }}" class="tl_checkbox" value="{{ item.id }}">
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <div class="tl_formbody_submit">
+    <div id="sfSubmitContainer" class="tl_submit_container">
+      <button type="submit" class="btn tl_submit">{{ lang.importEntry }}</button>
+    </div>
+  </div>
+</div>
+<script>
+  (function () {
+    function resizer() {
+      var width = document.querySelector('.tl_formbody_submit').offsetWidth;
+      document.getElementById('sfSubmitContainer').style.width = (width - 31) + 'px';
+    }
+
+    window.addEventListener('resize', resizer);
+    resizer();
+
+    document.querySelector('input[name=selectAll]').addEventListener('change', function () {
+      var checked = this.checked;
+
+      document.getElementsByName('importItems[]').forEach(function (item) {
+        item.checked = checked;
+      });
+    });
+  })();
+</script>

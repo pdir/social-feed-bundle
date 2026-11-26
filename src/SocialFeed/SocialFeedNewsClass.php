@@ -54,6 +54,9 @@ class SocialFeedNewsClass
             $objTemplate->sfElementWidth = $objModule->pdir_sf_columns;
             $objTemplate->sfImages = $objModule->pdir_sf_enableImages;
             $objTemplate->teaser = $teaser;
+            // teaser with paragraphs instead of multiple line breaks (news_social_feed templates)
+            $objTemplate->sfTeaser = '<p>'.preg_replace('#(?:<br\s*/?>\s*?){2,}#', '</p><p>', (string) $teaser).'</p>';
+            $objTemplate->sfMoreLabel = $GLOBALS['TL_LANG']['MSC']['more'] ?? '';
             $objTemplate->type = $arrRow['social_feed_type'];
 
             $pictureFactory = System::getContainer()->get('contao.image.picture_factory');

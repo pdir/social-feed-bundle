@@ -18,6 +18,8 @@ Types of changes
 - [Added] Compatibility with [Social Feed+](https://pdir.de/socialfeed+).
 - [Added] Compatibility with `doctrine/dbal` 4 (Contao 5.7). [#191](https://github.com/pdir/social-feed-bundle/issues/191)
 - [Added] Compatibility with Contao 6 (Symfony 8).
+- [Changed] All templates are Twig templates (Contao 6 only renders Twig templates). Customized `.html5` templates still work in Contao 5.
+- [Fixed] News templates: the LinkedIn icon is also shown in `news_social_feed_extended`, the masonry relayout after lazy loaded images works again. Captions in the moderation list are escaped.
 - [Fixed] The backend stylesheets are plain CSS (raw SCSS is not compiled in Contao 5.7), the moderation list styles no longer affect other backend views.
 - [Added] Instagram: option "Link hashtags and mentions" (cron and moderated import). [#179](https://github.com/pdir/social-feed-bundle/issues/179)
 - [Changed] The configuration is split into services (app credentials, `tl_sf_service`) and accounts (import settings, `tl_sf_account`). Existing `tl_social_feed` records are migrated automatically, the old table is kept. See "Upgrade to version 3.0" in the README.

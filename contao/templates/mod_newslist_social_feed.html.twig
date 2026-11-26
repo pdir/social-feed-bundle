@@ -1,0 +1,36 @@
+{% extends '@Contao/block_unsearchable' %}
+
+{% block content %}
+
+    {% if not articles %}
+        <p class="empty">{{ empty }}</p>
+    {% else %}
+        <div class="social_feed_container{{ sfMasonry|default ? ' masonry' }}{{ sfColumns|default }}">
+            {{ articles|join|raw }}
+        </div>
+        {{ pagination|default|raw }}
+    {% endif %}
+
+    {% if sfMasonry|default %}
+        {% add 'pdir_social_feed_masonry' to body %}
+            <script src="bundles/pdirsocialfeed/js/masonry.pkgd.min.js"></script>
+            <script src="bundles/pdirsocialfeed/js/imagesloaded.pkgd.min.js"></script>
+            <script>
+                jQuery(function ($) {
+                    var grid = $('.social_feed_container.masonry');
+
+                    // init Masonry after all images have loaded
+                    grid.imagesLoaded(function () {
+                        grid.masonry({ itemSelector: '.social_feed_element' });
+                    });
+
+                    // relayout when lazy loaded images are loaded
+                    $('.social_feed_element img').on('load', function () {
+                        grid.masonry({ itemSelector: '.social_feed_element' });
+                    });
+                });
+            </script>
+        {% endadd %}
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{#
+    Icon of the social network of a post, used by news_social_feed and news_social_feed_extended.
+#}
+{% if type == 'Facebook' or not type %}
+    <img src="bundles/pdirsocialfeed/img/icon_facebook.svg" alt="Facebook Icon">
+{% elseif type == 'Instagram' %}
+    <img src="bundles/pdirsocialfeed/img/icon_instagram.svg" alt="Instagram Icon">
+{% elseif type == 'Twitter' or type == 'X' %}
+    <img src="bundles/pdirsocialfeed/img/icon_twitter.svg" alt="X Icon">
+{% elseif type == 'LinkedIn' %}
+    <img src="bundles/pdirsocialfeed/img/linkedin-in-brands.svg" alt="LinkedIn Icon">
+{% endif %}

@@ -188,11 +188,13 @@ class ModerateController
             if (0 < \count($moderationItems)) {
                 $template = new BackendTemplate('be_sf_moderation_list');
                 $template->arr = $moderationItems;
+                $template->lang = $GLOBALS['TL_LANG']['tl_news_moderate'] ?? [];
                 $html = $template->parse();
             }
         }
 
         $this->template->activeAccount = $request->request->get('account');
+        $this->template->numberPosts = (int) $request->request->get('number_posts') ?: 20;
         $this->template->moderationList = $html ?? '';
         $this->template->message = isset($this->message) ? '<div class="tl_sucess">'.$this->message.'</div></div>' : '';
     }
@@ -217,6 +219,9 @@ class ModerateController
         }
 
         $this->template->backUrl = $system->getReferer();
+        $this->template->backLabel = $GLOBALS['TL_LANG']['MSC']['backBT'] ?? '';
+        $this->template->backTitle = $GLOBALS['TL_LANG']['MSC']['backBTTitle'] ?? '';
+        $this->template->lang = $GLOBALS['TL_LANG']['tl_news_moderate'] ?? [];
         $this->template->action = $environment->get('request');
         $this->template->formId = $formId;
         $this->template->message = isset($this->message) ? '<div class="tl_confirm">'.$this->message.'</div>' : '';
