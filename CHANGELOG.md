@@ -28,6 +28,7 @@ Types of changes
 - [Fixed] Instagram: the moderation and the import load further pages until the number of posts is reached (previously max. 20–25 posts). [#131](https://github.com/pdir/social-feed-bundle/issues/131)
 - [Fixed] Instagram: images of moderated imports were not assigned to the news.
 - [Fixed] Existing images are detected correctly when the import runs via the web cron, images are no longer downloaded and the `.public` file is no longer written on every import. [#141](https://github.com/pdir/social-feed-bundle/issues/141)
+- [Fixed] Facebook: an API error no longer ends the whole cron job or command (`exit`), only the affected account is skipped and the error is logged with the account ID. Failing attachments or page pictures only skip the image. The access token is no longer part of the request URLs.
 - [Fixed] The default value of the option `--max-posts` of `social-feed:linkedin:import` was ignored.
 - [Removed] `Pdir\SocialFeedBundle\Model\SocialFeedModel`, `Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener` and the DCA `tl_social_feed` (BC break). Use `SocialFeedServiceModel` (credentials) and `SocialFeedAccountModel` (import settings) instead.
 
