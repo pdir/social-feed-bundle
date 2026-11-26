@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -20,8 +20,8 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Cron;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database;
 use Contao\Email;
@@ -72,16 +72,16 @@ class RefreshAccessTokenCron
      */
     private function refreshLinkedInAccessToken(SocialFeedModel $socialFeedModel): void
     {
-        if (\strtotime('+1 week', \time()) >= $socialFeedModel->linkedin_refresh_token_expires || '' === $socialFeedModel->linkedin_refresh_token_expires) {
+        if (strtotime('+1 week', time()) >= $socialFeedModel->linkedin_refresh_token_expires || '' === $socialFeedModel->linkedin_refresh_token_expires) {
             $objMail = new Email();
             $objMail->subject = $GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInSubject'];
-            $objMail->html = sprintf($GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInHtml'], $socialFeedModel->noteForRefreshTokenMail?? '-', $socialFeedModel->linkedin_company_id);
+            $objMail->html = sprintf($GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInHtml'], $socialFeedModel->noteForRefreshTokenMail ?? '-', $socialFeedModel->linkedin_company_id);
             $objMail->from = $GLOBALS['TL_CONFIG']['adminEmail'];
-            $objMail->fromName = $socialFeedModel->noteForRefreshTokenMail?? '-';
+            $objMail->fromName = $socialFeedModel->noteForRefreshTokenMail ?? '-';
             $objMail->sendTo($GLOBALS['TL_CONFIG']['adminEmail']);
         }
 
-        if ($socialFeedModel->access_token_expires <= \strtotime('+1 week', \time())) {
+        if ($socialFeedModel->access_token_expires <= strtotime('+1 week', time())) {
             $data = [
                 'grant_type' => 'refresh_token',
                 'refresh_token' => $socialFeedModel->linkedin_refresh_token,
@@ -106,14 +106,14 @@ class RefreshAccessTokenCron
     {
         // Unified login: system user access tokens never expire and cannot be refreshed via graph.instagram.com
         if (InstagramClient::isUnifiedLogin($socialFeedModel->psf_instagramLoginType)) {
-            if ('' !== (string) $socialFeedModel->access_token_expires && \strtotime('+1 week', \time()) >= (int) $socialFeedModel->access_token_expires) {
+            if ('' !== (string) $socialFeedModel->access_token_expires && strtotime('+1 week', time()) >= (int) $socialFeedModel->access_token_expires) {
                 $this->logger->log(LogLevel::WARNING, 'Social Feed (ID '.$socialFeedModel->id.'): The Instagram access token (unified login) expires soon and cannot be renewed automatically. Please request a new access token in the backend.', ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
 
             return;
         }
 
-        if (\strtotime('+1 week', \time()) >= $socialFeedModel->access_token_expires || '' === $socialFeedModel->access_token_expires) {
+        if (strtotime('+1 week', time()) >= $socialFeedModel->access_token_expires || '' === $socialFeedModel->access_token_expires) {
             try {
                 $client = new Client();
                 $response = $client->get('https://graph.instagram.com/refresh_access_token', [

@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -21,8 +21,8 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\Cron;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Dbafs;
 use Contao\File;
@@ -70,7 +70,7 @@ class TwitterImportCron
             if ('' === $lastImport) {
                 $lastImport = 0;
             }
-            $interval = \time() - $lastImport;
+            $interval = time() - $lastImport;
 
             if ($interval >= $cron || 0 === $lastImport || false === $this->poorManCron) {
                 NewsImporter::setLastImportDate($account);
@@ -105,7 +105,7 @@ class TwitterImportCron
                             continue;
                         }
 
-                        if ('' !== $search && '' !== $accountName && false === \strpos($post->full_text, $search)) { // remove unwanted tweets
+                        if ('' !== $search && '' !== $accountName && false === strpos($post->full_text, $search)) { // remove unwanted tweets
                             continue;
                         }
 
@@ -118,11 +118,11 @@ class TwitterImportCron
                         }
 
                         if (null !== $post->full_text) {
-                            $post->full_text = \mb_substr($post->full_text, $post->display_text_range[0], $post->display_text_range[1]);
+                            $post->full_text = mb_substr($post->full_text, $post->display_text_range[0], $post->display_text_range[1]);
                         }
 
                         if ($post->retweeted_status && '1' === $account->show_retweets) {
-                            $post->full_text = 'RT @' . $post->entities->user_mentions[0]->screen_name . ': ' . $post->retweeted_status->full_text;
+                            $post->full_text = 'RT @'.$post->entities->user_mentions[0]->screen_name.': '.$post->retweeted_status->full_text;
                         }
 
                         $objNews = new NewsModel();
@@ -134,10 +134,10 @@ class TwitterImportCron
                         $imgPath = NewsImporter::createImageFolder($accountName);
 
                         // save account picture
-                        $accountPicture = $imgPath . $post->user->id . '.jpg';
+                        $accountPicture = $imgPath.$post->user->id.'.jpg';
 
-                        if (!\file_exists($accountPicture)) {
-                            $strImage = \file_get_contents($post->user->profile_image_url_https);
+                        if (!file_exists($accountPicture)) {
+                            $strImage = file_get_contents($post->user->profile_image_url_https);
                             $file = new File($accountPicture);
                             $file->write($strImage);
                             $file->close();
@@ -145,15 +145,15 @@ class TwitterImportCron
 
                         // save post picture
                         if ($post->entities->media[0]->media_url_https) {
-                            $picturePath = $imgPath . $post->id . '.jpg';
+                            $picturePath = $imgPath.$post->id.'.jpg';
 
-                            if (!\file_exists($picturePath)) {
-                                $strImage = \file_get_contents($post->entities->media[0]->media_url_https);
+                            if (!file_exists($picturePath)) {
+                                $strImage = file_get_contents($post->entities->media[0]->media_url_https);
                                 $file = new File($picturePath);
                                 $file->write($strImage);
                                 $file->close();
                             }
-                            $objFile = Dbafs::addResource($imgPath . $post->id . '.jpg');
+                            $objFile = Dbafs::addResource($imgPath.$post->id.'.jpg');
                             $objNews->singleSRC = $objFile->uuid;
                             $objNews->addImage = 1;
                         }
@@ -161,14 +161,15 @@ class TwitterImportCron
                         // write to database
                         $objNews->pid = $account->pdir_sf_fb_news_archive;
                         $objNews->author = $account->user;
-                        $objNews->tstamp = \time();
+                        $objNews->tstamp = time();
 
                         $more = '';
+
                         if (null !== $post->full_text && \strlen($post->full_text) > 50) {
                             $more = ' ...';
                         }
 
-                        $objNews->headline = \mb_substr($post->full_text, 0, 50) . $more;
+                        $objNews->headline = mb_substr($post->full_text, 0, 50).$more;
 
                         if ('1' === $account->hashtags_link) {
                             if ($post->retweeted_status && '1' === $account->show_retweets) {
@@ -199,17 +200,17 @@ class TwitterImportCron
                         $objNews->social_feed_account_picture = Dbafs::addResource($accountPicture)->uuid;
                         $objNews->source = 'external';
 
-                        $url = 'https://x.com/' . $post->user->screen_name . '/status/' . $post->id;
+                        $url = 'https://x.com/'.$post->user->screen_name.'/status/'.$post->id;
 
                         $objNews->url = $url;
                         $objNews->target = 1;
                         $objNews->save();
 
-                        $this->counter++;
+                        ++$this->counter;
                     }
 
                     if (0 < $this->counter) {
-                        $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): X - imported ' . $this->counter . ' items.', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
+                        $logger->log(LogLevel::INFO, 'Social Feed (ID '.$account->id.'): X - imported '.$this->counter.' items.', ['contao' => new ContaoContext(__METHOD__, 'INFO')]);
                     }
                 }
 
@@ -222,7 +223,7 @@ class TwitterImportCron
 
     private function replaceLinks($str): array|string|null
     {
-        return \preg_replace(
+        return preg_replace(
             '|(https?://([\d\w\.-]+\.[\w\.]{2,6})[^\s\]\[\<\>]*/?)|i',
             '<a href="$1" target="_blank" rel="noreferrer noopener">$1</a>',
             $str
@@ -231,7 +232,7 @@ class TwitterImportCron
 
     private function replaceHashTags($str): array|string|null
     {
-        return \preg_replace(
+        return preg_replace(
             '/(\#)([^\s]+)/',
             '<a href="https://x.com/hashtag/$2" target="_blank" rel="noreferrer noopener">#$2</a>',
             $str
@@ -240,7 +241,7 @@ class TwitterImportCron
 
     private function replaceMentions($str): array|string|null
     {
-        return \preg_replace(
+        return preg_replace(
             '/@(\w+)/',
             '<a href="https://www.x.com/$1" target="_blank" rel="noreferrer noopener">@$1</a>',
             $str
@@ -249,7 +250,7 @@ class TwitterImportCron
 
     private function removeTwitterLinks($str): array|string|null
     {
-        return \preg_replace(
+        return preg_replace(
             '/\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i',
             '',
             $str

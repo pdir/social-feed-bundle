@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -54,7 +54,7 @@ class TwitterImportCommand extends Command
     protected function configure(): void
     {
         $this->addOption('max-posts', 'm', InputOption::VALUE_REQUIRED, 'The maximum number of posts to execute (default 100)', '100');
-        $this->addOption('enable-debug', 'd', InputArgument::OPTIONAL, "Log debug information to console");
+        $this->addOption('enable-debug', 'd', InputArgument::OPTIONAL, 'Log debug information to console');
     }
 
     /**
@@ -76,8 +76,8 @@ class TwitterImportCommand extends Command
             return Command::FAILURE;
         }
 
-        if(0 < $cron->counter) {
-            $output->writeln('... imported ' . $cron->counter . ' items.');
+        if (0 < $cron->counter) {
+            $output->writeln('... imported '.$cron->counter.' items.');
         }
 
         if (0 === $cron->counter) {

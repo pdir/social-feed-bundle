@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2025 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -21,9 +21,8 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\Database;
 use Contao\CoreBundle\Image\ImageSizes;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Environment;
 use Contao\Input;
@@ -46,11 +45,7 @@ class SocialFeedListener
     /**
      * ModuleListener constructor.
      */
-    public function __construct(
-        private readonly RouterInterface $router,
-        private readonly TokenStorageInterface $tokenStorage,
-        private readonly ImageSizes $imageSizes
-    )
+    public function __construct(private readonly RouterInterface $router, private readonly TokenStorageInterface $tokenStorage, private readonly ImageSizes $imageSizes)
     {
         $this->session = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
     }
@@ -132,8 +127,8 @@ class SocialFeedListener
                     'override_default_response_type' => 'true',
                     'state' => $state,
                 ],
-                fn ($r) => 'https://www.facebook.com/'.InstagramClient::GRAPH_VERSION.'/dialog/oauth?',
-                fn ($r) => [
+                static fn ($r) => 'https://www.facebook.com/'.InstagramClient::GRAPH_VERSION.'/dialog/oauth?',
+                static fn ($r) => [
                     'socialFeedId' => Input::get('id'),
                     'backUrl' => Environment::get('uri'),
                     'state' => $state,
@@ -157,8 +152,8 @@ class SocialFeedListener
                 'scope' => 'instagram_business_basic',
                 'state' => $state,
             ],
-            fn ($r) => 'https://www.instagram.com/oauth/authorize/?',
-            fn ($r) => [
+            static fn ($r) => 'https://www.instagram.com/oauth/authorize/?',
+            static fn ($r) => [
                 'socialFeedId' => Input::get('id'),
                 'backUrl' => Environment::get('uri'),
                 'state' => $state,
@@ -182,8 +177,8 @@ class SocialFeedListener
                 'redirect_uri' => $this->router->generate('facebook_auth', [], RouterInterface::ABSOLUTE_URL),
                 'scope' => 'pages_read_engagement,pages_read_user_content',
             ],
-            fn ($r) => 'https://www.facebook.com/v11.0/dialog/oauth?',
-            fn ($r) => [
+            static fn ($r) => 'https://www.facebook.com/v11.0/dialog/oauth?',
+            static fn ($r) => [
                 'socialFeedId' => Input::get('id'),
                 'backUrl' => Environment::get('uri'),
                 'clientId' => (string) $r->pdir_sf_fb_app_id,
@@ -210,63 +205,13 @@ class SocialFeedListener
                 'redirect_uri' => $this->router->generate('auth_linkedin', [], RouterInterface::ABSOLUTE_URL),
                 'scope' => 'r_organization_social,rw_organization_admin',
             ],
-            fn ($r) => 'https://www.linkedin.com/oauth/v2/authorization?',
-            fn ($r) => [
+            static fn ($r) => 'https://www.linkedin.com/oauth/v2/authorization?',
+            static fn ($r) => [
                 'socialFeedId' => Input::get('id'),
                 'backUrl' => Environment::get('uri'),
                 'clientId' => (string) $r->linkedin_client_id,
                 'clientSecret' => (string) $r->linkedin_client_secret,
             ]
-        );
-    }
-
-    /**
-     * @param list<string> $requiredFields
-     * @param \Closure(object):array<string,string> $queryBuilder
-     * @param \Closure(object):string $baseUrlBuilder
-     * @param \Closure(object):array<string,mixed> $sessionBuilder
-     */
-    private function renderAuthWizard(
-        DataContainer $dc,
-        string $type,
-        string $label,
-        array $requiredFields,
-        \Closure $queryBuilder,
-        \Closure $baseUrlBuilder,
-        \Closure $sessionBuilder
-    ): string {
-        if (!$dc->activeRecord) {
-            return '';
-        }
-
-        if ($type !== ($dc->activeRecord->socialFeedType ?? null)) {
-            return '';
-        }
-
-        // Required fields check
-        foreach ($requiredFields as $field) {
-            $val = (string) ($dc->activeRecord->{$field} ?? '');
-            if ('' === trim($val)) {
-                return sprintf(
-                    ' <a href="#" class="tl_submit disabled" style="margin-top:5px; opacity:.5; pointer-events:none;" aria-disabled="true">%s</a>',
-                    htmlspecialchars($label, ENT_QUOTES)
-                );
-            }
-        }
-
-        // Session context (needed for callback)
-        $this->session->set(self::SESSION_KEY, $sessionBuilder($dc->activeRecord));
-        $this->session->save();
-
-        $baseUrl = $baseUrlBuilder($dc->activeRecord);
-        $query = $queryBuilder($dc->activeRecord);
-
-        $url = $baseUrl.http_build_query($query);
-
-        return sprintf(
-            ' <a href="%s" class="tl_submit" style="margin-top:5px" target="_blank" rel="noopener noreferrer">%s</a>',
-            htmlspecialchars($url, ENT_QUOTES),
-            htmlspecialchars($label, ENT_QUOTES)
         );
     }
 
@@ -309,5 +254,49 @@ class SocialFeedListener
         }
 
         return $varValue;
+    }
+
+    /**
+     * @param list<string> $requiredFields
+     * @param \Closure(object):array<string,string> $queryBuilder
+     * @param \Closure(object):string $baseUrlBuilder
+     * @param \Closure(object):array<string,mixed> $sessionBuilder
+     */
+    private function renderAuthWizard(DataContainer $dc, string $type, string $label, array $requiredFields, \Closure $queryBuilder, \Closure $baseUrlBuilder, \Closure $sessionBuilder): string
+    {
+        if (!$dc->activeRecord) {
+            return '';
+        }
+
+        if ($type !== ($dc->activeRecord->socialFeedType ?? null)) {
+            return '';
+        }
+
+        // Required fields check
+        foreach ($requiredFields as $field) {
+            $val = (string) ($dc->activeRecord->{$field} ?? '');
+
+            if ('' === trim($val)) {
+                return sprintf(
+                    ' <a href="#" class="tl_submit disabled" style="margin-top:5px; opacity:.5; pointer-events:none;" aria-disabled="true">%s</a>',
+                    htmlspecialchars($label, ENT_QUOTES)
+                );
+            }
+        }
+
+        // Session context (needed for callback)
+        $this->session->set(self::SESSION_KEY, $sessionBuilder($dc->activeRecord));
+        $this->session->save();
+
+        $baseUrl = $baseUrlBuilder($dc->activeRecord);
+        $query = $queryBuilder($dc->activeRecord);
+
+        $url = $baseUrl.http_build_query($query);
+
+        return sprintf(
+            ' <a href="%s" class="tl_submit" style="margin-top:5px" target="_blank" rel="noopener noreferrer">%s</a>',
+            htmlspecialchars($url, ENT_QUOTES),
+            htmlspecialchars($label, ENT_QUOTES)
+        );
     }
 }
