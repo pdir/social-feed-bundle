@@ -70,27 +70,23 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 
         'operations' => [
             'edit' => [
-                'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['edit'],
                 'href' => 'act=edit',
                 'icon' => 'edit.gif',
             ],
 
             'delete' => [
-                'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['delete'],
                 'href' => 'act=delete',
                 'icon' => 'delete.gif',
                 'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
             ],
 
             'show' => [
-                'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['show'],
                 'href' => 'act=show',
                 'icon' => 'show.gif',
                 'attributes' => 'style="margin-right: 3px"',
             ],
 
             'copy' => [
-                'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['copy'],
                 'href' => 'act=copy',
                 'icon' => 'copy.gif',
             ],
@@ -120,7 +116,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'socialFeedType' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['socialFeedType'],
             'exclude' => true,
             'filter' => true,
             'sorting' => true,
@@ -131,7 +126,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'pdir_sf_fb_account' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_account'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -142,7 +136,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'pdir_sf_fb_app_id' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_app_id'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -154,7 +147,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'pdir_sf_fb_app_secret' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_app_secret'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -166,7 +158,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'pdir_sf_fb_access_token' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_access_token'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -180,7 +171,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'pdir_sf_fb_news_archive' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_archive'],
             'exclude' => true,
             'inputType' => 'select',
             'eval' => [
@@ -191,7 +181,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'pdir_sf_fb_posts' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_posts'],
             'default' => 1,
             'exclude' => true,
             'inputType' => 'checkbox',
@@ -202,7 +191,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'pdir_sf_fb_news_cronjob' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_cronjob'],
             'exclude' => true,
             'inputType' => 'select',
             'eval' => [
@@ -218,7 +206,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'pdir_sf_fb_news_last_import_date' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['pdir_sf_fb_news_last_import_date'],
             'exclude' => true,
             'inputType' => 'text',
             'sql' => "varchar(255) NOT NULL default ''",
@@ -226,7 +213,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'instagram_account' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['instagram_account'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -237,7 +223,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'instagram_account_picture' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['instagram_account_picture'],
             'exclude' => true,
             'inputType' => 'fileTree',
             'eval' => ['filesOnly' => true, 'fieldType' => 'radio', 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => 'w50 autoheight'],
@@ -245,7 +230,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'instagram_account_picture_size' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['instagram_account_picture_size'],
             'exclude' => true,
             'inputType' => 'imageSize',
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
@@ -257,12 +241,13 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'psf_instagramLoginType' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramLoginType'],
             'exclude' => true,
             'inputType' => 'select',
-            'options' => ['instagram_login', 'unified_login'],
+            'options' => ['unified_login', 'instagram_login'],
             'reference' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramLoginTypes'],
-            'default' => 'instagram_login',
+            // New accounts use the unified login. The SQL default stays "instagram_login",
+            // so existing accounts keep the legacy login when the column is added.
+            'default' => 'unified_login',
             'eval' => [
                 'submitOnChange' => true,
                 'tl_class' => 'w50',
@@ -271,7 +256,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'psf_instagramConfigId' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramConfigId'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -283,7 +267,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'psf_instagramUserId' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramUserId'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -295,7 +278,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'psf_instagramAppId' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppId'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -307,7 +289,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'psf_instagramAppSecret' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAppSecret'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -319,7 +300,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'psf_instagramAccessToken' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['psf_instagramAccessToken'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -344,7 +324,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'number_posts' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['number_posts'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -356,7 +335,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'twitter_account' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['twitter_account'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -367,7 +345,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'search' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['search'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -378,7 +355,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'show_retweets' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['show_retweets'],
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => [
@@ -388,7 +364,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'show_reply' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['show_reply'],
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => [
@@ -398,7 +373,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'hashtags_link' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['hashtags_link'],
             'exclude' => true,
             'inputType' => 'checkbox',
             'eval' => [
@@ -408,7 +382,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'twitter_api_key' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_key'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -420,7 +393,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'twitter_api_secret_key' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['twitter_api_secret_key'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -432,7 +404,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'twitter_access_token' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -444,7 +415,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'twitter_access_token_secret' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['twitter_access_token_secret'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -462,7 +432,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
 
         // LinkedIn
         'linkedin_client_id' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_client_id'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -474,7 +443,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'linkedin_client_secret' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_client_secret'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -486,7 +454,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'linkedin_company_id' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_company_id'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -498,7 +465,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'linkedin_access_token' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_access_token'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -511,7 +477,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'linkedin_account_picture' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture'],
             'exclude' => true,
             'inputType' => 'fileTree',
             'eval' => ['filesOnly' => true, 'fieldType' => 'radio', 'feEditable' => true, 'feViewable' => true, 'feGroup' => 'personal', 'tl_class' => 'clr w50 autoheight'],
@@ -519,7 +484,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'linkedin_account_picture_size' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_account_picture_size'],
             'exclude' => true,
             'inputType' => 'imageSize',
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
@@ -531,7 +495,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'access_token_expires' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['access_token_expires'],
             'exclude' => true,
             'inputType' => 'text',
             'sql' => "varchar(255) NOT NULL default ''",
@@ -543,7 +506,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'linkedin_refresh_token' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_refresh_token'],
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
@@ -553,7 +515,6 @@ $GLOBALS['TL_DCA']['tl_social_feed'] = [
         ],
 
         'linkedin_refresh_token_expires' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_social_feed']['linkedin_refresh_token_expires'],
             'exclude' => true,
             'inputType' => 'text',
             'sql' => "varchar(255) NOT NULL default ''",

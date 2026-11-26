@@ -25,7 +25,6 @@ declare(strict_types=1);
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newslist'] = str_replace('cssID', 'cssID;{pdir_sf_settings_legend},pdir_sf_text_length,pdir_sf_columns,pdir_sf_enableMasonry,pdir_sf_enableImages', $GLOBALS['TL_DCA']['tl_module']['palettes']['newslist']);
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_text_length'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_text_length'],
     'exclude' => true,
     'inputType' => 'text',
     'eval' => [
@@ -36,7 +35,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_text_length'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_enableMasonry'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_enableMasonry'],
     'exclude' => true,
     'inputType' => 'checkbox',
     'eval' => [
@@ -47,7 +45,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_enableMasonry'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_columns'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_columns'],
     'exclude' => true,
     'inputType' => 'select',
     'eval' => [
@@ -59,7 +56,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_columns'] = [
 ];
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['pdir_sf_enableImages'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_module']['pdir_sf_enableImages'],
     'exclude' => true,
     'inputType' => 'checkbox',
     'eval' => [
