@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -24,8 +24,8 @@ use Contao\Input;
 use Contao\Message;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener;
 use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedServiceCallbackListener;
+use Pdir\SocialFeedBundle\Importer\NewsImporter;
 use Pdir\SocialFeedBundle\Model\SocialFeedAccountModel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,30 +62,44 @@ class FacebookController
     {
         $sessionData = $this->session->get(SocialFeedServiceCallbackListener::SESSION_KEY);
 
-        dump($sessionData);
+        if (null === $sessionData || !isset($sessionData['sfServiceId'])) {
+            return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
+        }
 
-        $data = [
+        $graphUrl = 'https://graph.facebook.com/'.($sessionData['apiVersion'] ?? 'v20.0');
+
+        // Exchange the code for a short-lived user access token
+        $json = @file_get_contents($graphUrl.'/oauth/access_token?'.http_build_query([
             'client_id' => $sessionData['clientId'],
             'client_secret' => $sessionData['clientSecret'],
             'redirect_uri' => $this->router->generate('facebook_auth', [], RouterInterface::ABSOLUTE_URL),
             'code' => $request->query->get('code'),
-        ];
+        ]));
 
-        $json = @file_get_contents('https://graph.facebook.com/v11.0/oauth/access_token?'.http_build_query($data));
-
-        dump($json);
-
-        if (false === $json) {
-            Message::addError(Input::get('error_message'));
+        if (false === $json || empty(json_decode($json)->access_token)) {
+            Message::addError(Input::get('error_message') ?: 'FACEBOOK GRAPH ERROR: Failed getting the user access token.');
 
             return new RedirectResponse($sessionData['backUrl']);
         }
 
-        $obj = json_decode($json);
-        $userAccessToken = $obj->access_token;
+        // Exchange the short-lived for a long-lived user access token, so the page access tokens do not expire
+        $userAccessToken = json_decode($json)->access_token;
 
-        // Get accounts
-        $json = @file_get_contents('https://graph.facebook.com/v20.0/me/accounts?access_token='.$userAccessToken);
+        $json = @file_get_contents($graphUrl.'/oauth/access_token?'.http_build_query([
+            'grant_type' => 'fb_exchange_token',
+            'client_id' => $sessionData['clientId'],
+            'client_secret' => $sessionData['clientSecret'],
+            'fb_exchange_token' => $userAccessToken,
+        ]));
+
+        if (false !== $json && !empty(json_decode($json)->access_token)) {
+            $userAccessToken = json_decode($json)->access_token;
+        } else {
+            Message::addInfo('FACEBOOK GRAPH: Failed getting a long-lived user access token, the page access tokens may expire.');
+        }
+
+        // Get accounts (pages) of the user
+        $json = @file_get_contents($graphUrl.'/me/accounts?'.http_build_query(['access_token' => $userAccessToken]));
 
         // Set error message
         if (\is_bool($json) && false === $json) {
@@ -100,62 +114,44 @@ class FacebookController
         // Set accounts
         if (!\is_bool($json)) {
             $obj = json_decode($json);
-            dump($obj);
-            // Create accounts if not exists
-            foreach($obj->data as $item) {
-                dump($item);
-                $account = SocialFeedAccountModel::findBy(['type=?', 'identifier=?'], ['Facebook', $item->id]);
+
+            // Create or update the accounts (Facebook pages) of the user
+            foreach ($obj->data ?? [] as $item) {
+                $account = SocialFeedAccountModel::findOneBy(['type = ?', 'identifier = ?'], ['Facebook', $item->id]);
 
                 if (null === $account) {
                     $account = new SocialFeedAccountModel();
-                    $account->name = $item->name;
-                    $account->identifier = $sessionData['page'] = $item->id;
                     $account->type = 'Facebook';
-                    $account->added = $account->tstamp = time();
-                    $account->accessToken = $item->access_token;
-                    $account->service = $sessionData['sfServiceId'];
-                    $account->save();
-
-                    $sessionData['page'];
-
-                    continue;
+                    $account->identifier = $item->id;
+                    $account->added = time();
                 }
 
                 $account->name = $item->name;
                 $account->tstamp = time();
                 $account->accessToken = $item->access_token;
+                $account->service = (int) $sessionData['sfServiceId'];
+                $account->save();
+
+                // the avatar needs the id of the saved account
+                $account->avatar = $this->getAvatar($account);
                 $account->save();
 
                 $sessionData['page'] = $item->id;
             }
         }
 
-        dump(json_decode($json));
-
-        // Get token
-        $json = @file_get_contents('https://graph.facebook.com/'.$sessionData['page'].'?fields=access_token&access_token='.$userAccessToken);
-
-        dump(json_decode($json));
-die();
-        // set error message
-        if (\is_bool($json) && false === $json) {
-            if (Input::get('error_message')) {
-                Message::addError(Input::get('error_message'));
-            } else {
-                $pageAccessToken = 'FACEBOOK GRAPH ERROR: empty return! Please check your credentials or account name.';
-                Message::addError($pageAccessToken);
-            }
-        }
-
-        if (!\is_bool($json)) {
-            $obj = json_decode($json);
-            $pageAccessToken = $obj->access_token;
-        }
-
-        // Store the access token and remove temporary session key
-        $this->db->update('tl_sf_service', ['accessToken' => $pageAccessToken], ['id' => $sessionData['sfServiceId']]);
+        // Store the user access token at the service (the page access tokens are stored at the accounts)
+        $this->db->update('tl_sf_service', ['accessToken' => $userAccessToken, 'tstamp' => time()], ['id' => $sessionData['sfServiceId']]);
         $this->session->remove(SocialFeedServiceCallbackListener::SESSION_KEY);
 
         return new RedirectResponse($sessionData['backUrl']);
+    }
+
+    private function getAvatar(SocialFeedAccountModel $account): ?string
+    {
+        $imgPath = NewsImporter::createImageFolder($account->id); // create image folder if not exists
+
+        // Get profile picture
+        return NewsImporter::saveImage($imgPath.'avatar.jpg', 'https://graph.facebook.com/'.$account->identifier.'/picture?type=large');
     }
 }

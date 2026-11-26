@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -20,12 +20,10 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Importer;
 
-use Contao\Controller;
 use Contao\Date;
-use Contao\Environment;
 use Contao\Message;
 use Contao\System;
-use Pdir\SocialFeedBundle\Model\SocialFeedModel;
+use Pdir\SocialFeedBundle\Model\SocialFeedAccountModel;
 
 class Importer
 {
@@ -46,22 +44,30 @@ class Importer
      *
      * @return void|array
      */
-    public function getInstagramPosts($accessToken, $socialFeedId, $numberPosts = 30)
+    public function getInstagramPosts($accessToken, $socialFeedId, $numberPosts = 30, ?string $instagramUserId = null)
     {
         if (null === $accessToken) {
-            # Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported']);
+            // Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['facebookNotSupported']);
 
             return [];
         }
 
         $client = System::getContainer()->get(InstagramClient::class);
-        $items = $client->getMediaData($accessToken, (int) $socialFeedId, (int) $numberPosts);
+        $items = $client->getMediaData($accessToken, (int) $socialFeedId, (int) $numberPosts, true, $instagramUserId);
 
-        if(null === $items) {
+        return $items['data'] ?? null;
+    }
+
+    /**
+     * Get the Instagram user ID for the unified login, null for the legacy Instagram login (uses /me).
+     */
+    public static function getInstagramUserId(SocialFeedAccountModel $account): ?string
+    {
+        if (!InstagramClient::isUnifiedLogin($account->getService()?->loginType)) {
             return null;
         }
 
-        return $items['data'];
+        return (string) $account->identifier;
     }
 
     public function getAccountImage()
@@ -122,7 +128,7 @@ class Importer
 
     public function getPostsByAccount($id, $numberPosts)
     {
-        $objSocialFeed = SocialFeedModel::findBy('id', $id);
+        $objSocialFeed = SocialFeedAccountModel::findBy('id', $id);
 
         if (null === $objSocialFeed) {
             return;
@@ -134,10 +140,10 @@ class Importer
                 break;
 
             case 'Instagram':
-                return $this->getInstagramPosts($objSocialFeed->psf_instagramAccessToken, $objSocialFeed->id, $numberPosts);
+                return $this->getInstagramPosts($objSocialFeed->getAccessToken() ?: null, $objSocialFeed->id, $numberPosts, self::getInstagramUserId($objSocialFeed));
                 break;
 
-            case 'Twitter':
+            case 'X':
                 Message::addError($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['twitterNotSupported']);
                 break;
 

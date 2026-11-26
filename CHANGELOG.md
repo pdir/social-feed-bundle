@@ -10,6 +10,24 @@ Types of changes
     Security in case of vulnerabilities.
 )
 
+## [3.0.0](https://github.com/pdir/social-feed-bundle/tree/3.0.0) - unreleased
+
+[Added] Add compatibility for [Social Feed+](https://pdir.de/socialfeed+).
+[Changed] Split the social feed configuration into services (app credentials, `tl_sf_service`) and accounts (import settings, `tl_sf_account`). Existing `tl_social_feed` records are migrated automatically, the old table is kept.
+[Changed] The import commands (`social-feed:*:import`) now import all accounts of a type, not only accounts without cronjob.
+[Fixed] Facebook: exchange the user access token for a long-lived token, so the page access tokens do not expire.
+[Changed] Instagram unified login (see 2.15.0): login method and configuration ID are stored in the service, the Instagram account ID in the account. All Instagram accounts shared during the login are created as social feed accounts.
+[Changed] Instagram login: the scope `instagram_business_basic` is requested.
+[Removed] Support for Contao 4.13 and PHP 8.0, the minimum requirements are now Contao 5.3 and PHP 8.1.
+[Added] Compatibility with `doctrine/dbal` 4 (Contao 5.7). [#191](https://github.com/pdir/social-feed-bundle/issues/191)
+[Added] Instagram: option "Link hashtags and mentions" for Instagram accounts (cron and moderated import). [#179](https://github.com/pdir/social-feed-bundle/issues/179)
+[Fixed] LinkedIn: posts without `firstPublishedAt` no longer get the date 01.01.1970, the creation or modification date is used instead. [#185](https://github.com/pdir/social-feed-bundle/issues/185)
+[Fixed] Instagram: the moderation and the import load further pages until the number of posts is reached (previously max. 20–25 posts). [#131](https://github.com/pdir/social-feed-bundle/issues/131)
+[Fixed] Existing images are detected correctly when the import runs via the web cron, images are no longer downloaded and the `.public` file is no longer written on every import. [#141](https://github.com/pdir/social-feed-bundle/issues/141)
+[Fixed] Instagram: images of moderated imports were not assigned to the news, posts without image no longer break the import.
+[Removed] `Pdir\SocialFeedBundle\Model\SocialFeedModel` and the DCA `tl_social_feed` (BC break). Use `SocialFeedServiceModel` (credentials) and `SocialFeedAccountModel` (import settings) instead.
+[Removed] `Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener` (BC break), replaced by `SocialFeedServiceCallbackListener`.
+
 ## [2.13.1](https://github.com/pdir/social-feed-bundle/tree/2.13.1) - 2024-06-21
 
 This version is currently only available via the “early adopter” program (EAP). You can find out more at [Social Feed EAP](https://pdir.de/crowdfunding/social-feed-bundle.html).

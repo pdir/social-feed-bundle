@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -21,10 +21,12 @@ declare(strict_types=1);
 namespace Pdir\SocialFeedBundle\Controller;
 
 use Contao\BackendUser;
+use Contao\Message;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener;
+use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedServiceCallbackListener;
 use Pdir\SocialFeedBundle\Importer\InstagramClient;
+use Pdir\SocialFeedBundle\Model\SocialFeedAccountModel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -90,36 +92,135 @@ class InstagramController
             return new Response(Response::$statusTexts[Response::HTTP_UNAUTHORIZED], Response::HTTP_UNAUTHORIZED);
         }
 
-        $sessionData = $this->session->get(SocialFeedListener::SESSION_KEY);
+        $sessionData = $this->session->get(SocialFeedServiceCallbackListener::SESSION_KEY);
 
         // Social feed ID not found in session
         if (null === $sessionData || !isset($sessionData['sfServiceId'])) {
             return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
         }
 
-        // Social feed account not found
-        if (false === ($module = $this->db->fetchAssociative('SELECT * FROM tl_sf_service WHERE id=?', [$sessionData['sfServiceId']]))) {
+        // Invalid state parameter (CSRF protection)
+        if (isset($sessionData['state']) && !hash_equals((string) $sessionData['state'], (string) $request->query->get('state'))) {
             return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
         }
 
-        $longLivedAccessToken = $this->client->getAccessToken(
-            $module['psf_instagramAppId'],
-            $module['psf_instagramAppSecret'],
-            $code,
-            $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL)
-        );
-
-        if (null === $longLivedAccessToken['access_token']) {
-            return new Response(Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR], Response::HTTP_INTERNAL_SERVER_ERROR);
+        // Social feed service not found
+        if (false === ($service = $this->db->fetchAssociative('SELECT * FROM tl_sf_service WHERE id=?', [$sessionData['sfServiceId']]))) {
+            return new Response(Response::$statusTexts[Response::HTTP_BAD_REQUEST], Response::HTTP_BAD_REQUEST);
         }
 
-        // Get the user and media data
-        $this->client->getUserData($longLivedAccessToken['access_token'], (int) $module['id'], false);
-        // $mediaData = $this->client->getMediaData($accessToken, (int) $module['id'], false);
+        System::getContainer()->get('contao.framework')->initialize();
+        System::loadLanguageFile('tl_sf_service');
+
+        $redirectUri = $this->router->generate('instagram_auth', [], RouterInterface::ABSOLUTE_URL);
+
+        if (InstagramClient::isUnifiedLogin($service['loginType'] ?? null)) {
+            return $this->handleUnifiedLogin($service, $code, $redirectUri, $sessionData);
+        }
+
+        $longLivedAccessToken = $this->client->getAccessToken(
+            (string) $service['appId'],
+            (string) $service['appSecret'],
+            $code,
+            $redirectUri
+        );
+
+        if (null === $longLivedAccessToken || empty($longLivedAccessToken['access_token'])) {
+            return $this->redirectWithError($sessionData, $GLOBALS['TL_LANG']['tl_sf_service']['instagramTokenError'] ?? 'The Instagram access token could not be requested. Please check the system log.');
+        }
+
+        // Get the user data and create or update the account
+        $userData = $this->client->getUserData($longLivedAccessToken['access_token'], (int) $service['id'], false);
+
+        if (!empty($userData['data']['id'])) {
+            $this->saveAccount((int) $service['id'], (string) $userData['data']['id'], (string) ($userData['data']['username'] ?? ''));
+        }
 
         // Store the access token and remove temporary session key
-        $this->db->update('tl_sf_service', ['psf_instagramAccessToken' => $longLivedAccessToken['access_token'], 'access_token_expires' => time() + $longLivedAccessToken['expires_in']], ['id' => $sessionData['sfServiceId']]);
-        $this->session->remove(SocialFeedListener::SESSION_KEY);
+        $this->db->update('tl_sf_service', [
+            'accessToken' => $longLivedAccessToken['access_token'],
+            'tokenExpires' => time() + (int) ($longLivedAccessToken['expires_in'] ?? 0),
+            'tstamp' => time(),
+        ], ['id' => $sessionData['sfServiceId']]);
+
+        $this->session->remove(SocialFeedServiceCallbackListener::SESSION_KEY);
+
+        return new RedirectResponse($sessionData['backUrl']);
+    }
+
+    /**
+     * Handle the callback of the unified login (Facebook Login for Business with config_id).
+     *
+     * @param array<string, mixed> $service
+     * @param array<string, mixed> $sessionData
+     */
+    private function handleUnifiedLogin(array $service, string $code, string $redirectUri, array $sessionData): Response
+    {
+        $token = $this->client->getUnifiedAccessToken((string) $service['appId'], (string) $service['appSecret'], $code, $redirectUri);
+
+        if (null === $token) {
+            return $this->redirectWithError($sessionData, $GLOBALS['TL_LANG']['tl_sf_service']['instagramTokenError'] ?? 'The Instagram access token could not be requested. Please check the system log.');
+        }
+
+        $accounts = $this->client->getUnifiedInstagramAccounts($token['access_token']);
+
+        if ([] === $accounts) {
+            return $this->redirectWithError($sessionData, $GLOBALS['TL_LANG']['tl_sf_service']['instagramAccountError'] ?? 'No Instagram account was shared during login. Please select an Instagram professional account and try again.');
+        }
+
+        // Every shared Instagram account becomes a social feed account, the token is stored at the service
+        foreach ($accounts as $account) {
+            $this->saveAccount((int) $service['id'], $account['id'], $account['username']);
+        }
+
+        $this->db->update('tl_sf_service', [
+            'accessToken' => $token['access_token'],
+            // empty = never expires (system user access token)
+            'tokenExpires' => $token['expires_at'] > 0 ? $token['expires_at'] : '',
+            'tstamp' => time(),
+        ], ['id' => $sessionData['sfServiceId']]);
+
+        $this->session->remove(SocialFeedServiceCallbackListener::SESSION_KEY);
+
+        return new RedirectResponse($sessionData['backUrl']);
+    }
+
+    /**
+     * Create or update the Instagram account with the given Instagram user ID.
+     */
+    private function saveAccount(int $serviceId, string $instagramUserId, string $username): void
+    {
+        $account = SocialFeedAccountModel::findOneBy(['type = ?', 'identifier = ?'], ['Instagram', $instagramUserId]);
+
+        // Migrated accounts have no Instagram user ID yet, so assign the account of the service without ID
+        $account ??= SocialFeedAccountModel::findOneBy(['type = ?', 'service = ?', "identifier = ''"], ['Instagram', $serviceId]);
+
+        if (null === $account) {
+            $account = new SocialFeedAccountModel();
+            $account->type = 'Instagram';
+            $account->added = time();
+            $account->cronjob = 'no_cronjob';
+        }
+
+        $account->identifier = $instagramUserId;
+        $account->name = $username ?: ($account->name ?: $instagramUserId);
+        $account->service = $serviceId;
+        $account->tstamp = time();
+        $account->save();
+    }
+
+    /**
+     * @param array<string, mixed> $sessionData
+     */
+    private function redirectWithError(array $sessionData, string $message): Response
+    {
+        $this->session->remove(SocialFeedServiceCallbackListener::SESSION_KEY);
+
+        if (empty($sessionData['backUrl'])) {
+            return new Response($message, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        Message::addError($message);
 
         return new RedirectResponse($sessionData['backUrl']);
     }

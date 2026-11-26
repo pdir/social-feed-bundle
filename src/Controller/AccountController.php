@@ -3,13 +3,15 @@
 declare(strict_types=1);
 
 /*
- * Social Feed Plus bundle for Contao Open Source CMS
+ * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
- * @package    social-feed-plus-bundle
- * @link       https://pdir.de/socialfeed+
- * @license    proprietary / pdir license - All-rights-reserved - commercial extension
+ * @package    social-feed-bundle
+ * @link       https://github.com/pdir/social-feed-bundle
+ * @license    http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @author     Mathias Arzberger <develop@pdir.de>
+ * @author     Philipp Seibt <develop@pdir.de>
  * @author     pdir GmbH <https://pdir.de>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -18,14 +20,13 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Controller;
 
+use Contao\Config;
 use Contao\CoreBundle\Controller\AbstractBackendController;
 use Contao\Date;
-use Contao\FilesModel;
-use Contao\StringUtil;
-use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedPostLabelCallbackListener;
+use Contao\System;
 use Pdir\SocialFeedBundle\Model\SocialFeedAccountModel;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('%contao.backend.route_prefix%/sfAccount', name: self::class, defaults: ['_scope' => 'backend'])]
 class AccountController extends AbstractBackendController
@@ -33,18 +34,20 @@ class AccountController extends AbstractBackendController
     public function __invoke(): Response
     {
         $items = [];
+        $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+        $accounts = SocialFeedAccountModel::findAll(['order' => 'type, name']);
 
-        $accounts = SocialFeedAccountModel::findAll();
-
-        if(null !== $accounts) {
-            foreach($accounts as $account) {
+        if (null !== $accounts) {
+            foreach ($accounts as $account) {
                 $items[] = [
+                    'id' => $account->id,
                     'name' => $account->name,
                     'type' => $account->type,
-                    'added' => Date::parse('Y-m-d\TH:i', $account->added),
-                    'avatar' => $account->avatar,
-                    #'avatar' => $this->getAvatars(StringUtil::deserialize($account->avatar)),
-                    #'typeIcon' => $this->getAvatars(StringUtil::deserialize($account->type)),
+                    'added' => $account->added ? Date::parse(Config::get('datimFormat'), $account->added) : '-',
+                    'avatar' => $account->getAvatar($account, 120),
+                    'service' => $account->getService(),
+                    'editUrl' => $this->getBackendUrl(['act' => 'edit', 'id' => $account->id, 'rt' => $requestToken]),
+                    'deleteUrl' => $this->getBackendUrl(['act' => 'delete', 'id' => $account->id, 'rt' => $requestToken]),
                 ];
             }
         }
@@ -54,32 +57,27 @@ class AccountController extends AbstractBackendController
         return $this->render(
             '@Contao_PdirSocialFeedBundle/sf_account.html.twig',
             [
-                #'error' => 'Oh no, an error!',
-                'title' => 'Social Feed Kalender',
-                'headline' => 'Social Feed Kalender',
-                'items' => $items?? [],
+                'title' => 'Social Feed Konten',
+                'headline' => 'Social Feed Konten',
+                'items' => $items,
+                'createUrl' => $this->getBackendUrl(['act' => 'create', 'rt' => $requestToken]),
                 'locale' => $GLOBALS['TL_LANGUAGE'],
             ]
         );
     }
 
-    private function getAvatars($ids): string
+    /**
+     * @param array<string, int|string> $params
+     */
+    private function getBackendUrl(array $params): string
     {
-        $html = '';
+        // the referer id lets Contao return to this overview after "save and close"
+        $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()?->attributes->get('_contao_referer_id');
 
-        $accounts = SocialFeedAccountModel::findBy(
-            [
-                'type != ?',
-                'id IN (' . implode(',', array_map('\intval', $ids)) . ')'
-            ],
-            ['']
-        );
-
-
-        foreach($accounts as $account) {
-            $html .= SocialFeedPlusPostLabelCallbackListener::getAvatar($account->avatar, $account->type);
+        if ($refererId) {
+            $params['ref'] = $refererId;
         }
 
-        return $html;
+        return $this->generateUrl('contao_backend', array_merge(['do' => 'sfService', 'table' => 'tl_sf_account'], $params));
     }
 }

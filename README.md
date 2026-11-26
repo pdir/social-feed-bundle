@@ -44,17 +44,46 @@ Screenshot
 System requirements
 -------------------
 
-* [Contao 4.3](https://github.com/contao/contao-bundle) or higher
+* PHP 8.1 or higher
+* [Contao](https://github.com/contao/contao-bundle) 5.3 or higher (Contao 4.13 is supported up to version 2.13)
 
 Installation & Configuration
 ----------------------------
 * [Dokumentation](https://pdir.de/docs/de/contao/extensions/socialfeed/)
 
+Upgrade to version 3.0
+----------------------------
+
+Version 3.0 splits the configuration into **services** (app credentials such as App ID, App Secret and access token, table `tl_sf_service`) and **accounts** (import settings such as news archive, cron job and number of posts, table `tl_sf_account`). Both are managed in the backend under *pdir Apps → Social Feed services*.
+
+1. Make a database backup.
+2. Update the bundle with `composer require pdir/social-feed-bundle:^3.0`.
+3. Run the migration with `php vendor/bin/contao-console contao:migrate` (or the Contao Manager / install tool). Each `tl_social_feed` record is migrated to a service and an account. Accounts keep their ID if possible, otherwise the imported news are reassigned. X (Twitter) accounts get the type `X`.
+4. Check the migrated services and accounts in the backend. The old table `tl_social_feed` is kept and can be deleted manually once everything works.
+5. Instagram: accounts created by a new login (e.g. with the unified login, which creates all shared Instagram accounts) have no news archive yet. Select a news archive, otherwise nothing is imported.
+
+Breaking changes for developers: `SocialFeedModel` and `SocialFeedListener` have been removed. Use `SocialFeedServiceModel` and `SocialFeedAccountModel` (`$account->getService()`, `$account->getAccessToken()`) instead. The import commands now import all accounts of a type, also accounts with a cron job.
+
+**Deutsch**
+
+Ab Version 3.0 ist die Konfiguration aufgeteilt in **Dienste** (Zugangsdaten wie App-ID, App-Secret und Access Token, Tabelle `tl_sf_service`) und **Konten** (Importeinstellungen wie Nachrichtenarchiv, Cronjob und Anzahl der Beiträge, Tabelle `tl_sf_account`). Beides verwaltest du im Backend unter *pdir Apps → Social Feed Dienste*.
+
+1. Datenbank sichern.
+2. Bundle mit `composer require pdir/social-feed-bundle:^3.0` aktualisieren.
+3. Migration mit `php vendor/bin/contao-console contao:migrate` ausführen (oder über Contao Manager / Installtool). Jeder Datensatz aus `tl_social_feed` wird zu einem Dienst und einem Konto. Konten behalten nach Möglichkeit ihre ID, sonst werden die importierten Nachrichten umgehängt. X-(Twitter-)Konten erhalten den Typ `X`.
+4. Migrierte Dienste und Konten im Backend prüfen. Die alte Tabelle `tl_social_feed` bleibt erhalten und kann gelöscht werden, sobald alles funktioniert.
+5. Instagram: Konten, die durch einen neuen Login angelegt werden (z. B. beim Unified Login, der alle freigegebenen Instagram-Konten anlegt), haben noch kein Nachrichtenarchiv. Wähle eines aus, sonst wird nichts importiert.
+
+Änderungen für Entwickler: `SocialFeedModel` und `SocialFeedListener` wurden entfernt. Verwende stattdessen `SocialFeedServiceModel` und `SocialFeedAccountModel` (`$account->getService()`, `$account->getAccessToken()`). Die Import-Befehle importieren jetzt alle Konten eines Typs, auch Konten mit Cronjob.
+
 Commands
 ----------------------------
 
-    php vendor/bin/contao-console linkedin:import
-    php vendor/bin/contao-console linkedin:import -d true -m 30
+    php vendor/bin/contao-console social-feed:facebook:import
+    php vendor/bin/contao-console social-feed:instagram:import
+    php vendor/bin/contao-console social-feed:x:import
+    php vendor/bin/contao-console social-feed:linkedin:import
+    php vendor/bin/contao-console social-feed:linkedin:import -d true -m 30
 
 
 Demo

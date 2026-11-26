@@ -36,7 +36,7 @@ $assetsDir = 'bundles/pdirsocialfeed';
 
 $GLOBALS['BE_MOD']['pdir'] = [
     'sfService' => [
-        'tables' => ['tl_sf_service'],
+        'tables' => ['tl_sf_service', 'tl_sf_account'],
     ],
 ];
 

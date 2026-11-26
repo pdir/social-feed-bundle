@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -27,14 +27,14 @@ use Contao\Folder;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\System;
-use Pdir\SocialFeedBundle\Model\SocialFeedModel;
+use Pdir\SocialFeedBundle\Model\SocialFeedAccountModel;
 
 class NewsImporter
 {
     public $accountImage;
     protected $arrNews;
 
-    public function execute($newsArchiveId, SocialFeedModel $socialFeedAccount): void
+    public function execute($newsArchiveId, SocialFeedAccountModel $socialFeedAccount): void
     {
         $objNews = new NewsModel();
 
@@ -73,7 +73,7 @@ class NewsImporter
         $objNews->teaser = $this->arrNews['teaser'];
 
         // author
-        $objNews->author = $socialFeedAccount->user;
+        $objNews->author = $socialFeedAccount->author;
 
         // default
         $objNews->published = 1;
@@ -103,8 +103,12 @@ class NewsImporter
         // Create Public Image Folder
         $imgPath = 'files/social-feed/'.$account.'/';
 
-        if (!file_exists($imgPath)) {
+        if (!self::fileExists($imgPath)) {
             new Folder($imgPath);
+        }
+
+        // only write the .public file once, rewriting it on every import is not necessary
+        if (!self::fileExists('files/social-feed/.public')) {
             $file = new File('files/social-feed/.public');
             $file->write('');
             $file->close();
@@ -113,10 +117,47 @@ class NewsImporter
         return $imgPath;
     }
 
+    /**
+     * Links Instagram hashtags (#tag) and mentions (@user) in a text (#179).
+     */
+    public static function linkInstagramHashtags(string $text): string
+    {
+        // hashtags, not preceded by a word character or "&" (HTML entities like &#39;)
+        $text = preg_replace(
+            '/(?<![\w&\/])#([\p{L}\p{N}_]+)/u',
+            '<a href="https://www.instagram.com/explore/tags/$1/" target="_blank" rel="noreferrer noopener">#$1</a>',
+            $text,
+        ) ?? $text;
+
+        // mentions, not part of an e-mail address
+        return preg_replace(
+            '/(?<![\w.\/])@([A-Za-z0-9._]{1,30})(?<!\.)/u',
+            '<a href="https://www.instagram.com/$1/" target="_blank" rel="noreferrer noopener">@$1</a>',
+            $text,
+        ) ?? $text;
+    }
+
+    /**
+     * Checks a path relative to the project directory.
+     *
+     * file_exists() with a relative path depends on the current working directory, which is
+     * public/ in web requests (e.g. the poor man's cron), so the check always failed there.
+     */
+    public static function fileExists(string $path): bool
+    {
+        return file_exists(System::getContainer()->getParameter('kernel.project_dir').'/'.ltrim($path, '/'));
+    }
+
     public static function saveImage($strPath, $strUrl): ?string
     {
-        if (!file_exists($strPath)) {
-            $strImage = file_get_contents($strUrl);
+        if (!self::fileExists($strPath)) {
+            $strImage = $strUrl ? @file_get_contents($strUrl) : false;
+
+            // posts without media_url (e.g. videos with copyrighted music) or broken images
+            if (false === $strImage || '' === $strImage) {
+                return null;
+            }
+
             $file = new File($strPath);
             $file->write($strImage);
             $file->close();
@@ -128,7 +169,7 @@ class NewsImporter
         }
 
         // use existing file
-        $objFile = FilesModel::findByPath($strPath);
+        $objFile = FilesModel::findByPath($strPath) ?? Dbafs::addResource($strPath);
 
         return $objFile->uuid;
     }
@@ -140,6 +181,10 @@ class NewsImporter
 
     public static function shortenHeadline($str): string
     {
+        if (empty($str)) {
+            return '';
+        }
+
         $arr = explode("\n", $str);
 
         $message = $arr[0] ?? $str;
@@ -152,9 +197,9 @@ class NewsImporter
         return mb_substr($message, 0, 50).$more;
     }
 
-    public static function setLastImportDate(SocialFeedModel $socialFeedModel): void
+    public static function setLastImportDate(SocialFeedAccountModel $socialFeedAccount): void
     {
-        $socialFeedModel->pdir_sf_fb_news_last_import_date = time();
-        $socialFeedModel->save();
+        $socialFeedAccount->lastImport = time();
+        $socialFeedAccount->save();
     }
 }

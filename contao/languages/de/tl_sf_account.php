@@ -18,9 +18,40 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-$GLOBALS['TL_LANG']['tl_sf_account']['type_legend'] = 'Social Feed Konten';
+$GLOBALS['TL_LANG']['tl_sf_account']['edit'] = 'Konto ID %s bearbeiten';
+$GLOBALS['TL_LANG']['tl_sf_account']['copy'] = 'Konto ID %s duplizieren';
+$GLOBALS['TL_LANG']['tl_sf_account']['delete'] = 'Konto ID %s löschen';
+$GLOBALS['TL_LANG']['tl_sf_account']['show'] = 'Details des Kontos ID %s anzeigen';
+$GLOBALS['TL_LANG']['tl_sf_account']['new'] = ['Neues Konto', 'Ein neues Social Feed Konto anlegen.'];
+
+$GLOBALS['TL_LANG']['tl_sf_account']['title_legend'] = 'Konto';
+$GLOBALS['TL_LANG']['tl_sf_account']['import_legend'] = 'Import-Einstellungen';
+$GLOBALS['TL_LANG']['tl_sf_account']['avatar_legend'] = 'Profilbild';
+
 $GLOBALS['TL_LANG']['tl_sf_account']['type'] = ['Typ', 'Wählen Sie hier zuerst den Typ aus.'];
-$GLOBALS['TL_LANG']['tl_sf_account']['name'] = ['Name des Accounts', 'Wird automatisch ausgelesen wenn das Konto verbunden wird.'];
-$GLOBALS['TL_LANG']['tl_sf_account']['service'] = ['Service oder App', 'Wird automatisch ausgelesen wenn das Konto verbunden wird.'];
-$GLOBALS['TL_LANG']['tl_sf_account']['avatar'] = ['Avatar des Accounts', 'Wird automatisch ausgelesen wenn das Konto verbunden wird.'];
-$GLOBALS['TL_LANG']['tl_sf_account']['accessToken'] = ['Access Token', 'Der Access Token wird automatisch hinterlegt, wenn Sie Access Token generieren auswählen und speichern.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['service'] = ['Service oder App', 'Wählen Sie die App bzw. den Service mit den Zugangsdaten aus.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['name'] = ['Name des Kontos', 'Wird automatisch ausgelesen, wenn das Konto über den Service verbunden wird.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['identifier'] = ['Kennung', 'Facebook: Seiten-ID oder -Name, Instagram: Benutzer-ID, X: Account-Name, LinkedIn: Unternehmens-ID.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['accessToken'] = ['Access Token', 'Wird automatisch gesetzt, wenn das Konto über den Service verbunden wird. Ist das Feld leer, wird der Access Token des Service verwendet.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['newsArchive'] = ['Nachrichtenarchiv', 'Geben Sie hier das Nachrichtenarchiv an, in welches die Posts importiert werden sollen.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['author'] = ['Autor', 'Geben Sie hier an, welcher Benutzer für neu importierte Nachrichten gesetzt werden soll.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['numberPosts'] = ['Maximale Anzahl an Posts', 'Geben Sie hier die maximale Anzahl der Posts an, die importiert werden sollen.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['cronjob'] = ['Ausführung des Cronjobs', 'Geben Sie hier an, wie oft der Cronjob aufgerufen werden soll, um Posts zu importieren. Ohne Cronjob erfolgt der Import über den Konsolenbefehl.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['cronjobOptions'] = [
+    'no_cronjob' => 'Kein Cronjob',
+    '60' => 'Minütlich',
+    '3600' => 'Stündlich',
+    '86400' => 'Täglich',
+    '604800' => 'Wöchentlich',
+    '2629800' => 'Monatlich',
+];
+$GLOBALS['TL_LANG']['tl_sf_account']['lastImport'] = ['Letzter Import', 'Wird automatisch gesetzt. Leeren Sie das Feld, um beim nächsten Cronjob sofort zu importieren.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['importPostsOnly'] = ['Nur Posts der Seite importieren', 'Wenn diese Option aktiviert ist, werden nur die Posts der Seite importiert und keine Posts, die Nutzer an Ihre Pinnwand geschrieben haben.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['importMentions'] = ['Erwähnungen importieren', 'Aktivieren Sie diese Option, um Erwähnungen zu importieren.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['importSharedContent'] = ['Geteilte Beiträge importieren', 'Aktivieren, um geteilte Beiträge der Unternehmensseite zu importieren.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['search'] = ['Suchbegriff', 'Statt nach einem bestimmten Account können Sie auch nach einem Suchbegriff suchen. Sind Account und Suchbegriff angegeben, wird der Account abgerufen und in den Posts nach dem Suchbegriff gesucht.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['showRetweets'] = ['Reposts importieren', 'Wenn diese Option aktiviert ist, werden auch Reposts importiert.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['showReplies'] = ['Antworten importieren', 'Wenn diese Option aktiviert ist, werden auch Antworten importiert.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['hashtagsLink'] = ['Hashtags und Erwähnungen verlinken', 'Wenn diese Option aktiviert ist, werden Hashtags und Erwähnungen verlinkt. Dafür muss das extended-Template verwendet werden.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['avatar'] = ['Profilbild', 'Wird bei Facebook automatisch gesetzt. Wird im Frontend angezeigt, wenn der Post kein eigenes Profilbild enthält.'];
+$GLOBALS['TL_LANG']['tl_sf_account']['avatarSize'] = ['Bildgröße des Profilbilds', 'Wählen Sie die Bildgröße für das Profilbild im Frontend aus.'];

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
+use PhpCsFixer\Fixer\FunctionNotation\NullableTypeDeclarationForDefaultNullValueFixer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 
@@ -29,6 +30,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $parameters = $containerConfigurator->parameters();
     $parameters->set(Option::LINE_ENDING, "\n");
+
+    // The Contao set removes the "?" from parameters with default null (int $foo = null), which is deprecated since
+    // PHP 8.4. Keep the explicit nullable types (?int $foo = null) instead.
+    $parameters->set(Option::SKIP, [
+        NullableTypeDeclarationForDefaultNullValueFixer::class => null,
+    ]);
 
     $services = $containerConfigurator->services();
     $services

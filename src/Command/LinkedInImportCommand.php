@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -54,7 +54,7 @@ class LinkedInImportCommand extends Command
     protected function configure(): void
     {
         $this->addOption('max-posts', 'm', InputOption::VALUE_REQUIRED, 'The maximum number of posts to execute (default 100)', '100');
-        $this->addOption('enable-debug', 'd', InputArgument::OPTIONAL, "Log debug information to console");
+        $this->addOption('enable-debug', 'd', InputArgument::OPTIONAL, 'Log debug information to console');
     }
 
     /**
@@ -70,17 +70,16 @@ class LinkedInImportCommand extends Command
             $importer = new LinkedIn();
             $importer->setIgnoreInterval(true);
             $importer->setDebugMode((bool) $input->getOption('enable-debug'));
-            $importer->setMaxPosts((int) $input->getOption('max-posts')?? 100);
-            $strLog = $importer->import();
-
+            $importer->setMaxPosts((int) ($input->getOption('max-posts') ?? 100));
+            $importer->import();
         } catch (InvalidArgumentException $e) {
             $output->writeln(sprintf('%s (see help social-feed:linkedin:import).', $e->getMessage()));
 
             return Command::FAILURE;
         }
 
-        if(0 < $importer->counter) {
-            $output->writeln('... imported ' . $importer->counter . ' items.');
+        if (0 < $importer->counter) {
+            $output->writeln('... imported '.$importer->counter.' items.');
         }
 
         if (0 === $importer->counter) {

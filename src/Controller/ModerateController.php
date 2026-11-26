@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -29,7 +29,7 @@ use Contao\Message;
 use Contao\System;
 use Pdir\SocialFeedBundle\Importer\Importer;
 use Pdir\SocialFeedBundle\Importer\NewsImporter;
-use Pdir\SocialFeedBundle\Model\SocialFeedModel;
+use Pdir\SocialFeedBundle\Model\SocialFeedAccountModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -42,7 +42,7 @@ class ModerateController
     private BackendTemplate $template;
 
     private string $message;
-    private ContaoCsrfTokenManager  $csrfTokenManager;
+    private ContaoCsrfTokenManager $csrfTokenManager;
 
     /**
      * ExportController constructor.
@@ -83,31 +83,17 @@ class ModerateController
         $options = [];
 
         if ($filter) {
-            $objFeedModel = SocialFeedModel::findBy('type', $filter);
+            $socialFeedAccount = SocialFeedAccountModel::findBy('type', $filter);
         } else {
-            $objFeedModel = SocialFeedModel::findAll();
+            $socialFeedAccount = SocialFeedAccountModel::findAll();
         }
 
-        foreach ($objFeedModel as $feed) {
-            $options[$feed->id] = $feed->type.' ';
+        if (null === $socialFeedAccount) {
+            return $options;
+        }
 
-            if ('Facebook' === $feed->type) {
-                $options[$feed->id] .= $feed->name;
-            }
-
-            if ('Instagram' === $feed->type) {
-                $options[$feed->id] .= $feed->instagram_account;
-            }
-
-            if ('Twitter' === $feed->type) {
-                $options[$feed->id] .= $feed->twitter_account;
-            }
-
-            if ('LinkedIn' === $feed->type) {
-                $options[$feed->id] .= $feed->linkedin_account;
-            }
-
-            $options[$feed->id] .= ' (ID '.$feed->id.')';
+        foreach ($socialFeedAccount as $account) {
+            $options[$account->id] = $account->type.' '.$account->name.' (ID '.$account->id.')';
         }
 
         return $options;
@@ -125,7 +111,7 @@ class ModerateController
         $item['headline'] = mb_substr($message, 0, 50).$more;
     }
 
-    public function getPostImage(SocialFeedModel $socialFeedAccount, $item): void
+    public function getPostImage(SocialFeedAccountModel $socialFeedAccount, $item): ?string
     {
         $imgPath = NewsImporter::createImageFolder($socialFeedAccount->id); // create image folder
 
@@ -133,18 +119,17 @@ class ModerateController
             $imgSrc = '';
 
             if (isset($item['media_url'])) {
-                $imgSrc = false !== \strpos($item['media_url'], 'jpg') ? $item['media_url'] : $item['thumbnail_url'];
+                $imgSrc = false !== strpos($item['media_url'], 'jpg') ? $item['media_url'] : $item['thumbnail_url'];
             }
 
             if (!isset($item['media_url']) && isset($item['children']['data'][0]['media_url'])) {
                 $imgSrc = $item['children']['data'][0]['media_url'];
             }
 
-            $picturePath = $imgPath.$item['id'].'.jpg';
-            $pictureUuid = NewsImporter::saveImage($picturePath, $imgSrc);
-
-            $item['singleSRC'] = $pictureUuid;
+            return NewsImporter::saveImage($imgPath.$item['id'].'.jpg', $imgSrc);
         }
+
+        return null;
     }
 
     /**
@@ -159,7 +144,7 @@ class ModerateController
         }
 
         $socialFeedAccount = $request->request->get('account');
-        $objSocialFeedModel = SocialFeedModel::findById($socialFeedAccount);
+        $objSocialFeedAccountModel = SocialFeedAccountModel::findById($socialFeedAccount);
         $newsArchiveId = Input::get('id');
 
         $objImporter = new Importer();
@@ -175,27 +160,31 @@ class ModerateController
                     $importer = new NewsImporter();
 
                     // set headline
-                    $item['headline'] = NewsImporter::shortenHeadline($item['caption']);
+                    $item['headline'] = NewsImporter::shortenHeadline($item['caption'] ?? '');
 
                     // set teaser
-                    $item['teaser'] = str_replace("\n", '<br>', $item['caption']);
+                    $item['teaser'] = str_replace("\n", '<br>', $item['caption'] ?? '');
+
+                    if ('1' === (string) $objSocialFeedAccountModel->hashtagsLink) {
+                        $item['teaser'] = NewsImporter::linkInstagramHashtags($item['teaser']);
+                    }
 
                     // add image
-                    $item['singleSRC'] = $this->getPostImage($objSocialFeedModel, $item);
+                    $item['singleSRC'] = $this->getPostImage($objSocialFeedAccountModel, $item);
 
                     $item['date'] = strtotime($item['timestamp']);
                     $item['time'] = strtotime($item['timestamp']);
 
                     $importer->setNews($item);
                     $importer->accountImage = $objImporter->getAccountImage();
-                    $importer->execute($newsArchiveId, $objSocialFeedModel);
+                    $importer->execute($newsArchiveId, $objSocialFeedAccountModel);
                 }
             }
         }
 
         // set import message
         if (\is_array($items) && isset($allValues['importItems']) && \count($allValues['importItems']) > 0) {
-            $this->message = \sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($allValues['importItems']));
+            $this->message = sprintf($GLOBALS['TL_LANG']['BE_MOD']['socialFeedModerate']['importMessage'], \count($allValues['importItems']));
         }
 
         if (null === $items) {

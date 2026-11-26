@@ -2,13 +2,61 @@
   display: flex;
 }
 .sf-flex-container .sf-account-tile {
-  border: 2px solid black;
+  border: 2px solid #000;
   margin: 0 12px 24px;
   width: 250px;
-  height: 220px;
+  min-height: 220px;
+  padding: 8px;
 }
-.sf-flex-container .sf-account-tile img {
-  width: 100%;
+.sf-flex-container .sf-account-tile.new {
+  max-height: 90px;
+  min-height: initial;
+  padding: 20px;
+  text-align: center;
+}
+.sf-flex-container .sf-account-tile span {
+  display: inline-block;
+  padding-top: 5px;
+  font-size: 0.9em;
+  color: #ccc;
+}
+.sf-flex-container .sf-account-tile.new {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.sf-flex-container .sf-account-tile .sf-account-actions {
+  margin-top: 8px;
+}
+.sf-flex-container .sf-account-tile .sf-account-actions a {
+  display: inline-block;
+  margin-top: 3px;
+  margin-right: 5px;
+}
+.sf-flex-container .sf-account-tile h2 {
+  margin-top: 5px;
+}
+.sf-flex-container .sf-account-tile .sfp_type {
+  position: absolute;
+  background: #000;
+  border-radius: 100%;
+  margin: 86px;
+  padding: 5px;
+  width: 20px;
+  height: 20px;
+}
+.sf-flex-container .sf-account-tile .sfp_avatar {
+  border-radius: 100%;
+}
+
+html[data-color-scheme=dark] .sf-flex-container {
+  display: flex;
+}
+html[data-color-scheme=dark] .sf-flex-container .sf-account-tile {
+  border: 2px solid #fff;
+}
+html[data-color-scheme=dark] .sf-flex-container .sf-account-tile .sfp_type {
+  filter: invert(1);
 }
 
 /*# sourceMappingURL=account.css.map */

@@ -48,9 +48,6 @@ services:
             - "@database_connection"
             - "@router"
 
-    Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener:
-        public: true
-
     pdir_social_feed_moderate.controller:
         class: Pdir\SocialFeedBundle\Controller\ModerateController
         public: true

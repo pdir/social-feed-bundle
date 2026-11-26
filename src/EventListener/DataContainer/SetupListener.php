@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -43,26 +43,7 @@ class SetupListener
      */
     public function onGenerateLabel(array $row): string
     {
-        $account = '';
-
-        // set account type
-        switch ($row['type']) {
-            case 'Facebook':
-                $account = $row['name'];
-                break;
-
-            case 'Instagram':
-                $account = $row['instagram_account'];
-                break;
-
-            case 'Twitter':
-                $account = $row['twitter_account'];
-                break;
-
-            case 'LinkedIn':
-                $account = $row['linkedin_company_id'];
-                break;
-        }
+        $account = $row['name'] ?? '';
 
         // no account is selected
         if (empty($account)) {

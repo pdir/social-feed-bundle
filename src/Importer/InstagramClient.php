@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -24,7 +24,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\File;
 use Contao\FilesModel;
-use Contao\Message;
 use Contao\StringUtil;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use GuzzleHttp\Client;
@@ -39,6 +38,23 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class InstagramClient
 {
+    /**
+     * Legacy login: "API setup with Instagram login" (graph.instagram.com).
+     */
+    public const LOGIN_INSTAGRAM = 'instagram_login';
+
+    /**
+     * Unified login: Facebook Login for Business with config_id (graph.facebook.com).
+     */
+    public const LOGIN_UNIFIED = 'unified_login';
+
+    /**
+     * Graph API version used for the unified login flow.
+     */
+    public const GRAPH_VERSION = 'v26.0';
+
+    public const GRAPH_FACEBOOK_URL = 'https://graph.facebook.com/'.self::GRAPH_VERSION;
+
     /**
      * @var InstagramRequestCache
      */
@@ -65,9 +81,17 @@ class InstagramClient
     }
 
     /**
+     * Check if the given login type uses the unified login (Facebook Login for Business).
+     */
+    public static function isUnifiedLogin(?string $loginType): bool
+    {
+        return self::LOGIN_UNIFIED === $loginType;
+    }
+
+    /**
      * Get the data from Instagram.
      */
-    public function getData(string $url, array $query = [], int $socialFeedId = null, bool $cache = true): ?array
+    public function getData(string $url, array $query = [], ?int $socialFeedId = null, bool $cache = true): ?array
     {
         if (!$cache) {
             $this->cache->purge($this->cache->getCacheDir($socialFeedId));
@@ -77,7 +101,8 @@ class InstagramClient
             $response = $this->getCachedClient($socialFeedId)->get($url, ['query' => $query]);
         } catch (ClientException | ServerException $e) {
             if (null !== $this->logger) {
-                $this->logger->error(sprintf('Unable to fetch Instagram data from "%s": %s', $url, $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+                // Log the response body instead of the exception message, which contains the access token
+                $this->logger->error(sprintf('Social Feed (ID %s): Unable to fetch Instagram data from "%s": %s', $socialFeedId ?? '-', $url, (string) $e->getResponse()->getBody()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
 
             return null;
@@ -93,14 +118,22 @@ class InstagramClient
             return null;
         }
 
-        $data = $json_data['data'];
+        // Node requests (e.g. /me or /{ig-user-id}) do not return a "data" key
+        $data = $json_data['data'] ?? $json_data;
 
-        if ($query['limit'] > 100 && isset($json_data['paging']['next'])) {
-            $query['limit'] -= 100;
-            $json_data['paging']['next'] = str_replace('limit=100', 'limit='.$query['limit'], $json_data['paging']['next']);
-            parse_str(parse_url($json_data['paging']['next'], PHP_URL_QUERY), $query);
-            $next_page = $this->getData($url, $query, $socialFeedId, $cache);
-            $data = array_merge($data, $next_page['data']);
+        // Instagram returns at most 25 (or 100) items per page, so follow the paging until the requested number of
+        // items is reached (#131). Each recursive call fetches the next page with the remaining limit.
+        if (isset($query['limit'], $json_data['data'], $json_data['paging']['next']) && \is_array($data)) {
+            $remaining = (int) $query['limit'] - \count($data);
+
+            if ($remaining > 0 && \count($data) > 0) {
+                parse_str((string) parse_url($json_data['paging']['next'], PHP_URL_QUERY), $nextQuery);
+
+                if (!empty($nextQuery['after'])) {
+                    $nextPage = $this->getData($url, array_merge($query, ['after' => $nextQuery['after'], 'limit' => $remaining]), $socialFeedId, $cache);
+                    $data = array_merge($data, $nextPage['data'] ?? []);
+                }
+            }
         }
 
         return ['data' => $data];
@@ -109,9 +142,14 @@ class InstagramClient
     /**
      * Get the media data.
      */
-    public function getMediaData(string $accessToken, int $socialFeedId = null, int $numberPosts, bool $cache = true): ?array
+    public function getMediaData(string $accessToken, ?int $socialFeedId, int $numberPosts, bool $cache = true, ?string $instagramUserId = null): ?array
     {
-        return $this->getData('https://graph.instagram.com/me/media', [
+        // Unified login: the token belongs to a (system) user, so the Instagram account must be addressed by its ID
+        $url = null !== $instagramUserId && '' !== $instagramUserId
+            ? self::GRAPH_FACEBOOK_URL.'/'.rawurlencode($instagramUserId).'/media'
+            : 'https://graph.instagram.com/me/media';
+
+        return $this->getData($url, [
             'access_token' => $accessToken,
             'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,children{media_url}',
             'limit' => $numberPosts,
@@ -121,9 +159,13 @@ class InstagramClient
     /**
      * Get the user data.
      */
-    public function getUserData(string $accessToken, int $socialFeedId = null, bool $cache = true): ?array
+    public function getUserData(string $accessToken, ?int $socialFeedId = null, bool $cache = true, ?string $instagramUserId = null): ?array
     {
-        return $this->getData('https://graph.instagram.com/me', [
+        $url = null !== $instagramUserId && '' !== $instagramUserId
+            ? self::GRAPH_FACEBOOK_URL.'/'.rawurlencode($instagramUserId)
+            : 'https://graph.instagram.com/me';
+
+        return $this->getData($url, [
             'access_token' => $accessToken,
             'fields' => 'id,username',
         ], $socialFeedId, $cache);
@@ -132,7 +174,7 @@ class InstagramClient
     /**
      * Get the user image.
      */
-    public function getUserImage(string $accessToken, int $socialFeedId = null, bool $cache = true): ?array
+    public function getUserImage(string $accessToken, ?int $socialFeedId = null, bool $cache = true): ?array
     {
         // not supported by instagram
         return $this->getData('https://graph.instagram.com/me/picture', [
@@ -195,7 +237,7 @@ class InstagramClient
     /**
      * Get the tags (mentions).
      */
-    public function getTags(string $accessToken, int $userId = null, bool $cache = true): ?array
+    public function getTags(string $accessToken, ?int $userId = null, bool $cache = true): ?array
     {
         return $this->getData('https://graph.instagram.com/'.$userId.'/tags', [
             'access_token' => $accessToken,
@@ -206,13 +248,90 @@ class InstagramClient
     /**
      * Get the access token.
      */
-    public function getAccessToken(string $appId, string $appSecret, string $code, string $redirectUri): ?array
+    public function getAccessToken(string $clientId, string $clientSecret, string $code, string $redirectUri): ?array
     {
-        if (($token = $this->getShortLivedAccessToken($appId, $appSecret, $code, $redirectUri)) === null) {
+        if (($token = $this->getShortLivedAccessToken($clientId, $clientSecret, $code, $redirectUri)) === null) {
             return null;
         }
 
-        return $this->getLongLivedAccessToken($token, $appSecret);
+        return $this->getLongLivedAccessToken($token, $clientSecret);
+    }
+
+    /**
+     * Exchange the authorization code of the unified login (Facebook Login for Business) for an access token.
+     *
+     * Returns the access token and its expiry timestamp (0 = never expires, e.g. system user access tokens).
+     *
+     * @return array{access_token: string, expires_at: int}|null
+     */
+    public function getUnifiedAccessToken(string $clientId, string $clientSecret, string $code, string $redirectUri): ?array
+    {
+        $data = $this->requestGraph(self::GRAPH_FACEBOOK_URL.'/oauth/access_token', [
+            'client_id' => $clientId,
+            'client_secret' => $clientSecret,
+            'redirect_uri' => $redirectUri,
+            'code' => $code,
+        ], 'access token (unified login)');
+
+        if (null === $data || empty($data['access_token'])) {
+            return null;
+        }
+
+        $expiresAt = isset($data['expires_in']) ? time() + (int) $data['expires_in'] : 0;
+
+        // The debug endpoint returns the real expiry; 0 means the token never expires (system user access token)
+        $debug = $this->requestGraph(self::GRAPH_FACEBOOK_URL.'/debug_token', [
+            'input_token' => $data['access_token'],
+            'access_token' => $clientId.'|'.$clientSecret,
+        ], 'token debug info (unified login)');
+
+        if (isset($debug['data']['expires_at'])) {
+            $expiresAt = (int) $debug['data']['expires_at'];
+        }
+
+        return [
+            'access_token' => (string) $data['access_token'],
+            'expires_at' => $expiresAt,
+        ];
+    }
+
+    /**
+     * Resolve the Instagram professional accounts that were shared via the unified login.
+     *
+     * @return list<array{id: string, username: string}>
+     */
+    public function getUnifiedInstagramAccounts(string $accessToken): array
+    {
+        // Instagram accounts assigned as business asset (system user access token)
+        $data = $this->requestGraph(self::GRAPH_FACEBOOK_URL.'/me/assigned_instagram_accounts', [
+            'access_token' => $accessToken,
+            'fields' => 'id,username',
+        ], 'assigned Instagram accounts (unified login)');
+
+        $accounts = [];
+
+        foreach ($data['data'] ?? [] as $account) {
+            if (!empty($account['id'])) {
+                $accounts[$account['id']] = ['id' => (string) $account['id'], 'username' => (string) ($account['username'] ?? '')];
+            }
+        }
+
+        // Fallback: Instagram accounts linked to Facebook pages (user access token)
+        if ([] === $accounts) {
+            $data = $this->requestGraph(self::GRAPH_FACEBOOK_URL.'/me/accounts', [
+                'access_token' => $accessToken,
+                'fields' => 'instagram_business_account{id,username}',
+            ], 'Facebook pages (unified login)');
+
+            foreach ($data['data'] ?? [] as $page) {
+                if (!empty($page['instagram_business_account']['id'])) {
+                    $id = (string) $page['instagram_business_account']['id'];
+                    $accounts[$id] = ['id' => $id, 'username' => (string) ($page['instagram_business_account']['username'] ?? '')];
+                }
+            }
+        }
+
+        return array_values($accounts);
     }
 
     /**
@@ -220,13 +339,13 @@ class InstagramClient
      *
      * @return string
      */
-    private function getShortLivedAccessToken(string $appId, string $appSecret, string $code, string $redirectUri): ?string
+    private function getShortLivedAccessToken(string $clientId, string $clientSecret, string $code, string $redirectUri): ?string
     {
         try {
             $response = $this->getClient()->post('https://api.instagram.com/oauth/access_token', [
                 'form_params' => [
-                    'app_id' => $appId,
-                    'app_secret' => $appSecret,
+                    'client_id' => $clientId,
+                    'client_secret' => $clientSecret,
                     'grant_type' => 'authorization_code',
                     'redirect_uri' => $redirectUri,
                     'code' => $code,
@@ -234,7 +353,7 @@ class InstagramClient
             ]);
         } catch (ClientException | ServerException $e) {
             if (null !== $this->logger) {
-                $this->logger->error(sprintf('Unable to fetch the Instagram short-lived access token: %s', $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+                $this->logger->error(sprintf('Unable to fetch the Instagram short-lived access token: %s', (string) $e->getResponse()->getBody()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
 
             return null;
@@ -256,19 +375,19 @@ class InstagramClient
     /**
      * Get the long-lived access token.
      */
-    private function getLongLivedAccessToken(string $token, string $appSecret): ?array
+    private function getLongLivedAccessToken(string $token, string $clientSecret): ?array
     {
         try {
             $response = $this->getClient()->get('https://graph.instagram.com/access_token', [
                 'query' => [
                     'grant_type' => 'ig_exchange_token',
-                    'client_secret' => $appSecret,
+                    'client_secret' => $clientSecret,
                     'access_token' => $token,
                 ],
             ]);
         } catch (ClientException | ServerException $e) {
             if (null !== $this->logger) {
-                $this->logger->error(sprintf('Unable to fetch the Instagram long-lived access token: %s', $e->getMessage()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+                $this->logger->error(sprintf('Unable to fetch the Instagram long-lived access token: %s', (string) $e->getResponse()->getBody()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
 
             return null;
@@ -279,6 +398,42 @@ class InstagramClient
         if (!\is_array($data) || JSON_ERROR_NONE !== json_last_error()) {
             if (null !== $this->logger) {
                 $this->logger->error(sprintf('Unable to fetch the Instagram long-lived access token: %s', json_last_error_msg()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+            }
+
+            return null;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Send an uncached GET request to the Graph API and return the decoded response.
+     *
+     * @param array<string, string> $query
+     *
+     * @return array<string, mixed>|null
+     */
+    private function requestGraph(string $url, array $query, string $context): ?array
+    {
+        try {
+            $response = $this->getClient()->get($url, ['query' => $query]);
+        } catch (ClientException|ServerException $e) {
+            if (null !== $this->logger) {
+                // Log the response body instead of the exception message, which contains the access token
+                $this->logger->error(
+                    sprintf('Unable to fetch the Instagram %s: %s', $context, (string) $e->getResponse()->getBody()),
+                    ['contao' => new ContaoContext(__METHOD__, 'ERROR')]
+                );
+            }
+
+            return null;
+        }
+
+        $data = json_decode((string) $response->getBody(), true);
+
+        if (!\is_array($data)) {
+            if (null !== $this->logger) {
+                $this->logger->error(sprintf('Unable to decode the Instagram %s: %s', $context, json_last_error_msg()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
             }
 
             return null;
@@ -304,7 +459,7 @@ class InstagramClient
     /**
      * Get the cache client.
      */
-    private function getCachedClient(int $moduleId = null): Client
+    private function getCachedClient(?int $moduleId = null): Client
     {
         static $clients = [];
 

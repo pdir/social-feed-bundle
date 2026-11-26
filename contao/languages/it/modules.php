@@ -27,3 +27,7 @@ $GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][0] = 'Social Feed';
 $GLOBALS['TL_LANG']['MOD']['socialFeedSetup'][1] = 'Gestione del modulo Social Feed';
 $GLOBALS['TL_LANG']['MOD']['socialFeed'][0] = 'Social Feed Accounts';
 $GLOBALS['TL_LANG']['MOD']['socialFeed'][1] = 'Configurazione del modulo Social Feed.';
+$GLOBALS['TL_LANG']['MOD']['sfAccount'][0] = 'Account Social Feed';
+$GLOBALS['TL_LANG']['MOD']['sfAccount'][1] = 'Configura qui gli account Social Feed.';
+$GLOBALS['TL_LANG']['MOD']['sfService'][0] = 'Servizi Social Feed';
+$GLOBALS['TL_LANG']['MOD']['sfService'][1] = 'Configura qui i servizi Social Feed.';

@@ -3,25 +3,27 @@
 {% block main_content %}
   <div class="tl_listing_container">
     <div class="sf-flex-container">
-      <div class="sf-account-tile">
-        <img src="/bundles/pdirsocialfeedplus/img/icon_plus.svg" width="40" height="40" alt="Add Account">
-        <h2>Add Account</h2>
-      </div>
+      <a href="{{ createUrl }}" class="sf-account-tile new">
+        <img src="/bundles/pdirsocialfeed/img/icon_plus.svg" width="40" height="40" alt="">
+        <h2>Konto hinzufügen</h2>
+      </a>
 
       {% for item in items %}
         <div class="sf-account-tile">
-          {% if item.avatar %}<img src="{{ item.avatar }}" alt="{{ item.name }}">{% endif %}
+          {% if item.avatar %}{{ item.avatar|raw }}{% endif %}
           <h2>{{ item.name }}</h2>
-          <span>Hinzugefügt am: {{ item.added }}</span>
-            <button>aktualisieren</button><button>entfernen</button>
+          <span>Hinzugefügt am:<br>{{ item.added }}</span>
+          <span>Dienst:<br>{% if item.service %}{{ item.service.name }} [{{ item.service.id }}]{% else %}-{% endif %}</span>
+          <div class="sf-account-actions">
+            <a href="{{ item.editUrl }}" class="tl_submit">bearbeiten</a>
+            <a href="{{ item.deleteUrl }}" class="tl_submit" onclick="return confirm('Konto „{{ item.name|e('js') }}“ wirklich entfernen?')">entfernen</a>
+          </div>
         </div>
       {% else %}
         <div class="sf-account-tile">
-            <h2>No accounts found, please add one!</h2>
+          <h2>Noch keine Konten vorhanden. Verbinde einen Dienst oder lege ein Konto an.</h2>
         </div>
       {% endfor %}
     </div>
   </div>
 {% endblock %}
-
-

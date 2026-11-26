@@ -20,6 +20,9 @@ declare(strict_types=1);
 
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\System;
+
+System::loadLanguageFile('tl_sf_account');
 
 /*
  * add Dca
@@ -27,81 +30,209 @@ use Contao\DC_Table;
 $GLOBALS['TL_DCA']['tl_sf_account'] = [
     'config' => [
         'dataContainer' => DC_Table::class,
+        'enableVersioning' => true,
         'sql' => [
             'keys' => [
                 'id' => 'primary',
-                'tstamp' => 'index'
-            ]
-        ]
+                'tstamp' => 'index',
+                'service' => 'index',
+            ],
+        ],
     ],
 
     // List
     'list' => [
         'sorting' => [
             'mode' => DataContainer::MODE_SORTABLE,
-            'fields' => ['tstamp', 'id'],
+            'fields' => ['type', 'name'],
             'panelLayout' => 'filter;sort,search,limit',
-            'defaultSearchField' => 'name'
+            'defaultSearchField' => 'name',
         ],
         'label' => [
-            'fields' => ['tstamp', 'name', 'type', 'service', 'identifier'],
-            'format' => '<span style="color:#999;padding-right:3px">[%s]</span> <span style="padding-right:10px">%s</span>',
+            'fields' => ['type', 'name', 'identifier'],
+            'format' => '<span style="color:#999;padding-right:3px">[%s]</span> %s <span style="color:#999">(%s)</span>',
+        ],
+        'operations' => [
+            'edit' => [
+                'href' => 'act=edit',
+                'icon' => 'edit.svg',
+            ],
+            'copy' => [
+                'href' => 'act=copy',
+                'icon' => 'copy.svg',
+            ],
+            'delete' => [
+                'href' => 'act=delete',
+                'icon' => 'delete.svg',
+                'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
+            ],
+            'show' => [
+                'href' => 'act=show',
+                'icon' => 'show.svg',
+            ],
         ],
     ],
 
     // Palettes
     'palettes' => [
-        'default' => '{title_legend},name,type,account,avatar'
+        '__selector__' => ['type'],
+        'default' => '{title_legend},type,service,name,identifier',
+        'Facebook' => '{title_legend},type,service,name,identifier,accessToken;{import_legend},newsArchive,author,importPostsOnly,cronjob,lastImport;{avatar_legend},avatar,avatarSize',
+        'Instagram' => '{title_legend},type,service,name,identifier,accessToken;{import_legend},newsArchive,author,numberPosts,importMentions,hashtagsLink,cronjob,lastImport;{avatar_legend},avatar,avatarSize',
+        'X' => '{title_legend},type,service,name,identifier;{import_legend},newsArchive,author,search,numberPosts,showRetweets,showReplies,hashtagsLink,cronjob,lastImport;{avatar_legend},avatar,avatarSize',
+        'LinkedIn' => '{title_legend},type,service,name,identifier;{import_legend},newsArchive,author,numberPosts,importSharedContent,cronjob,lastImport;{avatar_legend},avatar,avatarSize',
     ],
 
     // Fields
     'fields' => [
         'id' => [
-            'flag' => 12,
-            'sql' => "int(10) unsigned NOT NULL auto_increment"
+            'sql' => 'int(10) unsigned NOT NULL auto_increment',
         ],
         'tstamp' => [
-            'filter' => true,
             'sorting' => true,
             'flag' => DataContainer::SORT_DAY_DESC,
-            'sql' => "int(10) unsigned NOT NULL default 0"
+            'sql' => 'int(10) unsigned NOT NULL default 0',
         ],
-        'identifier' => [
-            'search' => true,
-            'inputType' => 'text',
-            'eval' => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
-            'sql' => "varchar(255) NOT NULL default ''"
+        // id of the migrated tl_social_feed record
+        'legacyId' => [
+            'sql' => 'int(10) unsigned NOT NULL default 0',
         ],
-        'name' => [
-            'search' => true,
-            'inputType' => 'text',
-            'eval' => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
-            'sql' => "varchar(255) NOT NULL default ''"
-        ],
-        'service' => [
-            'inputType' => 'select',
-            'foreignKey' => 'tl_sf_service.id',
-            'eval' => ['tl_class' => 'w50 clr', 'readonly' => 'readonly'],
-            'sql' => "int(10) NOT NULL default 0"
+        'added' => [
+            'sorting' => true,
+            'flag' => DataContainer::SORT_DAY_DESC,
+            'sql' => 'int(10) unsigned NOT NULL default 0',
         ],
         'type' => [
             'exclude' => true,
             'filter' => true,
             'sorting' => true,
             'inputType' => 'select',
-            'options' => ['facebook', 'instagram', 'x', 'linkedin'],
-            'eval' => ['includeBlankOption' => true, 'tl_class' => 'w50', 'submitOnChange' => true],
+            'options' => ['Facebook', 'Instagram', 'X', 'LinkedIn'],
+            'eval' => ['mandatory' => true, 'includeBlankOption' => true, 'tl_class' => 'w50', 'submitOnChange' => true],
+            'sql' => "varchar(16) NOT NULL default ''",
+        ],
+        'service' => [
+            'exclude' => true,
+            'filter' => true,
+            'inputType' => 'select',
+            'foreignKey' => "tl_sf_service.CONCAT(type, ' – ', name)",
+            'relation' => ['type' => 'belongsTo', 'load' => 'lazy'],
+            'eval' => ['mandatory' => true, 'includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'],
+            'sql' => 'int(10) unsigned NOT NULL default 0',
+        ],
+        'name' => [
+            'exclude' => true,
+            'search' => true,
+            'sorting' => true,
+            'inputType' => 'text',
+            'eval' => ['mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'],
+            'sql' => "varchar(255) NOT NULL default ''",
+        ],
+        'identifier' => [
+            'exclude' => true,
+            'search' => true,
+            'inputType' => 'text',
+            'eval' => ['maxlength' => 255, 'tl_class' => 'w50'],
+            'sql' => "varchar(255) NOT NULL default ''",
+        ],
+        'accessToken' => [
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => ['tl_class' => 'clr long'],
+            'sql' => 'text NULL',
+        ],
+        'newsArchive' => [
+            'exclude' => true,
+            'filter' => true,
+            'inputType' => 'select',
+            'foreignKey' => 'tl_news_archive.title',
+            'relation' => ['type' => 'hasOne', 'load' => 'lazy'],
+            'eval' => ['mandatory' => true, 'includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'],
+            'sql' => 'int(10) unsigned NOT NULL default 0',
+        ],
+        'author' => [
+            'exclude' => true,
+            'inputType' => 'select',
+            'foreignKey' => "tl_user.CONCAT(name, ' (', id, ')')",
+            'relation' => ['type' => 'hasOne', 'load' => 'lazy'],
+            'eval' => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'],
+            'sql' => 'int(10) unsigned NOT NULL default 0',
+        ],
+        'numberPosts' => [
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => ['mandatory' => true, 'rgxp' => 'natural', 'maxlength' => 5, 'tl_class' => 'w50'],
+            'sql' => 'int(10) unsigned NOT NULL default 20',
+        ],
+        'cronjob' => [
+            'exclude' => true,
+            'inputType' => 'select',
+            'options' => ['no_cronjob', '60', '3600', '86400', '604800', '2629800'],
+            'reference' => &$GLOBALS['TL_LANG']['tl_sf_account']['cronjobOptions'],
+            'eval' => ['tl_class' => 'w50'],
+            'sql' => "varchar(64) NOT NULL default 'no_cronjob'",
+        ],
+        'lastImport' => [
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => ['rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'],
             'sql' => "varchar(10) NOT NULL default ''",
         ],
+        'importPostsOnly' => [
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => ['tl_class' => 'w50 m12'],
+            'sql' => "char(1) NOT NULL default '1'",
+        ],
+        'importMentions' => [
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => ['tl_class' => 'w50 m12'],
+            'sql' => "char(1) NOT NULL default ''",
+        ],
+        'importSharedContent' => [
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => ['tl_class' => 'w50 m12'],
+            'sql' => "char(1) NOT NULL default ''",
+        ],
+        'search' => [
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => ['maxlength' => 255, 'tl_class' => 'w50'],
+            'sql' => "varchar(255) NOT NULL default ''",
+        ],
+        'showRetweets' => [
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => ['tl_class' => 'clr w50'],
+            'sql' => "char(1) NOT NULL default ''",
+        ],
+        'showReplies' => [
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => ['tl_class' => 'w50'],
+            'sql' => "char(1) NOT NULL default ''",
+        ],
+        'hashtagsLink' => [
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => ['tl_class' => 'w50'],
+            'sql' => "char(1) NOT NULL default ''",
+        ],
         'avatar' => [
+            'exclude' => true,
             'inputType' => 'fileTree',
-            'eval' => ['fieldType' => 'radio', 'filesOnly' => true, 'extensions' => '%contao.image.valid_extensions%', 'mandatory' => true],
-            'sql' => "binary(16) NULL"
+            'eval' => ['fieldType' => 'radio', 'filesOnly' => true, 'extensions' => '%contao.image.valid_extensions%', 'tl_class' => 'clr w50 autoheight'],
+            'sql' => 'binary(16) NULL',
         ],
-        'added' => [
-            'filter' => true,
-            'sorting' => true,
-            'sql' => "int(10) unsigned NOT NULL default 0"
+        'avatarSize' => [
+            'exclude' => true,
+            'inputType' => 'imageSize',
+            'reference' => &$GLOBALS['TL_LANG']['MSC'],
+            'eval' => ['rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50'],
+            'options_callback' => static fn () => System::getContainer()->get('contao.image.sizes')->getAllOptions(),
+            'sql' => "varchar(128) NOT NULL default ''",
         ],
-    ]
+    ],
 ];

@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -28,7 +28,7 @@ use Contao\NewsModel;
 use Contao\System;
 use LinkedIn\Client;
 use LinkedIn\Exception;
-use Pdir\SocialFeedBundle\Model\SocialFeedModel;
+use Pdir\SocialFeedBundle\Model\SocialFeedAccountModel;
 use Psr\Log\LogLevel;
 
 class LinkedIn
@@ -48,12 +48,9 @@ class LinkedIn
         $logger = System::getContainer()->get('monolog.logger.contao');
 
         if (!$this->poorManCron) {
-            $objSocialFeed = SocialFeedModel::findBy('type', 'LinkedIn');
+            $objSocialFeed = SocialFeedAccountModel::findBy('type', 'LinkedIn');
         } else {
-            $objSocialFeed = SocialFeedModel::findBy(
-                ['type = ?', 'pdir_sf_fb_news_cronjob != ?'],
-                ['LinkedIn', 'no_cronjob']
-            );
+            $objSocialFeed = SocialFeedAccountModel::findForImport('LinkedIn', true);
         }
 
         if ($this->debug) {
@@ -70,26 +67,30 @@ class LinkedIn
 
         $this->counter = 0;
 
+        /** @var SocialFeedAccountModel $account */
         foreach ($objSocialFeed as $account) {
             $this->counter = 0;
-            $cron = $account->pdir_sf_fb_news_cronjob;
-            $lastImport = $account->pdir_sf_fb_news_last_import_date;
+            $cron = $account->cronjob;
+            $lastImport = (int) $account->lastImport;
+            $service = $account->getService();
+
+            if (null === $service) {
+                $logger->log(LogLevel::ERROR, 'Social Feed (ID '.$account->id.'): LinkedIn account has no service.', ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+                continue;
+            }
 
             if ($this->poorManCron) {
-                $this->maxPosts = $account->number_posts;
+                $this->maxPosts = (int) $account->numberPosts;
             }
 
-            if ('' === $lastImport) {
-                $lastImport = 0;
-            }
             $interval = time() - $lastImport;
 
-            if (($interval >= $cron && 'no_cronjob' !== $cron) || (0 === $lastImport && 'no_cronjob' !== $cron) || true === $this->ignoreInterval) {
+            if (($interval >= (int) $cron && 'no_cronjob' !== $cron) || (0 === $lastImport && 'no_cronjob' !== $cron) || true === $this->ignoreInterval) {
                 NewsImporter::setLastImportDate($account);
 
                 $client = new Client(
-                    $account->linkedin_client_id,
-                    $account->linkedin_client_secret
+                    $service->clientId,
+                    $service->clientSecret
                 );
 
                 $client->setApiHeaders([
@@ -97,7 +98,7 @@ class LinkedIn
                     'X-Restli-Protocol-Version' => '2.0.0', // use protocol v2
                 ]);
 
-                $client->setAccessToken($account->linkedin_access_token);
+                $client->setAccessToken($account->getAccessToken());
 
                 /*
                 if ($this->debug) {
@@ -108,7 +109,7 @@ class LinkedIn
 
                 if ($this->debug) {
                     dump('-- List organizations');
-                    #$companyInfo = $client->get('organizations/'.$account->linkedin_company_id);
+                    #$companyInfo = $client->get('organizations/'.$account->identifier);
                     dump($companyInfo);
                 }
                 */
@@ -122,7 +123,7 @@ class LinkedIn
 
                 // get posts
                 $posts = $client->get(
-                    'ugcPosts?q=authors&authors=List(urn%3Ali%3Aorganization%3A'.$account->linkedin_company_id.')&sortBy=LAST_MODIFIED&count='.$this->maxPosts
+                    'ugcPosts?q=authors&authors=List(urn%3Ali%3Aorganization%3A'.$account->identifier.')&sortBy=LAST_MODIFIED&count='.$this->maxPosts
                 );
 
                 if (!\is_array($posts['elements'])) {
@@ -137,7 +138,7 @@ class LinkedIn
                         dump($element);
                     }
 
-                    // @todo import shared content only if wanted by user $account->linkedinImportSharedContent
+                    // @todo import shared content only if wanted by user $account->importSharedContent
 
                     // continue if news exists
                     if (null !== NewsModel::findBy('social_feed_id', $element['id'])) {
@@ -153,7 +154,7 @@ class LinkedIn
                     $media = $element['specificContent']['com.linkedin.ugc.ShareContent']['media'];
 
                     if (!empty($media) && \is_array($media)) {
-                        $imgPath = NewsImporter::createImageFolder($account->linkedin_company_id);
+                        $imgPath = NewsImporter::createImageFolder($account->id);
                         $picturePath = $imgPath.str_replace('urn:li:share:', '', $element['id']).'.jpg';
 
                         // use originalUrl of media for image download
@@ -165,7 +166,7 @@ class LinkedIn
                         }
 
                         // get first image
-                        if (!file_exists($picturePath) && isset($firstImage)) {
+                        if (!NewsImporter::fileExists($picturePath) && isset($firstImage)) {
                             // Write to filesystem
                             $file = new File($picturePath);
                             $file->write(file_get_contents($firstImage));
@@ -176,7 +177,7 @@ class LinkedIn
                         }
 
                         // get files model for existing image
-                        if (file_exists($picturePath) && null === $objFile) {
+                        if (null === $objFile && NewsImporter::fileExists($picturePath)) {
                             $objFile = FilesModel::findByPath($picturePath);
                         }
                     }
@@ -185,8 +186,7 @@ class LinkedIn
                     $item['headline'] = NewsImporter::shortenHeadline($element['specificContent']['com.linkedin.ugc.ShareContent']['shareCommentary']['text'] ?? '');
                     $item['teaser'] = str_replace("\n", '<br>', $element['specificContent']['com.linkedin.ugc.ShareContent']['shareCommentary']['text'] ?? '');
                     $item['singleSRC'] = null !== $objFile ? $objFile->uuid : '';
-                    $item['date'] = $element['firstPublishedAt'] / 1000;
-                    $item['time'] = $element['firstPublishedAt'] / 1000;
+                    $item['date'] = $item['time'] = self::getPublishedTime($element);
                     $item['permalink'] = 'https://www.linkedin.com/feed/update/'.$item['id'].'/';
 
                     // @todo get organization and set account picture
@@ -200,7 +200,7 @@ class LinkedIn
                     // write to db
                     $importer = new NewsImporter();
                     $importer->setNews($item);
-                    $importer->execute($account->pdir_sf_fb_news_archive, $account);
+                    $importer->execute($account->newsArchive, $account);
 
                     ++$this->counter;
                 }
@@ -242,5 +242,26 @@ class LinkedIn
     public function setMaxPosts($maxPosts): void
     {
         $this->maxPosts = $maxPosts;
+    }
+
+    /**
+     * firstPublishedAt is missing for some posts (e.g. scheduled or edited posts), which resulted in news dated 01.01.1970 (#185).
+     *
+     * @param array<string, mixed> $element
+     */
+    public static function getPublishedTime(array $element): int
+    {
+        foreach ([
+            $element['firstPublishedAt'] ?? null,
+            $element['published']['time'] ?? null,
+            $element['created']['time'] ?? null,
+            $element['lastModified']['time'] ?? null,
+        ] as $timestamp) {
+            if (is_numeric($timestamp) && $timestamp > 0) {
+                return (int) ($timestamp / 1000);
+            }
+        }
+
+        return time();
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -23,7 +23,7 @@ namespace Pdir\SocialFeedBundle\SocialFeed;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
-use Pdir\SocialFeedBundle\Model\SocialFeedModel;
+use Pdir\SocialFeedBundle\Model\SocialFeedAccountModel;
 
 class SocialFeedNewsClass
 {
@@ -33,7 +33,6 @@ class SocialFeedNewsClass
     public function parseNews($objTemplate, $arrRow, $objModule): void
     {
         if ('' !== $arrRow['social_feed_id']) {
-
             $container = System::getContainer();
             $this->projectDir = $container->getParameter('kernel.project_dir');
             $this->staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
@@ -59,38 +58,32 @@ class SocialFeedNewsClass
             $pictureFactory = System::getContainer()->get('contao.image.picture_factory');
 
             if (null !== $arrRow['social_feed_account_picture']) {
-                $imagePath = FilesModel::findByUuid($arrRow['social_feed_account_picture'])->path?? null;
+                $imagePath = FilesModel::findByUuid($arrRow['social_feed_account_picture'])->path ?? null;
 
                 if (null === $imagePath) {
                     $objTemplate->accountPicture = '';
                 }
 
                 if (null !== $imagePath) {
-                    $pictureObj = $pictureFactory->create($this->projectDir.DIRECTORY_SEPARATOR.$imagePath);
+                    $pictureObj = $pictureFactory->create($this->projectDir.\DIRECTORY_SEPARATOR.$imagePath);
 
                     if (null !== $pictureObj) {
                         $objTemplate->accountPicture = $this->getTemplateData($pictureObj);
                     }
                 }
-            } else {
-                $socialFeedAccount = SocialFeedModel::findBy('id', $arrRow['social_feed_config']);
+            } elseif (null !== ($socialFeedAccount = SocialFeedAccountModel::findByPk($arrRow['social_feed_config'])) && null !== $socialFeedAccount->avatar) {
+                $image = FilesModel::findByUuid($socialFeedAccount->avatar);
 
-                if (null !== $socialFeedAccount->instagram_account_picture) {
-                    $image = FilesModel::findByUuid($socialFeedAccount->instagram_account_picture);
-                    $size = StringUtil::deserialize($socialFeedAccount->instagram_account_picture_size);
-                    $objTemplate->accountPicture = $this->getTemplateData($pictureFactory->create($this->projectDir.DIRECTORY_SEPARATOR.$image->path, $size));
-                } elseif (null !== $socialFeedAccount->linkedin_account_picture) {
-                    $image = FilesModel::findByUuid($socialFeedAccount->linkedin_account_picture);
-                    $size = StringUtil::deserialize($socialFeedAccount->linkedin_account_picture_size);
-                    $objTemplate->accountPicture = $this->getTemplateData($pictureFactory->create($this->projectDir.DIRECTORY_SEPARATOR.$image->path, $size));
+                if (null !== $image) {
+                    $size = StringUtil::deserialize($socialFeedAccount->avatarSize);
+                    $objTemplate->accountPicture = $this->getTemplateData($pictureFactory->create($this->projectDir.\DIRECTORY_SEPARATOR.$image->path, $size ?: null));
                 }
             }
 
             if (null !== $arrRow['social_feed_account'] && '' !== $arrRow['social_feed_account']) {
                 $objTemplate->sfFbAccount = $arrRow['social_feed_account'];
             } else {
-                $socialFeedAccount = SocialFeedModel::findBy('id', $arrRow['social_feed_config']);
-                $objTemplate->sfFbAccount = $socialFeedAccount->instagram_account;
+                $objTemplate->sfFbAccount = SocialFeedAccountModel::findByPk($arrRow['social_feed_config'])?->name;
             }
         }
     }

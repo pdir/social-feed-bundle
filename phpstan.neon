@@ -3,9 +3,15 @@ includes:
     - vendor/phpstan/phpstan-phpunit/rules.neon
     - vendor/phpstan/phpstan-symfony/extension.neon
     - vendor/phpstan/phpstan-symfony/rules.neon
+    # Known errors from before 3.0, only new errors fail the build. Regenerate with:
+    # vendor/bin/phpstan analyse --generate-baseline=phpstan-baseline.neon
+    - phpstan-baseline.neon
 
 parameters:
     level: 6
+
+    # The baseline is generated with Contao 5.7, some errors differ between Contao versions
+    reportUnmatchedIgnoredErrors: false
 
     paths:
         - %currentWorkingDirectory%/src

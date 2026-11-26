@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -27,12 +27,12 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Contao\NewsBundle\ContaoNewsBundle;
+use Pdir\SocialFeedBundle\PdirSocialFeedBundle;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
-use Pdir\SocialFeedBundle\PdirSocialFeedBundle;
 
-class Plugin implements BundlePluginInterface,RoutingPluginInterface
+class Plugin implements BundlePluginInterface, RoutingPluginInterface
 {
     /**
      * {@inheritdoc}
@@ -45,12 +45,13 @@ class Plugin implements BundlePluginInterface,RoutingPluginInterface
                     [
                         ContaoCoreBundle::class,
                         ContaoNewsBundle::class,
-                        CodefogNewsCategoriesBundle::class
+                        CodefogNewsCategoriesBundle::class,
                     ]
                 ) // @phpstan-ignore-line
                 ->setReplace(['socialfeedbundle']),
         ];
     }
+
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): RouteCollection|null
     {
         return $resolver

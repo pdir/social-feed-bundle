@@ -1,0 +1,646 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: src/Command/LinkedInImportCommand.php
+
+		-
+			message: "#^Class Codefog\\\\NewsCategoriesBundle\\\\CodefogNewsCategoriesBundle not found\\.$#"
+			count: 1
+			path: src/ContaoManager/Plugin.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$expires_in\\.$#"
+			count: 1
+			path: src/Controller/LinkedinController.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Controller\\\\ModerateController\\:\\:generateOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Controller/ModerateController.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Controller\\\\ModerateController\\:\\:getPostImage\\(\\) has parameter \\$item with no type specified\\.$#"
+			count: 1
+			path: src/Controller/ModerateController.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Controller\\\\ModerateController\\:\\:shortenHeadline\\(\\) has parameter \\$item with no type specified\\.$#"
+			count: 1
+			path: src/Controller/ModerateController.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbAccountPicture\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbAccountPicture\\(\\) has parameter \\$accessToken with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbAccountPicture\\(\\) has parameter \\$account with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbAccountPicture\\(\\) has parameter \\$fb with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbAttachments\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbAttachments\\(\\) has parameter \\$accessToken with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbAttachments\\(\\) has parameter \\$fb with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbAttachments\\(\\) has parameter \\$id with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbAttachments\\(\\) has parameter \\$imgPath with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbFeed\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbFeed\\(\\) has parameter \\$accessToken with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbFeed\\(\\) has parameter \\$account with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbFeed\\(\\) has parameter \\$fb with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbPostList\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbPostList\\(\\) has parameter \\$accessToken with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbPostList\\(\\) has parameter \\$account with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:getFbPostList\\(\\) has parameter \\$fb with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:setPoorManCronMode\\(\\) has parameter \\$flag with no type specified\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Property Contao\\\\NewsModel\\:\\:\\$addImage \\(bool\\) does not accept int\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Property Contao\\\\NewsModel\\:\\:\\$published \\(bool\\) does not accept int\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Property Contao\\\\NewsModel\\:\\:\\$target \\(bool\\) does not accept int\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Property Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookImportCron\\:\\:\\$poorManCron \\(true\\) does not accept false\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and true will always evaluate to false\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Variable \\$arrMedia might not be defined\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Variable \\$objFile might not be defined\\.$#"
+			count: 1
+			path: src/Cron/FacebookImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\InstagramImportCron\\:\\:saveInstagramNews\\(\\) has parameter \\$account with no type specified\\.$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\InstagramImportCron\\:\\:saveInstagramNews\\(\\) has parameter \\$accountPicture with no type specified\\.$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\InstagramImportCron\\:\\:saveInstagramNews\\(\\) has parameter \\$media with no type specified\\.$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\InstagramImportCron\\:\\:saveInstagramNews\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\InstagramImportCron\\:\\:saveInstagramNews\\(\\) has parameter \\$obj with no type specified\\.$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\InstagramImportCron\\:\\:saveInstagramNews\\(\\) has parameter \\$objFile with no type specified\\.$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\InstagramImportCron\\:\\:saveInstagramNews\\(\\) has parameter \\$objNews with no type specified\\.$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\InstagramImportCron\\:\\:savePostPictures\\(\\) has parameter \\$media with no type specified\\.$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\InstagramImportCron\\:\\:savePostPictures\\(\\) has parameter \\$picturePath with no type specified\\.$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\InstagramImportCron\\:\\:setPoorManCronMode\\(\\) has parameter \\$flag with no type specified\\.$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^PHPDoc tag @throws with type Exception\\|Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookSDKException is not subtype of Throwable$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^Property Pdir\\\\SocialFeedBundle\\\\Cron\\\\InstagramImportCron\\:\\:\\$poorManCron \\(true\\) does not accept false\\.$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and true will always evaluate to false\\.$#"
+			count: 1
+			path: src/Cron/InstagramImportCron.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$expires_in\\.$#"
+			count: 1
+			path: src/Cron/RefreshAccessTokenCron.php
+
+		-
+			message: "#^Cannot access property \\$statuses on array\\|object\\.$#"
+			count: 2
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\TwitterImportCron\\:\\:removeTwitterLinks\\(\\) has parameter \\$str with no type specified\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\TwitterImportCron\\:\\:removeTwitterLinks\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\TwitterImportCron\\:\\:replaceHashTags\\(\\) has parameter \\$str with no type specified\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\TwitterImportCron\\:\\:replaceHashTags\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\TwitterImportCron\\:\\:replaceLinks\\(\\) has parameter \\$str with no type specified\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\TwitterImportCron\\:\\:replaceLinks\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\TwitterImportCron\\:\\:replaceMentions\\(\\) has parameter \\$str with no type specified\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\TwitterImportCron\\:\\:replaceMentions\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Cron\\\\TwitterImportCron\\:\\:setPoorManCronMode\\(\\) has parameter \\$flag with no type specified\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^PHPDoc tag @throws with type Exception\\|Pdir\\\\SocialFeedBundle\\\\Cron\\\\FacebookSDKException is not subtype of Throwable$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Property Contao\\\\NewsModel\\:\\:\\$addImage \\(bool\\) does not accept int\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Property Contao\\\\NewsModel\\:\\:\\$published \\(bool\\) does not accept int\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Property Contao\\\\NewsModel\\:\\:\\$target \\(bool\\) does not accept int\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Property Pdir\\\\SocialFeedBundle\\\\Cron\\\\TwitterImportCron\\:\\:\\$poorManCron \\(true\\) does not accept false\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and true will always evaluate to false\\.$#"
+			count: 1
+			path: src/Cron/TwitterImportCron.php
+
+		-
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\TreeBuilder\\:\\:root\\(\\)\\.$#"
+			count: 1
+			path: src/DependencyInjection/Configuration.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\DependencyInjection\\\\PdirSocialFeedExtension\\:\\:loadInternal\\(\\) has parameter \\$mergedConfig with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/DependencyInjection/PdirSocialFeedExtension.php
+
+		-
+			message: "#^Property Pdir\\\\SocialFeedBundle\\\\EventListener\\\\BackendMenuListener\\:\\:\\$requestStack has no type specified\\.$#"
+			count: 1
+			path: src/EventListener/BackendMenuListener.php
+
+		-
+			message: "#^Property Pdir\\\\SocialFeedBundle\\\\EventListener\\\\BackendMenuListener\\:\\:\\$router has no type specified\\.$#"
+			count: 1
+			path: src/EventListener/BackendMenuListener.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\EventListener\\\\DataContainer\\\\SetupListener\\:\\:onGenerateLabel\\(\\) has parameter \\$row with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EventListener/DataContainer/SetupListener.php
+
+		-
+			message: "#^PHPDoc tag @throws with type Safe\\\\Exceptions\\\\StringsException is not subtype of Throwable$#"
+			count: 1
+			path: src/EventListener/DataContainer/SetupListener.php
+
+		-
+			message: "#^Access to an undefined property Contao\\\\DataContainer\\:\\:\\$activeRecord\\.$#"
+			count: 16
+			path: src/EventListener/DataContainer/SocialFeedServiceCallbackListener.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\EventListener\\\\DataContainer\\\\SocialFeedServiceCallbackListener\\:\\:onRequestTokenSave\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/EventListener/DataContainer/SocialFeedServiceCallbackListener.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getAccountImage\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getInstagramAccount\\(\\) has parameter \\$accessToken with no type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getInstagramAccount\\(\\) has parameter \\$socialFeedId with no type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getInstagramAccount\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getInstagramAccountImage\\(\\) has parameter \\$accessToken with no type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getInstagramAccountImage\\(\\) has parameter \\$socialFeedId with no type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getInstagramAccountImage\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getInstagramPosts\\(\\) has parameter \\$accessToken with no type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getInstagramPosts\\(\\) has parameter \\$numberPosts with no type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getInstagramPosts\\(\\) has parameter \\$socialFeedId with no type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getInstagramPosts\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getPostsByAccount\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getPostsByAccount\\(\\) has parameter \\$id with no type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:getPostsByAccount\\(\\) has parameter \\$numberPosts with no type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:moderation\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:moderation\\(\\) has parameter \\$items with no type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Property Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:\\$accountImage has no type specified\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Property Pdir\\\\SocialFeedBundle\\\\Importer\\\\Importer\\:\\:\\$accountImage is never written, only read\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/Importer/Importer.php
+
+		-
+			message: "#^Constant TL_ROOT not found\\.$#"
+			count: 1
+			path: src/Importer/InstagramClient.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\InstagramClient\\:\\:getAccessToken\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/InstagramClient.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\InstagramClient\\:\\:getData\\(\\) has parameter \\$query with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/InstagramClient.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\InstagramClient\\:\\:getData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/InstagramClient.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\InstagramClient\\:\\:getLongLivedAccessToken\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/InstagramClient.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\InstagramClient\\:\\:getMediaData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/InstagramClient.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\InstagramClient\\:\\:getTags\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/InstagramClient.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\InstagramClient\\:\\:getUserData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/InstagramClient.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\InstagramClient\\:\\:getUserImage\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/InstagramClient.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\InstagramClient\\:\\:storeMediaFiles\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/InstagramClient.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\InstagramClient\\:\\:storeMediaFiles\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Importer/InstagramClient.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\LinkedIn\\:\\:setDebugMode\\(\\) has parameter \\$flag with no type specified\\.$#"
+			count: 1
+			path: src/Importer/LinkedIn.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\LinkedIn\\:\\:setIgnoreInterval\\(\\) has parameter \\$flag with no type specified\\.$#"
+			count: 1
+			path: src/Importer/LinkedIn.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\LinkedIn\\:\\:setMaxPosts\\(\\) has parameter \\$maxPosts with no type specified\\.$#"
+			count: 1
+			path: src/Importer/LinkedIn.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\LinkedIn\\:\\:setPoorManCronMode\\(\\) has parameter \\$flag with no type specified\\.$#"
+			count: 1
+			path: src/Importer/LinkedIn.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\NewsImporter\\:\\:createImageFolder\\(\\) has parameter \\$account with no type specified\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\NewsImporter\\:\\:execute\\(\\) has parameter \\$newsArchiveId with no type specified\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\NewsImporter\\:\\:generateAlias\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\NewsImporter\\:\\:generateAlias\\(\\) has parameter \\$headline with no type specified\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\NewsImporter\\:\\:generateAlias\\(\\) has parameter \\$newsArchiveId with no type specified\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\NewsImporter\\:\\:saveImage\\(\\) has parameter \\$strPath with no type specified\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\NewsImporter\\:\\:saveImage\\(\\) has parameter \\$strUrl with no type specified\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\NewsImporter\\:\\:setNews\\(\\) has parameter \\$arr with no type specified\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Importer\\\\NewsImporter\\:\\:shortenHeadline\\(\\) has parameter \\$str with no type specified\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Property Contao\\\\NewsModel\\:\\:\\$addImage \\(bool\\) does not accept int\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Property Contao\\\\NewsModel\\:\\:\\$published \\(bool\\) does not accept int\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Property Contao\\\\NewsModel\\:\\:\\$target \\(bool\\) does not accept int\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Property Pdir\\\\SocialFeedBundle\\\\Importer\\\\NewsImporter\\:\\:\\$accountImage has no type specified\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Property Pdir\\\\SocialFeedBundle\\\\Importer\\\\NewsImporter\\:\\:\\$arrNews has no type specified\\.$#"
+			count: 1
+			path: src/Importer/NewsImporter.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Migration\\\\SocialFeedServiceMigration\\:\\:getIdentifier\\(\\) has parameter \\$row with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Migration/SocialFeedServiceMigration.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Migration\\\\SocialFeedServiceMigration\\:\\:getServiceData\\(\\) has parameter \\$row with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Migration/SocialFeedServiceMigration.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Migration\\\\SocialFeedServiceMigration\\:\\:getServiceData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Migration/SocialFeedServiceMigration.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Model\\\\SocialFeedAccountModel\\:\\:findForImport\\(\\) return type with generic class Contao\\\\Model\\\\Collection does not specify its types\\: T$#"
+			count: 1
+			path: src/Model/SocialFeedAccountModel.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\Model\\\\SocialFeedAccountModel\\:\\:getAvatar\\(\\) has parameter \\$size with no type specified\\.$#"
+			count: 1
+			path: src/Model/SocialFeedAccountModel.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\SocialFeed\\\\SocialFeedNewsClass\\:\\:getTemplateData\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/SocialFeed/SocialFeedNewsClass.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\SocialFeed\\\\SocialFeedNewsClass\\:\\:getTemplateData\\(\\) has parameter \\$picture with no type specified\\.$#"
+			count: 1
+			path: src/SocialFeed/SocialFeedNewsClass.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\SocialFeed\\\\SocialFeedNewsClass\\:\\:parseNews\\(\\) has parameter \\$arrRow with no type specified\\.$#"
+			count: 1
+			path: src/SocialFeed/SocialFeedNewsClass.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\SocialFeed\\\\SocialFeedNewsClass\\:\\:parseNews\\(\\) has parameter \\$objModule with no type specified\\.$#"
+			count: 1
+			path: src/SocialFeed/SocialFeedNewsClass.php
+
+		-
+			message: "#^Method Pdir\\\\SocialFeedBundle\\\\SocialFeed\\\\SocialFeedNewsClass\\:\\:parseNews\\(\\) has parameter \\$objTemplate with no type specified\\.$#"
+			count: 1
+			path: src/SocialFeed/SocialFeedNewsClass.php
+
+		-
+			message: "#^Property Pdir\\\\SocialFeedBundle\\\\SocialFeed\\\\SocialFeedNewsClass\\:\\:\\$projectDir type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/SocialFeed/SocialFeedNewsClass.php
+
+		-
+			message: "#^Property Pdir\\\\SocialFeedBundle\\\\SocialFeed\\\\SocialFeedNewsClass\\:\\:\\$staticUrl has no type specified\\.$#"
+			count: 1
+			path: src/SocialFeed/SocialFeedNewsClass.php

@@ -18,11 +18,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-use Contao\BackendUser;
 use Contao\DC_Table;
 use Contao\System;
 use Pdir\SocialFeedBundle\EventListener\DataContainer\SetupListener;
-use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedListener;
 
 System::loadLanguageFile('tl_sf_service');
 
@@ -87,15 +85,16 @@ $GLOBALS['TL_DCA']['tl_sf_service'] = [
     ],
 
     'palettes' => [
-        '__selector__' => ['type'],
+        '__selector__' => ['type', 'loginType'],
         'default' => '{type_legend},name,type,psf_setup;',
     ],
 
     'subpalettes' => [
         'type_Facebook' => ';{credentials_legend},appId,appSecret,accessToken,requestToken,apiVersion;',
-        'type_Instagram' => ';{credentials_legend},appId,appSecret,accessToken,requestToken,noteForRefreshTokenMail,tokenExpires;',
+        'type_Instagram' => ';{credentials_legend},loginType,appId,appSecret,accessToken,requestToken,tokenExpires;',
+        'loginType_unified_login' => 'configId',
         'type_X' => ';{credentials_legend},apiKey,apiKeySecret,accessToken,accessTokenSecret;',
-        'type_LinkedIn' => ';{credentials_legend},clientId,clientSecret,accessToken,requestToken,noteForRefreshTokenMail,tokenExpires',
+        'type_LinkedIn' => ';{credentials_legend},clientId,clientSecret,accessToken,requestToken,noteForRefreshTokenMail,tokenExpires,refreshToken,refreshTokenExpires',
     ],
 
     'fields' => [
@@ -128,13 +127,37 @@ $GLOBALS['TL_DCA']['tl_sf_service'] = [
             'sql' => "varchar(255) NOT NULL default ''",
         ],
 
+        'loginType' => [
+            'exclude' => true,
+            'inputType' => 'select',
+            'options' => ['instagram_login', 'unified_login'],
+            'reference' => &$GLOBALS['TL_LANG']['tl_sf_service']['loginTypes'],
+            'default' => 'instagram_login',
+            'eval' => [
+                'submitOnChange' => true,
+                'tl_class' => 'w50',
+            ],
+            'sql' => "varchar(32) NOT NULL default 'instagram_login'",
+        ],
+
+        'configId' => [
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'mandatory' => true,
+                'maxlength' => 64,
+                'tl_class' => 'w50',
+            ],
+            'sql' => "varchar(64) NOT NULL default ''",
+        ],
+
         'appId' => [
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
                 'mandatory' => true,
                 'maxlength' => 255,
-                'tl_class' => 'w50',
+                'tl_class' => 'w50 clr',
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
@@ -154,10 +177,29 @@ $GLOBALS['TL_DCA']['tl_sf_service'] = [
             'exclude' => true,
             'inputType' => 'text',
             'eval' => [
-                'maxlength' => 255,
                 'tl_class' => 'w50',
             ],
+            'sql' => 'text NULL',
+        ],
+
+        'refreshToken' => [
+            'exclude' => true,
+            'inputType' => 'text',
+            'eval' => [
+                'tl_class' => 'clr w50',
+            ],
+            'sql' => 'text NULL',
+        ],
+
+        'refreshTokenExpires' => [
+            'exclude' => true,
+            'inputType' => 'text',
             'sql' => "varchar(255) NOT NULL default ''",
+            'eval' => [
+                'rgxp' => 'datim',
+                'tl_class' => 'w50',
+                'readonly' => 'readonly',
+            ],
         ],
 
         'accessTokenSecret' => [

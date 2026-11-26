@@ -3,13 +3,15 @@
 declare(strict_types=1);
 
 /*
- * Social Feed bundle for Contao Open Source CMS
+ * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
- * @link       https://pdir.de/socialfeed+
- * @license    proprietary / pdir license - All-rights-reserved - commercial extension
+ * @link       https://github.com/pdir/social-feed-bundle
+ * @license    http://www.gnu.org/licences/lgpl-3.0.html LGPL
+ * @author     Mathias Arzberger <develop@pdir.de>
+ * @author     Philipp Seibt <develop@pdir.de>
  * @author     pdir GmbH <https://pdir.de>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -21,8 +23,8 @@ namespace Pdir\SocialFeedBundle\EventListener;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Pdir\SocialFeedBundle\Controller\AccountController;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
 #[AsEventListener(ContaoCoreEvents::BACKEND_MENU_BUILD, priority: -255)]
@@ -54,7 +56,7 @@ class BackendMenuListener
             ->setLabel('Social Feed Konten')
             ->setLinkAttribute('title', 'Social Feed Konten')
             ->setLinkAttribute('class', 'sf-account')
-            ->setCurrent($this->requestStack->getCurrentRequest()->get('_controller') === AccountController::class)
+            ->setCurrent(AccountController::class === $this->requestStack->getCurrentRequest()->get('_controller'))
         ;
 
         $contentNode->addChild($node);

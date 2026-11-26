@@ -14,7 +14,7 @@
                     <img src="bundles/pdirsocialfeed/img/icon_facebook.svg" alt="Facebook Icon">
                 <?php elseif($this->type == "Instagram"): ?>
                     <img src="bundles/pdirsocialfeed/img/icon_instagram.svg" alt="Instagram Icon">
-                <?php elseif($this->type == "Twitter"): ?>
+                <?php elseif($this->type == "Twitter" || $this->type == "X"): ?>
                     <img src="bundles/pdirsocialfeed/img/icon_twitter.svg" alt="X Icon">
                 <?php elseif($this->type == "LinkedIn"): ?>
                     <img src="bundles/pdirsocialfeed/img/linkedin-in-brands.svg" alt="LinkedIn Icon">

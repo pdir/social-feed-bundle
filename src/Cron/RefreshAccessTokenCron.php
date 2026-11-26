@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * social feed bundle for Contao Open Source CMS
  *
- * Copyright (c) 2024 pdir / digital agentur // pdir GmbH
+ * Copyright (c) 2026 pdir / digital agentur // pdir GmbH
  *
  * @package    social-feed-bundle
  * @link       https://github.com/pdir/social-feed-bundle
@@ -20,14 +20,14 @@ declare(strict_types=1);
 
 namespace Pdir\SocialFeedBundle\Cron;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\Database;
 use Contao\Email;
 use Contao\System;
 use GuzzleHttp\Client;
-use Pdir\SocialFeedBundle\Model\SocialFeedModel;
+use Pdir\SocialFeedBundle\Importer\InstagramClient;
+use Pdir\SocialFeedBundle\Model\SocialFeedServiceModel;
 use Psr\Log\LogLevel;
 
 #[AsCronJob('daily')]
@@ -47,21 +47,21 @@ class RefreshAccessTokenCron
         $this->framework->initialize();
         $this->logger = System::getContainer()->get('monolog.logger.contao');
 
-        $objSocialFeed = SocialFeedModel::findAll();
+        $services = SocialFeedServiceModel::findAll();
 
-        if (null === $objSocialFeed) {
+        if (null === $services) {
             return;
         }
 
-        foreach ($objSocialFeed as $account) {
+        foreach ($services as $service) {
             // LinkedIn
-            if ('LinkedIn' === $account->type && '' !== $account->linkedin_access_token && '' !== $account->linkedin_refresh_token) {
-                $this->refreshLinkedInAccessToken($account);
+            if ('LinkedIn' === $service->type && !empty($service->accessToken) && !empty($service->refreshToken)) {
+                $this->refreshLinkedInAccessToken($service);
             }
 
             // Instagram
-            if ('Instagram' === $account->type && '' !== $account->psf_instagramAccessToken) {
-                $this->refreshInstagramAccessToken($account);
+            if ('Instagram' === $service->type && !empty($service->accessToken)) {
+                $this->refreshInstagramAccessToken($service);
             }
         }
     }
@@ -69,59 +69,92 @@ class RefreshAccessTokenCron
     /**
      * @throws \Exception
      */
-    private function refreshLinkedInAccessToken(SocialFeedModel $socialFeedModel): void
+    private function refreshLinkedInAccessToken(SocialFeedServiceModel $service): void
     {
-        if (\strtotime('+1 week', \time()) >= $socialFeedModel->linkedin_refresh_token_expires || '' === $socialFeedModel->linkedin_refresh_token_expires) {
+        $nextWeek = strtotime('+1 week', time());
+
+        // The refresh token expires after one year, the user has to generate a new access token manually
+        if ('' === (string) $service->refreshTokenExpires || $nextWeek >= (int) $service->refreshTokenExpires) {
+            $note = $service->noteForRefreshTokenMail ?: '-';
+
             $objMail = new Email();
             $objMail->subject = $GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInSubject'];
-            $objMail->html = sprintf($GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInHtml'], $socialFeedModel->noteForRefreshTokenMail?? '-', $socialFeedModel->linkedin_company_id);
+            $objMail->html = sprintf($GLOBALS['TL_LANG']['BE_MOD']['emailLinkedInHtml'], $note, $service->name);
             $objMail->from = $GLOBALS['TL_CONFIG']['adminEmail'];
-            $objMail->fromName = $socialFeedModel->noteForRefreshTokenMail?? '-';
+            $objMail->fromName = $note;
             $objMail->sendTo($GLOBALS['TL_CONFIG']['adminEmail']);
         }
 
-        if ($socialFeedModel->access_token_expires <= \strtotime('+1 week', \time())) {
-            $data = [
-                'grant_type' => 'refresh_token',
-                'refresh_token' => $socialFeedModel->linkedin_refresh_token,
-                'client_id' => $socialFeedModel->linkedin_client_id,
-                'client_secret' => $socialFeedModel->linkedin_client_secret,
-            ];
+        if ((int) $service->tokenExpires > $nextWeek) {
+            return;
+        }
 
-            try {
-                $token = json_decode(file_get_contents('https://www.linkedin.com/oauth/v2/accessToken?'.http_build_query($data)));
+        $data = [
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $service->refreshToken,
+            'client_id' => $service->clientId,
+            'client_secret' => $service->clientSecret,
+        ];
 
-                // Store the access token
-                $db = Database::getInstance();
-                $set = ['linkedin_access_token' => $token->access_token, 'access_token_expires' => time() + $token->expires_in, 'linkedin_refresh_token' => $token->refresh_token, 'linkedin_refresh_token_expires' => time() + $token->refresh_token_expires_in];
-                $db->prepare('UPDATE tl_sf_service %s WHERE id = ?')->set($set)->execute($socialFeedModel->id);
-            } catch (\Exception $e) {
-                $this->logger->log(LogLevel::ERROR, $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+        try {
+            $token = json_decode(file_get_contents('https://www.linkedin.com/oauth/v2/accessToken?'.http_build_query($data)));
+
+            if (empty($token->access_token)) {
+                throw new \RuntimeException('Social Feed (Service ID '.$service->id.'): LinkedIn access token could not be refreshed.');
             }
+
+            $service->accessToken = $token->access_token;
+            $service->tokenExpires = time() + $token->expires_in;
+            $service->refreshToken = $token->refresh_token ?? $service->refreshToken;
+
+            if (isset($token->refresh_token_expires_in)) {
+                $service->refreshTokenExpires = time() + $token->refresh_token_expires_in;
+            }
+
+            $service->tstamp = time();
+            $service->save();
+        } catch (\Exception $e) {
+            $this->logger->log(LogLevel::ERROR, $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
         }
     }
 
-    private function refreshInstagramAccessToken(SocialFeedModel $socialFeedModel): void
+    private function refreshInstagramAccessToken(SocialFeedServiceModel $service): void
     {
-        if (\strtotime('+1 week', \time()) >= $socialFeedModel->access_token_expires || '' === $socialFeedModel->access_token_expires) {
+        // Unified login: system user access tokens never expire and cannot be refreshed via graph.instagram.com
+        if (InstagramClient::isUnifiedLogin($service->loginType)) {
+            if ('' !== (string) $service->tokenExpires && strtotime('+1 week', time()) >= (int) $service->tokenExpires) {
+                $this->logger->log(LogLevel::WARNING, 'Social Feed (Service ID '.$service->id.'): The Instagram access token (unified login) expires soon and cannot be renewed automatically. Please request a new access token in the backend.', ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+            }
+
+            return;
+        }
+
+        if ('' !== (string) $service->tokenExpires && (int) $service->tokenExpires > strtotime('+1 week', time())) {
+            return;
+        }
+
+        try {
             $client = new Client();
             $response = $client->get('https://graph.instagram.com/refresh_access_token', [
                 'query' => [
                     'grant_type' => 'ig_refresh_token',
-                    'access_token' => $socialFeedModel->psf_instagramAccessToken,
+                    'access_token' => $service->accessToken,
                 ],
             ]);
 
-            try {
-                $data = json_decode((string) $response->getBody(), true);
+            $data = json_decode((string) $response->getBody(), true);
 
-                // Store the access token
-                $db = Database::getInstance();
-                $set = ['psf_instagramAccessToken' => $data['access_token'], 'access_token_expires' => time() + $data['expires_in']];
-                $db->prepare('UPDATE tl_sf_service %s WHERE id = ?')->set($set)->execute($socialFeedModel->id);
-            } catch (\Exception $e) {
-                $this->logger->log(LogLevel::ERROR, $e->getMessage(), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+            if (empty($data['access_token'])) {
+                throw new \RuntimeException('Social Feed (Service ID '.$service->id.'): Instagram access token could not be refreshed.');
             }
+
+            $service->accessToken = $data['access_token'];
+            $service->tokenExpires = time() + $data['expires_in'];
+            $service->tstamp = time();
+            $service->save();
+        } catch (\Exception $e) {
+            // Do not log the exception message, as it contains the request URI including the access token
+            $this->logger->log(LogLevel::ERROR, sprintf('Social Feed (Service ID %s): Unable to refresh the Instagram access token (%s, code %s).', $service->id, $e::class, $e->getCode()), ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
         }
     }
 }

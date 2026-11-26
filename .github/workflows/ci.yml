@@ -2,30 +2,56 @@ name: CI
 
 on:
     pull_request: ~
-    push: ~
+    push:
+        branches:
+            - main
+            - master
+            - plus
+            - '*.x'
+    workflow_dispatch: ~
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
 
 jobs:
-    ecs:
-        name: ECS
+    tests:
+        name: PHP ${{ matrix.php }} / Contao ${{ matrix.contao }}
         runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    # lowest supported versions (Doctrine DBAL 3)
+                    -   php: '8.1'
+                        contao: '5.3'
+                    # Contao 5.7 uses Doctrine DBAL 4
+                    -   php: '8.2'
+                        contao: '5.7'
+                    -   php: '8.4'
+                        contao: '5.7'
         steps:
             -   name: Setup PHP
                 uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 7.4 # Run with the lowest supported to avoid incompatible fixes
-                    extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                    php-version: ${{ matrix.php }}
+                    extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, pdo_sqlite, zlib
                     coverage: none
-                env:
-                    COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: Checkout
-                uses: actions/checkout@v3
+                uses: actions/checkout@v4
+
+            -   name: Require Contao ${{ matrix.contao }}
+                run: composer require contao/core-bundle:~${{ matrix.contao }}.0 contao/news-bundle:~${{ matrix.contao }}.0 --no-update --no-interaction
 
             -   name: Install the dependencies
-                run: composer install --no-interaction --no-progress
+                run: composer update --no-interaction --no-progress
 
-            -   name: Run ECS
-                run: vendor/bin/ecs check src tests --config ecs.php --no-progress-bar --ansi
+            -   name: Show the installed versions
+                run: composer show contao/core-bundle doctrine/dbal | grep -E '^(name|versions)'
+
+            -   name: Run the unit tests
+                run: vendor/bin/phpunit --colors=always
 
     phpstan:
         name: PHPStan
@@ -34,67 +60,55 @@ jobs:
             -   name: Setup PHP
                 uses: shivammathur/setup-php@v2
                 with:
-                    php-version: 7.4
-                    extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                    php-version: '8.4'
+                    extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, pdo_sqlite, zlib
                     coverage: none
-                env:
-                    COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: Checkout
-                uses: actions/checkout@v3
+                uses: actions/checkout@v4
+
+            # The baseline (phpstan-baseline.neon) has been generated with Contao 5.7
+            -   name: Require Contao 5.7
+                run: composer require contao/core-bundle:~5.7.0 contao/news-bundle:~5.7.0 --no-update --no-interaction
 
             -   name: Install the dependencies
-                run: |
-                    composer install --no-interaction --no-progress
+                run: composer update --no-interaction --no-progress
 
             -   name: Run PHPStan
-                run: vendor/bin/phpstan analyse src tests --no-progress
+                run: vendor/bin/phpstan analyse --no-progress
 
-#    tests:
-#        name: PHP ${{ matrix.php }}
-#        runs-on: ubuntu-latest
-#        strategy:
-#            fail-fast: false
-#            matrix:
-#                php: [ 7.4, 8.0, 8.1 ]
-#        steps:
-#            -   name: Setup PHP
-#                uses: shivammathur/setup-php@v2
-#                with:
-#                    php-version: ${{ matrix.php }}
-#                    extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-#                    coverage: none
-#                env:
-#                    COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#
-#            -   name: Checkout
-#                uses: actions/checkout@v3
-#
-#            -   name: Install the dependencies
-#                run: composer install --no-interaction --no-progress
-#
-#            -   name: Run the unit tests
-#                run: vendor/bin/phpunit --colors=always
+    ecs:
+        name: ECS
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.1' # Run with the lowest supported to avoid incompatible fixes
+                    extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, zlib
+                    coverage: none
 
-#    nightly:
-#        name: PHP 8.2
-#        runs-on: ubuntu-latest
-#        continue-on-error: true
-#        steps:
-#            -   name: Setup PHP
-#                uses: shivammathur/setup-php@v2
-#                with:
-#                    php-version: 8.2
-#                    extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-#                    coverage: none
-#                env:
-#                    COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#
-#            -   name: Checkout
-#                uses: actions/checkout@v3
-#
-#            -   name: Install the dependencies
-#                run: composer install --ignore-platform-req=php --no-interaction --no-progress
-#
-#            -   name: Run the unit tests
-#                run: vendor/bin/phpunit --colors=always
+            -   name: Checkout
+                uses: actions/checkout@v4
+
+            -   name: Install the dependencies
+                run: composer update --no-interaction --no-progress
+
+            -   name: Run ECS
+                run: vendor/bin/ecs check src tests --config ecs.php --no-progress-bar --ansi
+
+    composer:
+        name: Composer
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.4'
+                    coverage: none
+
+            -   name: Checkout
+                uses: actions/checkout@v4
+
+            -   name: Validate composer.json
+                run: composer validate --no-check-lock --no-check-publish

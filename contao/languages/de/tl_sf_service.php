@@ -28,20 +28,30 @@ $GLOBALS['TL_LANG']['tl_sf_service']['credentials_legend'] = 'Anmeldeinformation
 $GLOBALS['TL_LANG']['tl_sf_service']['type'] = ['Typ', 'Wählen Sie hier zuerst den Typ aus.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['name'] = ['Name', 'Legen Sie hier den Namen für diese App oder den Service an. Kann hilfreich sein, wenn Sie mehrere Apps vom gleichen Anbieter verbinden wollen.'];
 
-$GLOBALS['TL_LANG']['tl_sf_service']['appId'] = ['App ID', 'Geben Sie hier die App ID an.'];
-$GLOBALS['TL_LANG']['tl_sf_service']['appSecret'] = ['App Secret', 'Geben Sie hier den App Secret der App an.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['appId'] = ['App ID', 'Geben Sie hier die App ID an. Beim Instagram Unified Login ist das die Meta App ID (App-Einstellungen > Allgemeines), beim bisherigen Instagram Login die Instagram App ID.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['appSecret'] = ['App Secret', 'Geben Sie hier das App Secret an. Beim Instagram Unified Login ist das der Meta App-Geheimcode, beim bisherigen Instagram Login das Instagram App Secret.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['loginType'] = ['Login-Verfahren', 'Neu angelegte Meta-Apps unterstützen nur noch den Unified Login. Der Instagram Login steht nur für bestehende Apps zur Verfügung.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['loginTypes'] = ['instagram_login' => 'Instagram Login (bestehende Apps)', 'unified_login' => 'Unified Login (Facebook Login for Business)'];
+$GLOBALS['TL_LANG']['tl_sf_service']['configId'] = ['Konfigurations-ID', 'Die Konfigurations-ID aus der Meta-App unter Instagram > API-Einrichtung mit Unified Login.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['instagramTokenError'] = 'Der Instagram Access Token konnte nicht angefordert werden. Details finden Sie im System-Log.';
+$GLOBALS['TL_LANG']['tl_sf_service']['instagramAccountError'] = 'Beim Login wurde kein Instagram-Konto freigegeben. Bitte wählen Sie ein professionelles Instagram-Konto aus und versuchen Sie es erneut.';
 
 $GLOBALS['TL_LANG']['tl_sf_service']['requestToken'] = ['Access Token generieren', 'Wenn Sie speichern wird der Access Token automatisch generiert.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['apiKey'] = ['API Key', 'Geben Sie hier den API Key ein.'];
-$GLOBALS['TL_LANG']['tl_sf_service']['apiSecretKey'] = ['API Key Secret', 'Geben Sie hier den API Key Secret ein.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['apiKeySecret'] = ['API Key Secret', 'Geben Sie hier den API Key Secret ein.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['accessTokenSecret'] = ['Access Token Secret', 'Geben Sie hier den Access Token Secret ein.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['clientId'] = ['Client ID', 'Geben Sie hier die Client ID aus der App ein.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['clientSecret'] = ['Client Secret', 'Geben Sie hier den Client Secret aus der App ein.'];
-$GLOBALS['TL_LANG']['tl_sf_service']['tokenExpires'] = ['Refresh Token läuft ab am', 'Wenn der Refresh Token abgelaufen ist muss der Access Token manuell neu generiert werden.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['accessToken'] = ['Access Token', 'Wird automatisch hinterlegt, wenn Sie „Access Token generieren“ auswählen und speichern.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['apiVersion'] = ['API-Version', 'Version der Facebook Graph API.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['tokenExpires'] = ['Access Token läuft ab am', 'Der Access Token wird automatisch vor Ablauf erneuert. Beim Instagram Unified Login mit Systemnutzer-Token bleibt das Feld leer, da der Token nicht abläuft.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['refreshToken'] = ['Refresh Token', 'Wird automatisch hinterlegt, wenn der Access Token generiert wird.'];
+$GLOBALS['TL_LANG']['tl_sf_service']['refreshTokenExpires'] = ['Refresh Token läuft ab am', 'Wenn der Refresh Token abgelaufen ist, muss der Access Token manuell neu generiert werden.'];
 $GLOBALS['TL_LANG']['tl_sf_service']['noteForRefreshTokenMail'] = ['Hinweis für Refresh Token E-Mail', 'Geben Sie hier bitte an, welche Domain oder welcher Hinweis in der Refresh Token E-Mail angezeigt werden soll.'];
 
 $GLOBALS['TL_LANG']['tl_sf_service']['psfLabelNoService'] = 'Kein Dienst angegeben';
 $GLOBALS['TL_LANG']['tl_sf_service']['psfLabelNoType'] = 'Kein Typ angegeben';
+$GLOBALS['TL_LANG']['tl_sf_service']['psfLabelSearchTerm'] = '(Suchbegriff <span style="color:#999;">%s</span>)';
 $GLOBALS['TL_LANG']['tl_sf_service']['setupWelcome'] = 'Social Feed Bundle';
 $GLOBALS['TL_LANG']['tl_sf_service']['setupLinks'] = <<<HTML
 <p>Das SocialFeedBundle ist gesponsert von der <a href="http://www.pdir.de/" target="_blank">pdir / digital agentur</a></p>
