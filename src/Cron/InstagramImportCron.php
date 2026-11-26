@@ -112,13 +112,13 @@ class InstagramImportCron
 
                     // save pictures
                     $picturePath = $imgPath.$media['id'].'.jpg';
-                    $this->savePostPictures($picturePath, $media);
+                    $hasPicture = $this->savePostPictures($picturePath, $media);
 
                     // Write in Database
                     $message = $media['caption'] ?? '';
 
                     // add/fetch file from DBAFS
-                    $objFile = Dbafs::addResource($imgPath.$media['id'].'.jpg');
+                    $objFile = $hasPicture ? Dbafs::addResource($picturePath) : null;
                     $this->saveInstagramNews($objNews, $account, $objFile, $message, $media);
 
                     ++$this->counter;
@@ -137,8 +137,8 @@ class InstagramImportCron
     {
         $objNews->pid = $obj->pdir_sf_fb_news_archive;
         $objNews->author = $obj->user;
-        $objNews->singleSRC = $objFile->uuid;
-        $objNews->addImage = 1;
+        $objNews->singleSRC = $objFile?->uuid;
+        $objNews->addImage = null !== $objFile ? 1 : 0;
         $objNews->tstamp = time();
 
         if ('' === $message) {
@@ -172,13 +172,28 @@ class InstagramImportCron
     /**
      * @throws \Exception
      */
-    private function savePostPictures($picturePath, $media): void
+    private function savePostPictures($picturePath, $media): bool
     {
-        if (!file_exists($picturePath)) {
-            $strImage = file_get_contents(false !== strpos($media['media_url'], 'jpg') ? $media['media_url'] : $media['thumbnail_url']);
-            $file = new File($picturePath);
-            $file->write($strImage);
-            $file->close();
+        if (file_exists($picturePath)) {
+            return true;
         }
+
+        $imageUrl = NewsImporter::getInstagramImageUrl($media);
+
+        if (null === $imageUrl) {
+            return false;
+        }
+
+        $strImage = file_get_contents($imageUrl);
+
+        if (false === $strImage) {
+            return false;
+        }
+
+        $file = new File($picturePath);
+        $file->write($strImage);
+        $file->close();
+
+        return true;
     }
 }

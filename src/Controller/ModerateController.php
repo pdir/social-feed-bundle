@@ -130,19 +130,9 @@ class ModerateController
         $imgPath = NewsImporter::createImageFolder($socialFeedAccount->id); // create image folder
 
         if ('VIDEO' === $item['media_type'] || 'IMAGE' === $item['media_type'] || 'CAROUSEL_ALBUM' === $item['media_type']) {
-            $imgSrc = '';
-
-            if (isset($item['media_url'])) {
-                $imgSrc = false !== strpos($item['media_url'], 'jpg') ? $item['media_url'] : $item['thumbnail_url'];
-            }
-
-            if (!isset($item['media_url']) && isset($item['children']['data'][0]['media_url'])) {
-                $imgSrc = $item['children']['data'][0]['media_url'];
-            }
-
             $picturePath = $imgPath.$item['id'].'.jpg';
 
-            return NewsImporter::saveImage($picturePath, $imgSrc);
+            return NewsImporter::saveImage($picturePath, NewsImporter::getInstagramImageUrl($item));
         }
     }
 
@@ -174,10 +164,10 @@ class ModerateController
                     $importer = new NewsImporter();
 
                     // set headline
-                    $item['headline'] = NewsImporter::shortenHeadline($item['caption']);
+                    $item['headline'] = NewsImporter::shortenHeadline($item['caption'] ?? '');
 
                     // set teaser
-                    $item['teaser'] = str_replace("\n", '<br>', $item['caption']);
+                    $item['teaser'] = str_replace("\n", '<br>', $item['caption'] ?? '');
 
                     // add image
                     $item['singleSRC'] = $this->getPostImage($objSocialFeedModel, $item);
