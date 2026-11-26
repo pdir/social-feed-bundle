@@ -41,10 +41,13 @@ class AccountController extends AbstractBackendController
             foreach ($accounts as $account) {
                 $items[] = [
                     'id' => $account->id,
-                    'name' => $account->name,
+                    'name' => $account->name ?: $account->identifier,
+                    'identifier' => $account->identifier,
                     'type' => $account->type,
-                    'added' => $account->added ? Date::parse(Config::get('datimFormat'), $account->added) : '-',
-                    'avatar' => $account->getAvatar($account, 120),
+                    'typeIcon' => SocialFeedAccountModel::getTypeIcon((string) $account->type),
+                    'added' => $account->added ? Date::parse(Config::get('datimFormat'), $account->added) : null,
+                    'lastImport' => $account->lastImport ? Date::parse(Config::get('datimFormat'), $account->lastImport) : null,
+                    'avatar' => SocialFeedAccountModel::getAvatarSrc($account, 96),
                     'service' => $account->getService(),
                     'editUrl' => $this->getBackendUrl(['act' => 'edit', 'id' => $account->id, 'rt' => $requestToken]),
                     'deleteUrl' => $this->getBackendUrl(['act' => 'delete', 'id' => $account->id, 'rt' => $requestToken]),
@@ -52,7 +55,7 @@ class AccountController extends AbstractBackendController
             }
         }
 
-        $GLOBALS['TL_CSS'][] = 'bundles/pdirsocialfeed/css/account.scss|static';
+        $GLOBALS['TL_CSS'][] = 'bundles/pdirsocialfeed/css/account.css|static';
 
         return $this->render(
             '@Contao_PdirSocialFeedBundle/sf_account.html.twig',

@@ -1,62 +1,154 @@
-.sf-flex-container {
+/* Social Feed accounts overview (uses the CSS variables of the Contao backend theme) */
+.sf-accounts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.sf-account {
   display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+  background: var(--content-bg, #fff);
+  border: 1px solid var(--content-border, #e0e0e2);
+  border-radius: var(--border-radius-lg, 12px);
 }
-.sf-flex-container .sf-account-tile {
-  border: 2px solid #000;
-  margin: 0 12px 24px;
-  width: 250px;
-  min-height: 220px;
-  padding: 8px;
-}
-.sf-flex-container .sf-account-tile.new {
-  max-height: 90px;
-  min-height: initial;
-  padding: 20px;
-  text-align: center;
-}
-.sf-flex-container .sf-account-tile span {
-  display: inline-block;
-  padding-top: 5px;
-  font-size: 0.9em;
-  color: #ccc;
-}
-.sf-flex-container .sf-account-tile.new {
-  display: block;
+
+.sf-account--new {
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 180px;
+  border-style: dashed;
   color: inherit;
+  font-weight: 600;
   text-decoration: none;
 }
-.sf-flex-container .sf-account-tile .sf-account-actions {
-  margin-top: 8px;
+
+.sf-account--new:hover,
+.sf-account--new:focus-visible {
+  border-color: var(--contao, #f47c00);
+  background: var(--form-bg-hover, #f9f9fb);
 }
-.sf-flex-container .sf-account-tile .sf-account-actions a {
-  display: inline-block;
-  margin-top: 3px;
-  margin-right: 5px;
+
+.sf-account--empty {
+  grid-column: span 2;
+  justify-content: center;
+  color: var(--gray, #89898b);
 }
-.sf-flex-container .sf-account-tile h2 {
-  margin-top: 5px;
+
+.sf-account__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
 }
-.sf-flex-container .sf-account-tile .sfp_type {
+
+.sf-account__avatar {
+  position: relative;
+  flex: 0 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--form-button, #f3f3f5);
+}
+
+.sf-account__avatar > img:first-child {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.sf-account__avatar > img.sf-account__placeholder {
+  width: 24px;
+  height: 24px;
+  border-radius: 0;
+  opacity: .6;
+}
+
+.sf-account__type-icon {
   position: absolute;
-  background: #000;
-  border-radius: 100%;
-  margin: 86px;
-  padding: 5px;
+  right: -4px;
+  bottom: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 20px;
   height: 20px;
-}
-.sf-flex-container .sf-account-tile .sfp_avatar {
-  border-radius: 100%;
+  background: var(--content-bg, #fff);
+  border: 1px solid var(--content-border, #e0e0e2);
+  border-radius: 50%;
 }
 
-html[data-color-scheme=dark] .sf-flex-container {
+.sf-account__type-icon img {
+  width: 12px;
+  height: 12px;
+}
+
+.sf-account__title {
   display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
-html[data-color-scheme=dark] .sf-flex-container .sf-account-tile {
-  border: 2px solid #fff;
+
+.sf-account__name,
+.sf-account__type,
+.sf-account__meta dd {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-html[data-color-scheme=dark] .sf-flex-container .sf-account-tile .sfp_type {
+
+.sf-account__name {
+  font-size: 1rem;
+}
+
+.sf-account__type,
+.sf-account__id {
+  color: var(--gray, #89898b);
+  font-size: .8rem;
+}
+
+.sf-account__meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  margin: 0;
+  font-size: .8rem;
+}
+
+.sf-account__meta dt {
+  color: var(--gray, #89898b);
+}
+
+.sf-account__meta dd {
+  min-width: 0;
+  margin: 0;
+}
+
+.sf-account__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.sf-account__actions .tl_submit {
+  flex: 1;
+  margin: 0;
+  text-align: center;
+}
+
+/* icon_user.svg and the LinkedIn icon are black */
+html[data-color-scheme="dark"] .sf-account__placeholder,
+html[data-color-scheme="dark"] .sf-account__type-icon img[src$="linkedin-in-brands.svg"],
+html[data-color-scheme="dark"] .sf-account__type-icon img[src$="icon_user.svg"] {
   filter: invert(1);
 }
-
-/*# sourceMappingURL=account.css.map */

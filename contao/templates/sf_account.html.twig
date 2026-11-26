@@ -2,27 +2,45 @@
 
 {% block main_content %}
   <div class="tl_listing_container">
-    <div class="sf-flex-container">
-      <a href="{{ createUrl }}" class="sf-account-tile new">
-        <img src="/bundles/pdirsocialfeed/img/icon_plus.svg" width="40" height="40" alt="">
-        <h2>Konto hinzufügen</h2>
+    <div class="sf-accounts">
+      <a href="{{ createUrl }}" class="sf-account sf-account--new">
+        <img src="/bundles/pdirsocialfeed/img/icon_plus.svg" width="32" height="32" alt="">
+        <span>Konto hinzufügen</span>
       </a>
 
       {% for item in items %}
-        <div class="sf-account-tile">
-          {% if item.avatar %}{{ item.avatar|raw }}{% endif %}
-          <h2>{{ item.name }}</h2>
-          <span>Hinzugefügt am:<br>{{ item.added }}</span>
-          <span>Dienst:<br>{% if item.service %}{{ item.service.name }} [{{ item.service.id }}]{% else %}-{% endif %}</span>
-          <div class="sf-account-actions">
+        <article class="sf-account">
+          <header class="sf-account__header">
+            <span class="sf-account__avatar">
+              {% if item.avatar %}
+                <img src="{{ item.avatar }}" width="48" height="48" alt="">
+              {% else %}
+                <img class="sf-account__placeholder" src="/bundles/pdirsocialfeed/img/icon_user.svg" width="24" height="24" alt="">
+              {% endif %}
+              <span class="sf-account__type-icon"><img src="/bundles/pdirsocialfeed/img/{{ item.typeIcon }}" width="12" height="12" alt=""></span>
+            </span>
+            <span class="sf-account__title">
+              <strong class="sf-account__name" title="{{ item.name }}">{{ item.name ?: '-' }}</strong>
+              <span class="sf-account__type">{{ item.type ?: '-' }}{% if item.identifier and item.identifier != item.name %} · <span title="{{ item.identifier }}">{{ item.identifier }}</span>{% endif %}</span>
+            </span>
+          </header>
+
+          <dl class="sf-account__meta">
+            <dt>Dienst</dt>
+            <dd title="{{ item.service ? item.service.name : '' }}">{% if item.service %}{{ item.service.name }} <span class="sf-account__id">[{{ item.service.id }}]</span>{% else %}–{% endif %}</dd>
+            <dt>Letzter Import</dt>
+            <dd>{{ item.lastImport ?: '–' }}</dd>
+            <dt>Hinzugefügt</dt>
+            <dd>{{ item.added ?: '–' }}</dd>
+          </dl>
+
+          <div class="sf-account__actions">
             <a href="{{ item.editUrl }}" class="tl_submit">bearbeiten</a>
             <a href="{{ item.deleteUrl }}" class="tl_submit" onclick="return confirm('Konto „{{ item.name|e('js') }}“ wirklich entfernen?')">entfernen</a>
           </div>
-        </div>
+        </article>
       {% else %}
-        <div class="sf-account-tile">
-          <h2>Noch keine Konten vorhanden. Verbinde einen Dienst oder lege ein Konto an.</h2>
-        </div>
+        <p class="sf-account sf-account--empty">Noch keine Konten vorhanden. Verbinde einen Dienst oder lege ein Konto an.</p>
       {% endfor %}
     </div>
   </div>

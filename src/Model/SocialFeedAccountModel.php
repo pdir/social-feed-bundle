@@ -83,21 +83,28 @@ class SocialFeedAccountModel extends Model
 
     public static function getAvatar(self $account, $size = 80): string
     {
-        $noAvatar = '<img src="/bundles/pdirsocialfeed/img/icon_user.svg" width="20" height="20" alt="no avatar" class="avatar">';
+        $src = self::getAvatarSrc($account, (int) $size);
 
+        if (null === $src) {
+            return '<img src="/bundles/pdirsocialfeed/img/icon_user.svg" width="20" height="20" alt="no avatar" class="avatar">';
+        }
+
+        return '<img class="sfp_type" src="/bundles/pdirsocialfeed/img/'.self::getTypeIcon((string) $account->type).'" width="40" height="40" alt="'.$account->type.'"><img class="sfp_avatar sfp_'.$account->type.'" src="'.$src.'" width="'.$size.'" height="'.$size.'" alt="'.$account->name.'">';
+    }
+
+    /**
+     * Returns the URL of the resized avatar or null if the account has no (existing) avatar.
+     */
+    public static function getAvatarSrc(self $account, int $size = 80): ?string
+    {
         if (empty($account->avatar)) {
-            return $noAvatar;
+            return null;
         }
 
         $file = FilesModel::findByUuid($account->avatar);
 
-        if (null === $file) {
-            return $noAvatar;
-        }
-
-        // Continue if the files has been processed or does not exist
-        if (!file_exists(System::getContainer()->getParameter('kernel.project_dir').'/'.$file->path)) {
-            return $noAvatar;
+        if (null === $file || !file_exists(System::getContainer()->getParameter('kernel.project_dir').'/'.$file->path)) {
+            return null;
         }
 
         $figure = System::getContainer()
@@ -108,8 +115,6 @@ class SocialFeedAccountModel extends Model
             ->build()
         ;
 
-        $imageData = $figure->getLegacyTemplateData();
-
-        return '<img class="sfp_type" src="/bundles/pdirsocialfeed/img/'.self::getTypeIcon((string) $account->type).'" width="40" height="40" alt="'.$account->type.'"><img class="sfp_avatar sfp_'.$account->type.'" src="'.($imageData['src'] ?? '/bundles/pdirsocialfeed/img/icon_user.svg').'" width="'.$size.'" height="'.$size.'" alt="'.($imageData['alt'] ?? $account->name).'">';
+        return $figure->getLegacyTemplateData()['src'] ?? null;
     }
 }
