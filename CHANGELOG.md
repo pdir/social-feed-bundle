@@ -20,6 +20,7 @@ Types of changes
 - [Added] Compatibility with Contao 6 (Symfony 8).
 - [Changed] All templates are Twig templates (Contao 6 only renders Twig templates). Customized `.html5` templates still work in Contao 5.
 - [Changed] The account overview in the backend has a new layout (cards with avatar, type, service and last import).
+- [Added] Account overview: "Add account" opens a dialog to choose a service and then the Facebook pages, Instagram accounts or LinkedIn organizations of the service. X accounts and LinkedIn organizations can be entered manually.
 - [Fixed] News templates: the LinkedIn icon is also shown in `news_social_feed_extended`, the masonry relayout after lazy loaded images works again. Captions in the moderation list are escaped.
 - [Fixed] After deleting an account or "save and close" the account overview is shown again (Contao 5.5+).
 - [Fixed] The backend stylesheets are plain CSS (raw SCSS is not compiled in Contao 5.7), the moderation list styles no longer affect other backend views.

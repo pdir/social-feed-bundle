@@ -55,3 +55,37 @@ $GLOBALS['TL_LANG']['tl_sf_account']['showReplies'] = ['Antworten importieren', 
 $GLOBALS['TL_LANG']['tl_sf_account']['hashtagsLink'] = ['Hashtags und Erwähnungen verlinken', 'Wenn diese Option aktiviert ist, werden Hashtags und Erwähnungen verlinkt. Dafür muss das extended-Template verwendet werden.'];
 $GLOBALS['TL_LANG']['tl_sf_account']['avatar'] = ['Profilbild', 'Wird bei Facebook automatisch gesetzt. Wird im Frontend angezeigt, wenn der Post kein eigenes Profilbild enthält.'];
 $GLOBALS['TL_LANG']['tl_sf_account']['avatarSize'] = ['Bildgröße des Profilbilds', 'Wählen Sie die Bildgröße für das Profilbild im Frontend aus.'];
+
+/*
+ * Dialog "Konto hinzufügen"
+ */
+$GLOBALS['TL_LANG']['tl_sf_account']['connect'] = [
+    'title' => 'Konto hinzufügen',
+    'close' => 'Schließen',
+    'back' => 'Zurück',
+    'loading' => 'Wird geladen …',
+    'loadError' => 'Der Dialog konnte nicht geladen werden.',
+    'chooseService' => 'Wähle den Dienst, über den das Konto verbunden ist.',
+    'noServices' => 'Es ist noch kein Dienst angelegt.',
+    'createService' => 'Dienst anlegen',
+    'connected' => 'verbunden',
+    'selected' => 'ausgewählt',
+    'chooseOther' => 'Anderen Dienst wählen',
+    'notConnected' => 'nicht verbunden',
+    'manualCreate' => 'Konto manuell anlegen',
+    'chooseAccounts' => 'Wähle die Konten, die importiert werden sollen.',
+    'alreadyAdded' => 'bereits hinzugefügt',
+    'noAccounts' => 'Über diesen Dienst sind keine Konten freigegeben. Prüfe die Berechtigungen und melde dich in den Einstellungen des Dienstes erneut an.',
+    'connectHint' => 'Melde dich in den Einstellungen des Dienstes an (Access Token anfordern), danach kannst du hier die Konten auswählen.',
+    'notConnectedTitle' => 'Der Dienst ist noch nicht verbunden.',
+    'connectService' => 'Dienst verbinden',
+    'openService' => 'Dienst bearbeiten',
+    'error' => 'Die Konten konnten nicht geladen werden. Details stehen im System-Log. Eventuell ist der Access Token abgelaufen, melde dich dann in den Einstellungen des Dienstes erneut an.',
+    'manualHint' => 'Gib die Kennung des Kontos ein, danach geht es mit den Importeinstellungen weiter.',
+    'identifierX' => 'Account-Name (ohne @)',
+    'identifierLinkedIn' => 'Unternehmens-ID',
+    'name' => 'Anzeigename (optional)',
+    'submit' => 'Konten hinzufügen',
+    'continue' => 'Weiter',
+    'added' => '%s Konto/Konten hinzugefügt.',
+];

@@ -55,3 +55,37 @@ $GLOBALS['TL_LANG']['tl_sf_account']['showReplies'] = ['Import replies', 'If ena
 $GLOBALS['TL_LANG']['tl_sf_account']['hashtagsLink'] = ['Link hashtags and mentions', 'If enabled, hashtags and mentions are linked. The extended template must be used for this.'];
 $GLOBALS['TL_LANG']['tl_sf_account']['avatar'] = ['Profile picture', 'Is set automatically for Facebook. Is shown in the front end if the post has no profile picture of its own.'];
 $GLOBALS['TL_LANG']['tl_sf_account']['avatarSize'] = ['Profile picture size', 'Select the image size of the profile picture in the front end.'];
+
+/*
+ * Dialog "Add account"
+ */
+$GLOBALS['TL_LANG']['tl_sf_account']['connect'] = [
+    'title' => 'Add account',
+    'close' => 'Close',
+    'back' => 'Back',
+    'loading' => 'Loading …',
+    'loadError' => 'The dialog could not be loaded.',
+    'chooseService' => 'Choose the service the account is connected with.',
+    'noServices' => 'There is no service yet.',
+    'createService' => 'Create service',
+    'connected' => 'connected',
+    'selected' => 'selected',
+    'chooseOther' => 'Choose another service',
+    'notConnected' => 'not connected',
+    'manualCreate' => 'Create account manually',
+    'chooseAccounts' => 'Choose the accounts to import.',
+    'alreadyAdded' => 'already added',
+    'noAccounts' => 'No accounts are shared with this service. Check the permissions and log in again in the service settings.',
+    'connectHint' => 'Log in in the service settings (request access token), then you can choose the accounts here.',
+    'notConnectedTitle' => 'The service is not connected yet.',
+    'connectService' => 'Connect service',
+    'openService' => 'Edit service',
+    'error' => 'The accounts could not be loaded. See the system log for details. If the access token has expired, log in again in the service settings.',
+    'manualHint' => 'Enter the identifier of the account, then continue with the import settings.',
+    'identifierX' => 'Account name (without @)',
+    'identifierLinkedIn' => 'Organization ID',
+    'name' => 'Display name (optional)',
+    'submit' => 'Add accounts',
+    'continue' => 'Continue',
+    'added' => '%s account(s) added.',
+];

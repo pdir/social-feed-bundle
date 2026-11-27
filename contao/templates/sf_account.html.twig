@@ -3,9 +3,9 @@
 {% block main_content %}
   <div class="tl_listing_container">
     <div class="sf-accounts">
-      <a href="{{ createUrl }}" class="sf-account sf-account--new">
+      <a href="{{ connectUrl }}" class="sf-account sf-account--new" data-sf-connect-open data-turbo="false" aria-haspopup="dialog">
         <img src="/bundles/pdirsocialfeed/img/icon_plus.svg" width="32" height="32" alt="">
-        <span>Konto hinzufügen</span>
+        <span>{{ connectLang.title|default('Konto hinzufügen') }}</span>
       </a>
 
       {% for item in items %}
@@ -44,4 +44,122 @@
       {% endfor %}
     </div>
   </div>
+
+  <dialog class="sf-connect" id="sf-connect" aria-labelledby="sf-connect-title"{% if connectServiceUrl|default %} data-auto-open="{{ connectServiceUrl }}"{% endif %} data-loading="{{ connectLang.loading|default('…') }}" data-error="{{ connectLang.loadError|default('Error') }}">
+    <div class="sf-connect__header">
+      <div class="sf-connect__heading">
+        <h2 id="sf-connect-title">{{ connectLang.title|default('Konto hinzufügen') }}</h2>
+        <p class="sf-connect__subtitle" id="sf-connect-subtitle"></p>
+      </div>
+      <button type="button" class="sf-connect__close" data-sf-connect-close aria-label="{{ connectLang.close|default('Close') }}">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="sf-connect__body" aria-live="polite"></div>
+  </dialog>
+
+  <script>
+    (function () {
+      // Event delegation, so the handlers survive Turbo page visits and are only registered once
+      if (!window.sfConnect) {
+        window.sfConnect = {load: load};
+        document.addEventListener('click', onClick);
+        document.addEventListener('change', function (event) {
+          if (event.target.closest && event.target.closest('#sf-connect')) {
+            updateCount(document.getElementById('sf-connect'));
+          }
+        });
+      }
+
+      // After connecting a service (e.g. Facebook login) the accounts of the service are shown directly
+      var autoDialog = document.getElementById('sf-connect');
+
+      if (autoDialog && autoDialog.dataset.autoOpen && !autoDialog.open) {
+        autoDialog.showModal();
+        window.sfConnect.load(autoDialog, autoDialog.dataset.autoOpen);
+        delete autoDialog.dataset.autoOpen;
+
+        // do not open the dialog again on reload
+        var url = new URL(window.location.href);
+        url.searchParams.delete('connect');
+        window.history.replaceState(window.history.state, '', url.toString());
+      }
+
+      function load(dialog, url) {
+        var body = dialog.querySelector('.sf-connect__body');
+        var title = dialog.querySelector('#sf-connect-title');
+
+        var subtitle = dialog.querySelector('#sf-connect-subtitle');
+
+        body.setAttribute('aria-busy', 'true');
+        body.innerHTML = '<p class="sf-connect__loading"><span class="sf-connect__spinner" aria-hidden="true"></span><span></span></p>';
+        body.querySelector('.sf-connect__loading span:last-child').textContent = dialog.dataset.loading;
+
+        fetch(url, {headers: {'X-Requested-With': 'XMLHttpRequest'}, credentials: 'same-origin'})
+          .then(function (response) {
+            if (!response.ok) {
+              throw new Error(response.status);
+            }
+
+            return response.text();
+          })
+          .then(function (html) {
+            body.innerHTML = html;
+
+            var content = body.querySelector('[data-sf-connect-title]');
+
+            if (content) {
+              title.textContent = content.dataset.sfConnectTitle;
+              subtitle.textContent = content.dataset.sfConnectSubtitle || '';
+            }
+
+            updateCount(dialog);
+
+            var focus = body.querySelector('input:not([type=hidden]), a, button');
+            focus && focus.focus();
+          })
+          .catch(function () {
+            body.innerHTML = '<p class="tl_error"></p>';
+            body.firstChild.textContent = dialog.dataset.error;
+          })
+          .finally(function () {
+            body.removeAttribute('aria-busy');
+          });
+      }
+
+      // number of selected accounts, the submit button is disabled without selection
+      function updateCount(dialog) {
+        var count = dialog.querySelectorAll('input[name="accounts[]"]:checked').length;
+        var counter = dialog.querySelector('[data-sf-connect-count]');
+        var submit = dialog.querySelector('[data-sf-connect-submit]');
+
+        counter && (counter.textContent = count);
+        submit && (submit.disabled = 0 === count);
+      }
+
+      function onClick(event) {
+        var dialog = document.getElementById('sf-connect');
+
+        if (!dialog || !event.target.closest) {
+          return;
+        }
+
+        var open = event.target.closest('[data-sf-connect-open]');
+        var link = event.target.closest('#sf-connect [data-sf-connect-load]');
+
+        if (open || link) {
+          event.preventDefault();
+
+          if (open && !dialog.open) {
+            dialog.showModal();
+          }
+
+          load(dialog, (open || link).href);
+        } else if (event.target.closest('#sf-connect [data-sf-connect-close]') || event.target === dialog) {
+          // close button or click on the backdrop
+          dialog.close();
+        }
+      }
+    })();
+  </script>
 {% endblock %}

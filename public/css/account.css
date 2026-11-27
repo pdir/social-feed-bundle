@@ -152,3 +152,444 @@ html[data-color-scheme="dark"] .sf-account__type-icon img[src$="linkedin-in-bran
 html[data-color-scheme="dark"] .sf-account__type-icon img[src$="icon_user.svg"] {
   filter: invert(1);
 }
+
+/* Dialog "add account" */
+.sf-connect {
+  --sf-radius: var(--border-radius-lg, 10px);
+  --sf-border: var(--content-border, #e3e3e6);
+  --sf-muted: var(--gray, #6b6b72);
+  --sf-hover: var(--form-bg-hover, #f6f6f8);
+  --sf-accent: var(--contao, #f47c00);
+
+  box-sizing: border-box;
+  width: min(480px, calc(100vw - 32px));
+  max-height: min(640px, calc(100vh - 48px));
+  padding: 0; /* clicks on the dialog element itself are clicks on the backdrop */
+  overflow: hidden;
+  border: 1px solid var(--sf-border);
+  border-radius: 14px;
+  background: var(--content-bg, #fff);
+  color: inherit;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, .3), 0 2px 6px rgba(0, 0, 0, .08);
+}
+
+.sf-connect[open] {
+  display: flex;
+  flex-direction: column;
+  animation: sf-connect-in .16s ease-out;
+}
+
+.sf-connect::backdrop {
+  background: rgba(15, 15, 20, .45);
+}
+
+@keyframes sf-connect-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-connect[open] {
+    animation: none;
+  }
+}
+
+.sf-connect__header {
+  display: flex;
+  flex: none;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 20px 16px;
+}
+
+.sf-connect__heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.sf-connect__header h2 {
+  margin: 0;
+  overflow: hidden;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sf-connect__subtitle {
+  margin: 4px 0 0;
+  color: var(--sf-muted);
+  font-size: .8125rem;
+  line-height: 1.4;
+}
+
+.sf-connect__subtitle:empty {
+  display: none;
+}
+
+.sf-connect__close {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: -4px -6px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--sf-muted);
+  cursor: pointer;
+}
+
+.sf-connect__close:hover,
+.sf-connect__close:focus-visible {
+  background: var(--sf-hover);
+  color: inherit;
+}
+
+.sf-connect__body {
+  flex: 1;
+  min-height: 0;
+  padding: 0 20px;
+  overflow-y: auto;
+}
+
+.sf-connect__body p {
+  line-height: 1.45;
+}
+
+.sf-connect__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+  padding: 40px 0 48px;
+  color: var(--sf-muted);
+}
+
+.sf-connect__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--sf-border);
+  border-top-color: var(--sf-accent);
+  border-radius: 50%;
+  animation: sf-connect-spin .7s linear infinite;
+}
+
+@keyframes sf-connect-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sf-connect__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 12px -4px;
+  padding: 4px 8px 4px 4px;
+  border-radius: 6px;
+  color: var(--sf-muted);
+  font-size: .8125rem;
+  text-decoration: none;
+}
+
+.sf-connect__back:hover,
+.sf-connect__back:focus-visible {
+  background: var(--sf-hover);
+  color: inherit;
+}
+
+/* Rows (services and accounts) */
+.sf-connect__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0 0 4px;
+  list-style: none;
+}
+
+.sf-connect__list > li {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.sf-connect__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--sf-border);
+  border-radius: var(--sf-radius);
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color .12s, background-color .12s, box-shadow .12s;
+}
+
+.sf-connect__row:hover,
+.sf-connect__row:focus-visible,
+.sf-connect__row:focus-within {
+  border-color: color-mix(in srgb, var(--sf-accent) 55%, var(--sf-border));
+  background: var(--sf-hover);
+}
+
+.sf-connect__row:focus-visible {
+  outline: 2px solid var(--sf-accent);
+  outline-offset: 1px;
+}
+
+.sf-connect__row--check:has(:checked) {
+  border-color: var(--sf-accent);
+  background: color-mix(in srgb, var(--sf-accent) 7%, transparent);
+}
+
+.sf-connect__brand,
+.sf-connect__avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #6b6b72;
+}
+
+.sf-connect__brand img {
+  filter: brightness(0) invert(1); /* white icon on the brand color */
+}
+
+.sf-connect__brand--facebook {
+  background: #1877f2;
+}
+
+.sf-connect__brand--instagram {
+  background: #e1306c;
+}
+
+.sf-connect__brand--linkedin {
+  background: #0a66c2;
+}
+
+.sf-connect__brand--x {
+  background: #111;
+}
+
+.sf-connect__brand--large {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+}
+
+.sf-connect__avatar {
+  border-radius: 50%;
+  background: var(--sf-hover);
+}
+
+.sf-connect__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sf-connect__label {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.sf-connect__label strong,
+.sf-connect__label span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sf-connect__label strong {
+  font-weight: 600;
+}
+
+.sf-connect__label span {
+  color: var(--sf-muted);
+  font-size: .8125rem;
+}
+
+.sf-connect__status,
+.sf-connect__badge {
+  flex: none;
+  color: var(--sf-muted);
+  font-size: .75rem;
+  white-space: nowrap;
+}
+
+.sf-connect__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sf-connect__status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #b5b5bc;
+}
+
+.sf-connect__status.is-connected::before {
+  background: #22a55b;
+}
+
+.sf-connect__badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--sf-hover);
+}
+
+.sf-connect__chevron {
+  flex: none;
+  color: var(--sf-muted);
+}
+
+.sf-connect__checkbox {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--sf-accent);
+  cursor: pointer;
+}
+
+/* Empty states and hints */
+.sf-connect__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 8px 24px;
+  text-align: center;
+}
+
+.sf-connect__empty p {
+  max-width: 34em;
+  margin: 0;
+  color: var(--sf-muted);
+}
+
+.sf-connect__empty--compact {
+  padding: 0 0 16px;
+}
+
+.sf-connect__error {
+  margin: 0 0 12px;
+}
+
+.sf-connect__alt {
+  margin: 12px -20px 0;
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--sf-border);
+  font-size: .8125rem;
+}
+
+.sf-connect__alt a {
+  color: var(--sf-muted);
+}
+
+.sf-connect__alt a:hover {
+  color: inherit;
+}
+
+/* Form */
+.sf-connect__field {
+  margin: 0 0 14px;
+}
+
+.sf-connect__field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: .8125rem;
+  font-weight: 600;
+}
+
+.sf-connect__field input {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.sf-connect__footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px -20px 0;
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--sf-border);
+  background: var(--content-bg, #fff);
+}
+
+.sf-connect__count {
+  color: var(--sf-muted);
+  font-size: .8125rem;
+}
+
+.sf-connect__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 16px;
+  border: 1px solid var(--sf-border);
+  border-radius: 8px;
+  background: var(--content-bg, #fff);
+  color: inherit;
+  font: inherit;
+  font-size: .8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sf-connect__button:hover,
+.sf-connect__button:focus-visible {
+  background: var(--sf-hover);
+}
+
+.sf-connect__button--primary {
+  border-color: var(--sf-accent);
+  background: var(--sf-accent);
+  color: #fff;
+}
+
+.sf-connect__button--primary:hover,
+.sf-connect__button--primary:focus-visible {
+  background: color-mix(in srgb, var(--sf-accent) 88%, #000);
+  color: #fff;
+}
+
+.sf-connect__button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+html[data-color-scheme="dark"] .sf-connect {
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, .7);
+}
+
+html[data-color-scheme="dark"] .sf-connect__brand--x {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2);
+}

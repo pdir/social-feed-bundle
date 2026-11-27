@@ -1,0 +1,110 @@
+{# Content of the dialog "add account", loaded by sf_account.html.twig #}
+{% set chevron %}<svg class="sf-connect__chevron" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>{% endset %}
+
+{% if step == 'services' %}
+  <div class="sf-connect__content" data-sf-connect-title="{{ lang.title|default('Add account') }}" data-sf-connect-subtitle="{{ lang.chooseService|default }}">
+    {% if services is empty %}
+      <div class="sf-connect__empty">
+        <p>{{ lang.noServices|default }}</p>
+        <a href="{{ serviceCreateUrl }}" class="sf-connect__button sf-connect__button--primary" data-turbo="false">{{ lang.createService|default }}</a>
+      </div>
+    {% else %}
+      <ul class="sf-connect__list">
+        {% for item in services %}
+          <li>
+            <a href="{{ item.url }}" class="sf-connect__row sf-connect__row--link" data-sf-connect-load>
+              <span class="sf-connect__brand sf-connect__brand--{{ item.type|lower }}"><img src="/bundles/pdirsocialfeed/img/{{ item.typeIcon }}" width="18" height="18" alt=""></span>
+              <span class="sf-connect__label">
+                <strong>{{ item.name ?: item.type }}</strong>
+                <span>{{ item.type }}</span>
+              </span>
+              <span class="sf-connect__status{{ item.connected ? ' is-connected' }}">{{ item.connected ? lang.connected|default : lang.notConnected|default }}</span>
+              {{ chevron }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <div class="sf-connect__alt">
+      <a href="{{ manualUrl }}" data-turbo="false">{{ lang.manualCreate|default }}</a>
+    </div>
+  </div>
+
+{% else %}
+  <div class="sf-connect__content" data-sf-connect-title="{{ service.name ?: service.type }}" data-sf-connect-subtitle="{{ not connected ? lang.notConnectedTitle|default : (manual and accounts is empty ? lang.manualHint|default : lang.chooseAccounts|default) }}">
+    <a href="{{ backUrl }}" class="sf-connect__back" data-sf-connect-load>
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      {{ lang.chooseOther|default(lang.back|default) }}
+    </a>
+
+    {% if not connected %}
+      <div class="sf-connect__empty">
+        <span class="sf-connect__brand sf-connect__brand--large sf-connect__brand--{{ service.type|lower }}"><img src="/bundles/pdirsocialfeed/img/{{ service.typeIcon }}" width="26" height="26" alt=""></span>
+        <p>{{ lang.connectHint|default }}</p>
+        <a href="{{ serviceEditUrl }}" class="sf-connect__button sf-connect__button--primary" data-turbo="false">{{ lang.connectService|default(lang.openService|default) }}</a>
+      </div>
+    {% else %}
+      {% if error %}
+        <p class="tl_error sf-connect__error">{{ lang.error|default }}</p>
+        {% if not manual %}
+          <div class="sf-connect__empty sf-connect__empty--compact">
+            <a href="{{ serviceEditUrl }}" class="sf-connect__button" data-turbo="false">{{ lang.openService|default }}</a>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {% if accounts is not empty %}
+        <form action="{{ action }}" method="post" data-turbo="false">
+          <input type="hidden" name="REQUEST_TOKEN" value="{{ requestToken }}">
+          <ul class="sf-connect__list">
+            {% for account in accounts %}
+              <li>
+                <label class="sf-connect__row sf-connect__row--check">
+                  {% if account.picture %}
+                    <span class="sf-connect__avatar"><img src="{{ account.picture }}" width="40" height="40" alt="" loading="lazy" referrerpolicy="no-referrer"></span>
+                  {% else %}
+                    <span class="sf-connect__brand sf-connect__brand--{{ service.type|lower }}"><img src="/bundles/pdirsocialfeed/img/{{ service.typeIcon }}" width="18" height="18" alt=""></span>
+                  {% endif %}
+                  <span class="sf-connect__label">
+                    <strong>{{ account.name ?: account.identifier }}</strong>
+                    <span>{{ account.identifier }}</span>
+                  </span>
+                  {% if account.added %}<span class="sf-connect__badge">{{ lang.alreadyAdded|default }}</span>{% endif %}
+                  <input type="checkbox" name="accounts[]" value="{{ account.identifier }}" class="sf-connect__checkbox"{{ account.added ? ' checked' }}>
+                </label>
+              </li>
+            {% endfor %}
+          </ul>
+          <div class="sf-connect__footer">
+            <span class="sf-connect__count"><span data-sf-connect-count>0</span> {{ lang.selected|default }}</span>
+            <button type="submit" class="sf-connect__button sf-connect__button--primary" data-sf-connect-submit>{{ lang.submit|default }}</button>
+          </div>
+        </form>
+      {% elseif not error and not manual %}
+        <div class="sf-connect__empty">
+          <span class="sf-connect__brand sf-connect__brand--large sf-connect__brand--{{ service.type|lower }}"><img src="/bundles/pdirsocialfeed/img/{{ service.typeIcon }}" width="26" height="26" alt=""></span>
+          <p>{{ lang.noAccounts|default }}</p>
+          <a href="{{ serviceEditUrl }}" class="sf-connect__button" data-turbo="false">{{ lang.openService|default }}</a>
+        </div>
+      {% endif %}
+
+      {% if manual %}
+        <form action="{{ action }}" method="post" data-turbo="false">
+          <input type="hidden" name="REQUEST_TOKEN" value="{{ requestToken }}">
+          <div class="sf-connect__field">
+            <label for="sf-connect-identifier">{{ service.type == 'LinkedIn' ? lang.identifierLinkedIn|default : lang.identifierX|default }}</label>
+            <input type="text" name="identifier" id="sf-connect-identifier" class="tl_text" required maxlength="255" autocomplete="off"{{ service.type == 'LinkedIn' ? ' inputmode="numeric" pattern="[0-9]+"' }}>
+          </div>
+          <div class="sf-connect__field">
+            <label for="sf-connect-name">{{ lang.name|default }}</label>
+            <input type="text" name="name" id="sf-connect-name" class="tl_text" maxlength="255" autocomplete="off">
+          </div>
+          <div class="sf-connect__footer">
+            <span></span>
+            <button type="submit" class="sf-connect__button sf-connect__button--primary">{{ lang.continue|default }}</button>
+          </div>
+        </form>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endif %}

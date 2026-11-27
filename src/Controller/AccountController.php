@@ -25,13 +25,14 @@ use Contao\CoreBundle\Controller\AbstractBackendController;
 use Contao\Date;
 use Contao\System;
 use Pdir\SocialFeedBundle\Model\SocialFeedAccountModel;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('%contao.backend.route_prefix%/sfAccount', name: self::class, defaults: ['_scope' => 'backend'])]
 class AccountController extends AbstractBackendController
 {
-    public function __invoke(): Response
+    public function __invoke(Request $request): Response
     {
         $items = [];
         $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
@@ -55,6 +56,8 @@ class AccountController extends AbstractBackendController
             }
         }
 
+        System::loadLanguageFile('tl_sf_account');
+
         $GLOBALS['TL_CSS'][] = 'bundles/pdirsocialfeed/css/account.css|static';
 
         return $this->render(
@@ -63,7 +66,10 @@ class AccountController extends AbstractBackendController
                 'title' => 'Social Feed Konten',
                 'headline' => 'Social Feed Konten',
                 'items' => $items,
-                'createUrl' => $this->getBackendUrl(['act' => 'create', 'rt' => $requestToken]),
+                'connectUrl' => $this->generateUrl('pdir_sf_account_connect'),
+                // after connecting a service (e.g. Facebook login) the dialog opens with the accounts of the service
+                'connectServiceUrl' => ctype_digit((string) $request->query->get('connect')) ? $this->generateUrl('pdir_sf_account_connect_service', ['id' => (int) $request->query->get('connect')]) : null,
+                'connectLang' => $GLOBALS['TL_LANG']['tl_sf_account']['connect'] ?? [],
                 'locale' => $GLOBALS['TL_LANGUAGE'],
             ]
         );
