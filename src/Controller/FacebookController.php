@@ -25,7 +25,6 @@ use Contao\Message;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Pdir\SocialFeedBundle\EventListener\DataContainer\SocialFeedServiceCallbackListener;
-use Pdir\SocialFeedBundle\Importer\NewsImporter;
 use Pdir\SocialFeedBundle\Model\SocialFeedAccountModel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,45 +93,22 @@ class FacebookController
             Message::addInfo('FACEBOOK GRAPH: Failed getting a long-lived user access token, the page access tokens may expire.');
         }
 
-        // Get accounts (pages) of the user
-        $json = @file_get_contents($graphUrl.'/me/accounts?'.http_build_query(['access_token' => $userAccessToken]));
+        // Refresh the page access tokens of the existing accounts of the service. New pages are not added
+        // automatically, they are selected in the account overview ("add account").
+        $json = @file_get_contents($graphUrl.'/me/accounts?'.http_build_query(['access_token' => $userAccessToken, 'fields' => 'id,name,access_token', 'limit' => 100]));
 
-        // Set error message
-        if (\is_bool($json) && false === $json) {
-            if (Input::get('error_message')) {
-                Message::addError(Input::get('error_message'));
-            } else {
-                $pageAccessToken = 'FACEBOOK GRAPH ERROR: empty return! Failed getting accounts of user.';
-                Message::addError($pageAccessToken);
-            }
-        }
+        if (false === $json) {
+            Message::addError(Input::get('error_message') ?: 'FACEBOOK GRAPH ERROR: empty return! Failed getting accounts of user.');
+        } else {
+            foreach (json_decode($json)->data ?? [] as $item) {
+                $account = SocialFeedAccountModel::findOneBy(['type = ?', 'identifier = ?', 'service = ?'], ['Facebook', $item->id, (int) $sessionData['sfServiceId']]);
 
-        // Set accounts
-        if (!\is_bool($json)) {
-            $obj = json_decode($json);
-
-            // Create or update the accounts (Facebook pages) of the user
-            foreach ($obj->data ?? [] as $item) {
-                $account = SocialFeedAccountModel::findOneBy(['type = ?', 'identifier = ?'], ['Facebook', $item->id]);
-
-                if (null === $account) {
-                    $account = new SocialFeedAccountModel();
-                    $account->type = 'Facebook';
-                    $account->identifier = $item->id;
-                    $account->added = time();
+                if (null !== $account) {
+                    $account->name = $item->name;
+                    $account->accessToken = $item->access_token;
+                    $account->tstamp = time();
+                    $account->save();
                 }
-
-                $account->name = $item->name;
-                $account->tstamp = time();
-                $account->accessToken = $item->access_token;
-                $account->service = (int) $sessionData['sfServiceId'];
-                $account->save();
-
-                // the avatar needs the id of the saved account
-                $account->avatar = $this->getAvatar($account);
-                $account->save();
-
-                $sessionData['page'] = $item->id;
             }
         }
 
@@ -140,14 +116,7 @@ class FacebookController
         $this->db->update('tl_sf_service', ['accessToken' => $userAccessToken, 'tstamp' => time()], ['id' => $sessionData['sfServiceId']]);
         $this->session->remove(SocialFeedServiceCallbackListener::SESSION_KEY);
 
-        return new RedirectResponse($sessionData['backUrl']);
-    }
-
-    private function getAvatar(SocialFeedAccountModel $account): ?string
-    {
-        $imgPath = NewsImporter::createImageFolder($account->id); // create image folder if not exists
-
-        // Get profile picture
-        return NewsImporter::saveImage($imgPath.'avatar.jpg', 'https://graph.facebook.com/'.$account->identifier.'/picture?type=large');
+        // Continue with the selection of the pages
+        return new RedirectResponse($this->router->generate(AccountController::class, ['connect' => (int) $sessionData['sfServiceId']]));
     }
 }

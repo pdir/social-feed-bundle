@@ -60,7 +60,7 @@ Version 3.0 splits the configuration into **services** (app credentials such as 
 2. Update the bundle with `composer require pdir/social-feed-bundle:^3.0`.
 3. Run the migration with `php vendor/bin/contao-console contao:migrate` (or the Contao Manager / install tool). Each `tl_social_feed` record is migrated to a service and an account. Accounts keep their ID if possible, otherwise the imported news are reassigned. X (Twitter) accounts get the type `X`.
 4. Check the migrated services and accounts in the backend. The old table `tl_social_feed` is kept and can be deleted manually once everything works.
-5. Instagram: accounts created by a new login (e.g. with the unified login, which creates all shared Instagram accounts) have no news archive yet. Select a news archive, otherwise nothing is imported.
+5. New accounts: after the login (Facebook, Instagram) the account overview opens the dialog *Add account*, where you select the pages and accounts to import. New accounts have no news archive yet. Select a news archive, otherwise nothing is imported.
 
 Breaking changes for developers: `SocialFeedModel` and `SocialFeedListener` have been removed. Use `SocialFeedServiceModel` and `SocialFeedAccountModel` (`$account->getService()`, `$account->getAccessToken()`) instead. The import commands now import all accounts of a type, also accounts with a cron job.
 
@@ -74,7 +74,7 @@ Ab Version 3.0 ist die Konfiguration aufgeteilt in **Dienste** (Zugangsdaten wie
 2. Bundle mit `composer require pdir/social-feed-bundle:^3.0` aktualisieren.
 3. Migration mit `php vendor/bin/contao-console contao:migrate` ausführen (oder über Contao Manager / Installtool). Jeder Datensatz aus `tl_social_feed` wird zu einem Dienst und einem Konto. Konten behalten nach Möglichkeit ihre ID, sonst werden die importierten Nachrichten umgehängt. X-(Twitter-)Konten erhalten den Typ `X`.
 4. Migrierte Dienste und Konten im Backend prüfen. Die alte Tabelle `tl_social_feed` bleibt erhalten und kann gelöscht werden, sobald alles funktioniert.
-5. Instagram: Konten, die durch einen neuen Login angelegt werden (z. B. beim Unified Login, der alle freigegebenen Instagram-Konten anlegt), haben noch kein Nachrichtenarchiv. Wähle eines aus, sonst wird nichts importiert.
+5. Neue Konten: Nach dem Login (Facebook, Instagram) öffnet die Kontenübersicht den Dialog *Konto hinzufügen*, in dem du die Seiten und Konten für den Import auswählst. Neue Konten haben noch kein Nachrichtenarchiv. Wähle eines aus, sonst wird nichts importiert.
 
 Änderungen für Entwickler: `SocialFeedModel` und `SocialFeedListener` wurden entfernt. Verwende stattdessen `SocialFeedServiceModel` und `SocialFeedAccountModel` (`$account->getService()`, `$account->getAccessToken()`). Die Import-Befehle importieren jetzt alle Konten eines Typs, auch Konten mit Cronjob.
 

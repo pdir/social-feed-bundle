@@ -125,11 +125,11 @@ class InstagramController
             return $this->redirectWithError($sessionData, $GLOBALS['TL_LANG']['tl_sf_service']['instagramTokenError'] ?? 'The Instagram access token could not be requested. Please check the system log.');
         }
 
-        // Get the user data and create or update the account
+        // Update the existing account, new accounts are selected in the account overview
         $userData = $this->client->getUserData($longLivedAccessToken['access_token'], (int) $service['id'], false);
 
         if (!empty($userData['data']['id'])) {
-            $this->saveAccount((int) $service['id'], (string) $userData['data']['id'], (string) ($userData['data']['username'] ?? ''));
+            $this->updateAccount((int) $service['id'], (string) $userData['data']['id'], (string) ($userData['data']['username'] ?? ''));
         }
 
         // Store the access token and remove temporary session key
@@ -141,7 +141,7 @@ class InstagramController
 
         $this->session->remove(SocialFeedServiceCallbackListener::SESSION_KEY);
 
-        return new RedirectResponse($sessionData['backUrl']);
+        return $this->redirectToAccountSelection((int) $service['id']);
     }
 
     /**
@@ -164,9 +164,9 @@ class InstagramController
             return $this->redirectWithError($sessionData, $GLOBALS['TL_LANG']['tl_sf_service']['instagramAccountError'] ?? 'No Instagram account was shared during login. Please select an Instagram professional account and try again.');
         }
 
-        // Every shared Instagram account becomes a social feed account, the token is stored at the service
+        // Update the existing accounts, new accounts are selected in the account overview. The token is stored at the service.
         foreach ($accounts as $account) {
-            $this->saveAccount((int) $service['id'], $account['id'], $account['username']);
+            $this->updateAccount((int) $service['id'], $account['id'], $account['username']);
         }
 
         $this->db->update('tl_sf_service', [
@@ -178,13 +178,21 @@ class InstagramController
 
         $this->session->remove(SocialFeedServiceCallbackListener::SESSION_KEY);
 
-        return new RedirectResponse($sessionData['backUrl']);
+        return $this->redirectToAccountSelection((int) $service['id']);
     }
 
     /**
-     * Create or update the Instagram account with the given Instagram user ID.
+     * Continue with the selection of the accounts (dialog "add account" of the account overview).
      */
-    private function saveAccount(int $serviceId, string $instagramUserId, string $username): void
+    private function redirectToAccountSelection(int $serviceId): Response
+    {
+        return new RedirectResponse($this->router->generate(AccountController::class, ['connect' => $serviceId]));
+    }
+
+    /**
+     * Update the existing Instagram account with the given Instagram user ID. New accounts are not created.
+     */
+    private function updateAccount(int $serviceId, string $instagramUserId, string $username): void
     {
         $account = SocialFeedAccountModel::findOneBy(['type = ?', 'identifier = ?'], ['Instagram', $instagramUserId]);
 
@@ -192,10 +200,7 @@ class InstagramController
         $account ??= SocialFeedAccountModel::findOneBy(['type = ?', 'service = ?', "identifier = ''"], ['Instagram', $serviceId]);
 
         if (null === $account) {
-            $account = new SocialFeedAccountModel();
-            $account->type = 'Instagram';
-            $account->added = time();
-            $account->cronjob = 'no_cronjob';
+            return;
         }
 
         $account->identifier = $instagramUserId;

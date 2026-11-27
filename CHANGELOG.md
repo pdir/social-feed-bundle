@@ -21,12 +21,13 @@ Types of changes
 - [Changed] All templates are Twig templates (Contao 6 only renders Twig templates). Customized `.html5` templates still work in Contao 5.
 - [Changed] The account overview in the backend has a new layout (cards with avatar, type, service and last import).
 - [Added] Account overview: "Add account" opens a dialog to choose a service and then the Facebook pages, Instagram accounts or LinkedIn organizations of the service. X accounts and LinkedIn organizations can be entered manually.
+- [Changed] Facebook and Instagram: the login only connects the service, the pages and accounts are selected in the account overview afterwards (the dialog opens automatically). Existing accounts are updated (Facebook: new page access tokens, Instagram: user ID of migrated accounts).
 - [Fixed] News templates: the LinkedIn icon is also shown in `news_social_feed_extended`, the masonry relayout after lazy loaded images works again. Captions in the moderation list are escaped.
 - [Fixed] After deleting an account or "save and close" the account overview is shown again (Contao 5.5+).
 - [Fixed] The backend stylesheets are plain CSS (raw SCSS is not compiled in Contao 5.7), the moderation list styles no longer affect other backend views.
 - [Added] Instagram: option "Link hashtags and mentions" (cron and moderated import). [#179](https://github.com/pdir/social-feed-bundle/issues/179)
 - [Changed] The configuration is split into services (app credentials, `tl_sf_service`) and accounts (import settings, `tl_sf_account`). Existing `tl_social_feed` records are migrated automatically, the old table is kept. See "Upgrade to version 3.0" in the README.
-- [Changed] Instagram unified login (see 2.15.0): login method and configuration ID are stored in the service, the Instagram account ID in the account. All Instagram accounts shared during the login are created as social feed accounts.
+- [Changed] Instagram unified login (see 2.15.0): login method and configuration ID are stored in the service, the Instagram account ID in the account. The Instagram accounts shared during the login can be added in the account overview.
 - [Changed] The access token is requested via the button next to the access token field of the service (Facebook, Instagram, LinkedIn), the login opens in a new tab.
 - [Changed] Facebook: the Graph API version is selected in the service (default `v25.0`), the login requests the permissions `pages_show_list`, `pages_read_engagement` and `pages_read_user_content`.
 - [Changed] The import commands (`social-feed:*:import`) import all accounts of a type, also accounts with a cron job.
