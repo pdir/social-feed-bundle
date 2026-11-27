@@ -24,6 +24,7 @@ Types of changes
 - [Changed] Facebook and Instagram: the login only connects the service, the pages and accounts are selected in the account overview afterwards (the dialog opens automatically). Existing accounts are updated (Facebook: new page access tokens, Instagram: user ID of migrated accounts).
 - [Fixed] News templates: the LinkedIn icon is also shown in `news_social_feed_extended`, the masonry relayout after lazy loaded images works again. Captions in the moderation list are escaped.
 - [Fixed] After deleting an account or "save and close" the account overview is shown again (Contao 5.5+).
+- [Fixed] News archive: the global operation "Moderate import" has its own icon (also in the operations menu of Contao 6) and no longer calls the MooTools function `Backend.getScrollOffset()`.
 - [Fixed] The backend stylesheets are plain CSS (raw SCSS is not compiled in Contao 5.7), the moderation list styles no longer affect other backend views.
 - [Added] Instagram: option "Link hashtags and mentions" (cron and moderated import). [#179](https://github.com/pdir/social-feed-bundle/issues/179)
 - [Changed] The configuration is split into services (app credentials, `tl_sf_service`) and accounts (import settings, `tl_sf_account`). Existing `tl_social_feed` records are migrated automatically, the old table is kept. See "Upgrade to version 3.0" in the README.

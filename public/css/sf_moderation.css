@@ -110,10 +110,6 @@
   margin-right: 5px;
 }
 
-a.header_sf_moderate {
-  background-size: 16px;
-}
-
 html[data-color-scheme="dark"] .be_sf_morderation_list .checkbox-container .checkmark {
   border: solid var(--form-border);
 }

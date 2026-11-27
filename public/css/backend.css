@@ -130,21 +130,7 @@ a.header_socialFeedAccounts {
     background-size: 16px;
 }
 
-.header_sf_moderate {
-    margin-left: 34px;
-}
-
-.header_sf_moderate:before {
-    content: "";
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    margin-left: -22px;
-    background: url(/bundles/pdirsocialfeed/img/icon_fa_download-solid.svg) 0 0 no-repeat;
-}
-
-html[data-color-scheme="dark"] .header_socialFeedAccounts,
-html[data-color-scheme="dark"] .header_sf_moderate:before {
+html[data-color-scheme="dark"] .header_socialFeedAccounts {
     filter: invert(1);
 }
 

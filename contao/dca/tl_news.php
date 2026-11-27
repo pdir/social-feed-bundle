@@ -31,7 +31,9 @@ ArrayUtil::arrayInsert($GLOBALS['TL_DCA']['tl_news']['list']['global_operations'
     'sf_moderate' => [
         'href' => 'key=moderate',
         'class' => 'header_sf_moderate',
-        'attributes' => 'onclick="Backend.getScrollOffset()"',
+        // rendered as background image (Contao 5) or as image in the operations menu (Contao 6)
+        'icon' => 'bundles/pdirsocialfeed/img/icon_moderate.svg',
+        'attributes' => 'data-action="contao--scroll-offset#store"',
     ],
 ]);
 
